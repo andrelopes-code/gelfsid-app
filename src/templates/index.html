@@ -1,0 +1,20 @@
+{% load static %} {% include "base.html" %} {% block content %}
+<img src="{% static 'img/logo.png' %}" class="top-0 left-5 z-50 absolute opacity-50 size-24" />
+<div class="w-screen h-screen">
+    <div
+        id="details"
+        class="right-0 z-20 fixed flex flex-col gap-5 bg-[#151b25] bg-clip-padding bg-opacity-75 shadow-[0_0_10px_#11151c] backdrop-blur-sm backdrop-filter p-3 rounded-md w-[40vw] h-full transition-transform translate-x-full duration-500 overflow-auto"
+    >
+        <div class="flex justify-between items-center px-3">
+            <h2 id="details-title" class="mt-3 mb-3 font-bold text-3xl text-white"></h2>
+            <i
+                class="ph-x text-white text-xl hover:text-highlight transition-colors duration-200 cursor-pointer ease-in-out ph"
+                onclick="closeDetails()"
+            ></i>
+        </div>
+        <div id="supplier-cards-container" class="flex flex-col gap-5"></div>
+    </div>
+
+    <div id="map" class="z-10 !bg-[#11151c] w-full h-full"></div>
+</div>
+{% endblock %}

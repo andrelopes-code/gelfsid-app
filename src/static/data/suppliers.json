@@ -1,0 +1,280 @@
+{
+    "Sete Lagoas": [
+        {
+            "name": "Fornecedor XYZ",
+            "address": "Rua ABC, 123",
+            "phone": "(31) 99999-9999",
+            "products": "Produto A, Produto B"
+        },
+        {
+            "name": "Fornecedor ABC",
+            "address": "Avenida XYZ, 456",
+            "phone": "(31) 88888-8888",
+            "products": "Produto C, Produto D"
+        }
+    ],
+    "Belo Horizonte": [
+        {
+            "name": "Fornecedor 123",
+            "address": "Rua Belo Horizonte, 789",
+            "phone": "(31) 77777-7777",
+            "products": "Produto E, Produto F"
+        }
+    ],
+    "Uberlândia": [
+        {
+            "name": "Fornecedor Alpha",
+            "address": "Avenida da Liberdade, 1500",
+            "phone": "(34) 98888-1122",
+            "products": "Produto G, Produto H"
+        },
+        {
+            "name": "Fornecedor Beta",
+            "address": "Rua das Flores, 230",
+            "phone": "(34) 98765-4321",
+            "products": "Produto I, Produto J"
+        }
+    ],
+    "Juiz de Fora": [
+        {
+            "name": "Fornecedor Delta",
+            "address": "Praça Central, 45",
+            "phone": "(32) 99222-3344",
+            "products": "Produto K, Produto L"
+        }
+    ],
+    "Contagem": [
+        {
+            "name": "Fornecedor Sigma",
+            "address": "Avenida dos Andradas, 3000",
+            "phone": "(31) 93333-4455",
+            "products": "Produto O, Produto P"
+        },
+        {
+            "name": "Fornecedor Lambda",
+            "address": "Rua Amazonas, 1200",
+            "phone": "(31) 95555-6677",
+            "products": "Produto Q, Produto R"
+        },
+        {
+            "name": "Fornecedor Epsilon",
+            "address": "Avenida do Contorno, 115",
+            "phone": "(31) 94444-3344",
+            "products": "Produto S, Produto T"
+        }
+    ],
+    "Betim": [
+        {
+            "name": "Fornecedor Theta",
+            "address": "Rua do Comércio, 85",
+            "phone": "(31) 97777-8899",
+            "products": "Produto S, Produto T"
+        }
+    ],
+    "Montes Claros": [
+        {
+            "name": "Fornecedor Zeta",
+            "address": "Rua Montes Claros, 340",
+            "phone": "(38) 99999-1234",
+            "products": "Produto W, Produto X"
+        },
+        {
+            "name": "Fornecedor Epsilon",
+            "address": "Avenida Central, 99",
+            "phone": "(38) 98888-7766",
+            "products": "Produto Y, Produto Z"
+        }
+    ],
+    "Governador Valadares": [
+        {
+            "name": "Fornecedor Omicron",
+            "address": "Avenida do Progresso, 150",
+            "phone": "(33) 97777-3344",
+            "products": "Produto AA, Produto BB"
+        },
+        {
+            "name": "Fornecedor Pi",
+            "address": "Rua dos Trabalhadores, 670",
+            "phone": "(33) 96666-1234",
+            "products": "Produto CC, Produto DD"
+        },
+        {
+            "name": "Fornecedor Delta",
+            "address": "Praça da República, 100",
+            "phone": "(33) 95555-7788",
+            "products": "Produto EE, Produto FF"
+        }
+    ],
+    "Ipatinga": [
+        {
+            "name": "Fornecedor Rho",
+            "address": "Rua dos Metalúrgicos, 200",
+            "phone": "(31) 94444-9999",
+            "products": "Produto GG, Produto HH"
+        }
+    ],
+    "Divinópolis": [
+        {
+            "name": "Fornecedor Tau",
+            "address": "Rua do Centro, 250",
+            "phone": "(37) 98888-6655",
+            "products": "Produto II, Produto JJ"
+        },
+        {
+            "name": "Fornecedor Iota",
+            "address": "Avenida Principal, 300",
+            "phone": "(37) 94444-5566",
+            "products": "Produto KK, Produto LL"
+        }
+    ],
+    "Patos de Minas": [
+        {
+            "name": "Fornecedor Kappa",
+            "address": "Rua dos Fazendeiros, 450",
+            "phone": "(34) 97777-3344",
+            "products": "Produto MM, Produto NN"
+        }
+    ],
+    "Poços de Caldas": [
+        {
+            "name": "Fornecedor Sigma",
+            "address": "Avenida das Águas, 90",
+            "phone": "(35) 96666-1122",
+            "products": "Produto OO, Produto PP"
+        },
+        {
+            "name": "Fornecedor Phi",
+            "address": "Rua das Termas, 120",
+            "phone": "(35) 98888-7755",
+            "products": "Produto QQ, Produto RR"
+        }
+    ],
+    "Araxá": [
+        {
+            "name": "Fornecedor Zeta",
+            "address": "Rua do Ouro, 50",
+            "phone": "(34) 94444-2233",
+            "products": "Produto SS, Produto TT"
+        }
+    ],
+    "Teófilo Otoni": [
+        {
+            "name": "Fornecedor Nu",
+            "address": "Avenida do Comércio, 400",
+            "phone": "(33) 95555-6677",
+            "products": "Produto UU, Produto VV"
+        },
+        {
+            "name": "Fornecedor Chi",
+            "address": "Rua Central, 60",
+            "phone": "(33) 92222-3344",
+            "products": "Produto WW, Produto XX"
+        }
+    ],
+    "Lavras": [
+        {
+            "name": "Fornecedor Psi",
+            "address": "Rua das Lavras, 35",
+            "phone": "(35) 91111-9988",
+            "products": "Produto YY, Produto ZZ"
+        }
+    ],
+    "Ituiutaba": [
+        {
+            "name": "Fornecedor Upsilon",
+            "address": "Avenida dos Amigos, 250",
+            "phone": "(34) 92222-1234",
+            "products": "Produto AAA, Produto BBB"
+        },
+        {
+            "name": "Fornecedor Omega",
+            "address": "Rua Central, 80",
+            "phone": "(34) 96666-4321",
+            "products": "Produto CCC, Produto DDD"
+        }
+    ],
+    "Caratinga": [
+        {
+            "name": "Fornecedor Gamma",
+            "address": "Rua do Café, 140",
+            "phone": "(33) 94444-5566",
+            "products": "Produto EEE, Produto FFF"
+        }
+    ],
+    "Viçosa": [
+        {
+            "name": "Fornecedor Beta",
+            "address": "Rua do Campus, 210",
+            "phone": "(31) 93333-4455",
+            "products": "Produto GGG, Produto HHH"
+        },
+        {
+            "name": "Fornecedor Alpha",
+            "address": "Avenida dos Estudantes, 300",
+            "phone": "(31) 91111-1122",
+            "products": "Produto III, Produto JJJ"
+        }
+    ],
+    "Sabará": [
+        {
+            "name": "Fornecedor Delta",
+            "address": "Rua Antiga, 75",
+            "phone": "(31) 95555-6677",
+            "products": "Produto KKK, Produto LLL"
+        }
+    ],
+    "Nova Lima": [
+        {
+            "name": "Fornecedor Epsilon",
+            "address": "Rua das Montanhas, 400",
+            "phone": "(31) 98888-9988",
+            "products": "Produto MMM, Produto NNN"
+        }
+    ],
+    "Ouro Preto": [
+        {
+            "name": "Fornecedor Pi",
+            "address": "Praça Tiradentes, 180",
+            "phone": "(31) 94444-8899",
+            "products": "Produto OOO, Produto PPP"
+        }
+    ],
+    "Varginha": [
+        {
+            "name": "Fornecedor Eta",
+            "address": "Rua dos Aliens, 13",
+            "phone": "(35) 93333-1122",
+            "products": "Produto QQQ, Produto RRR"
+        },
+        {
+            "name": "Fornecedor Lambda",
+            "address": "Avenida da Terra, 56",
+            "phone": "(35) 95555-3344",
+            "products": "Produto SSS, Produto TTT"
+        }
+    ],
+    "Três Corações": [
+        {
+            "name": "Fornecedor Xi",
+            "address": "Rua dos Heróis, 25",
+            "phone": "(35) 92222-3344",
+            "products": "Produto UUU, Produto VVV"
+        }
+    ],
+    "Araguari": [
+        {
+            "name": "Fornecedor Omicron",
+            "address": "Rua do Mercado, 98",
+            "phone": "(34) 97777-9988",
+            "products": "Produto WWW, Produto XXX"
+        }
+    ],
+    "Passos": [
+        {
+            "name": "Fornecedor Tau",
+            "address": "Avenida dos Passos, 112",
+            "phone": "(35) 91111-4455",
+            "products": "Produto YYY, Produto ZZZ"
+        }
+    ]
+}
