@@ -2,6 +2,19 @@ from django.db import models
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 
 
+class InfoRota(models.Model):
+    origem = models.CharField(max_length=255)
+    destino = models.CharField(max_length=255)
+    distancia_em_metros = models.IntegerField()
+    duracao_em_segundos = models.IntegerField()
+
+    class Meta:
+        unique_together = ('origem', 'destino')
+
+    def __str__(self):
+        return f'{self.origem} -> {self.destino}: {self.distancia_em_metros}m, {self.duracao_em_segundos}s'
+
+
 class Estado(models.Model):
     sigla = models.CharField(max_length=2, primary_key=True)
     nome = models.CharField(max_length=100)
@@ -15,6 +28,8 @@ class Estado(models.Model):
 
 class Cidade(models.Model):
     nome = models.CharField(max_length=100)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
 
     def __str__(self):

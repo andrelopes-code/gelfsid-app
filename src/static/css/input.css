@@ -72,3 +72,13 @@ html::-webkit-scrollbar-thumb:hover {
         opacity: 1;
     }
 }
+
+.fixtransition {
+    outline: 1px solid transparent;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    will-change: transform;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+}

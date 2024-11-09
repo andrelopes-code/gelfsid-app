@@ -1,6 +1,6 @@
 from django.forms import model_to_dict
 from django.http import JsonResponse
-from .models import Cidade, FornecedorMateriaPrima
+from ..models import Cidade, FornecedorMateriaPrima
 from django.contrib.admin.views.decorators import staff_member_required
 
 

@@ -1,45 +1,49 @@
 const BRAZIL_COORDINATES = [-14.235, -51.925];
 const FILL_COLOR = "#151b25";
 const STROKE_COLOR = "#4b5260";
+const MIN_COLOR = "#f7a399";
+const CV_COLOR = "#B8DFD0";
 
 const CONFIG = {
-    api: {
+    geojson: {
         states: "static/data/geojson/br_states.json",
         cities: "static/data/geojson/mun/geojs-{uf}-mun.json",
-        suppliers: "static/data/suppliers.json",
+    },
+    api: {
+        suppliers: "http://localhost:8000/fornecedores/",
     },
 };
 
 const map = L.map("map", { zoomControl: false, attributionControl: false }).setView(BRAZIL_COORDINATES, 4);
 
-const ufMap = {
-    RO: 11, // Rondônia
-    AC: 12, // Acre
-    AM: 13, // Amazonas
-    RR: 14, // Roraima
-    PA: 15, // Pará
-    AP: 16, // Amapá
-    TO: 17, // Tocantins
-    MA: 21, // Maranhão
-    PI: 22, // Piauí
-    CE: 23, // Ceará
-    RN: 24, // Rio Grande do Norte
-    PB: 25, // Paraíba
-    PE: 26, // Pernambuco
-    AL: 27, // Alagoas
-    SE: 28, // Sergipe
-    BA: 29, // Bahia
-    MG: 31, // Minas Gerais
-    ES: 32, // Espírito Santo
-    RJ: 33, // Rio de Janeiro
-    SP: 35, // São Paulo
-    PR: 41, // Paraná
-    SC: 42, // Santa Catarina
-    RS: 43, // Rio Grande do Sul
-    MS: 50, // Mato Grosso do Sul
-    MT: 51, // Mato Grosso
-    GO: 52, // Goiás
-    DF: 53, // Distrito Federal
+const stateCodeMap = {
+    RO: 11,
+    AC: 12,
+    AM: 13,
+    RR: 14,
+    PA: 15,
+    AP: 16,
+    TO: 17,
+    MA: 21,
+    PI: 22,
+    CE: 23,
+    RN: 24,
+    PB: 25,
+    PE: 26,
+    AL: 27,
+    SE: 28,
+    BA: 29,
+    MG: 31,
+    ES: 32,
+    RJ: 33,
+    SP: 35,
+    PR: 41,
+    SC: 42,
+    RS: 43,
+    MS: 50,
+    MT: 51,
+    GO: 52,
+    DF: 53,
 };
 
 const cache = {
@@ -48,62 +52,36 @@ const cache = {
     currentLayer: null,
 };
 
-const colors = ["#fbc3bc", "#f7a399", "#f38375", "#ffb4a2"];
-
 let citySuppliers;
 
 function generateSupplierCards(suppliers) {
     const container = document.getElementById("supplier-cards-container");
     container.innerHTML = "";
 
+    const template = document.getElementById("supplier-card-template");
+
     suppliers.forEach((supplier) => {
-        const card = document.createElement("div");
-        card.classList.add(
-            "bg-[#19212E]",
-            "bg-opacity-75",
-            "shadow-md",
-            "hover:shadow-lg",
-            "px-6",
-            "py-3",
-            "rounded-lg",
-            "transition-transform",
-            "hover:translate-x-1",
-            "duration-500"
-        );
-
-        card.innerHTML = `
-      <div class="flex flex-col gap-1 text-slate-200 text-sm">
-        <p class="mb-2 font-semibold text-white text-xl">${supplier.name}</p>
-        <div class="flex items-center gap-2">
-          <i class="flex justify-center items-center ph-map-pin w-5 h-5 ph"></i>
-          <span>${supplier.address}</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <i class="flex justify-center items-center w-5 h-5 ph-phone ph"></i>
-          <span>${supplier.phone}</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <i class="flex justify-center items-center w-5 h-5 ph-package ph"></i>
-          <span>${supplier.products}</span>
-        </div>
-      </div>
-    `;
-
+        const card = template.cloneNode(true);
         container.appendChild(card);
     });
 }
 
-async function openDetails(cityName) {
-    const suppliers = citySuppliers[cityName];
+function getCityKey(stateCode, cityName) {
+    return `${stateCode}-${cityName}`;
+}
+
+function openDetails(cityKey) {
+    const suppliers = citySuppliers[cityKey];
     if (!suppliers) {
         return;
     }
 
     const detailsTitle = document.querySelector("#details-title");
-    detailsTitle.textContent = cityName;
+    const detailsElement = document.getElementById("details");
+
+    detailsTitle.textContent = suppliers[0].cidade.nome;
     generateSupplierCards(suppliers);
 
-    const detailsElement = document.getElementById("details");
     detailsElement.classList.remove("translate-x-full");
     detailsElement.classList.add("translate-x-0");
 }
@@ -119,7 +97,7 @@ async function loadGeoJSON(type, uf = null) {
 
     if (!cache.geojson.has(key)) {
         try {
-            const url = type === "states" ? CONFIG.api.states : CONFIG.api.cities.replace("{uf}", uf);
+            const url = type === "states" ? CONFIG.geojson.states : CONFIG.geojson.cities.replace("{uf}", uf);
 
             const response = await fetch(url);
             if (!response.ok) throw new Error(`Failed to load ${key}`);
@@ -145,22 +123,20 @@ async function loadStates() {
                 fillColor: FILL_COLOR,
             },
             onEachFeature: function (feature, layer) {
-                layer.on("mouseover", function () {
-                    console.log(feature);
-                });
+                layer.on("mouseover", function () {});
                 layer.on("click", async function () {
-                    loadCities(ufMap[feature.id]);
+                    loadCities(stateCodeMap[feature.id]);
                 });
             },
         }).addTo(map);
     } catch (error) {
-        console.error("Erro ao carregar estados:", error);
+        console.error("Error loading states:", error);
     }
 }
 
-async function loadCities(uf) {
+async function loadCities(stateCode) {
     try {
-        const data = await loadGeoJSON("cities", uf);
+        const data = await loadGeoJSON("cities", stateCode);
 
         map.eachLayer((layer) => {
             if (layer.options && layer.options.active) {
@@ -170,17 +146,19 @@ async function loadCities(uf) {
 
         L.geoJSON(data, {
             style: function (feature) {
-                const supplier = citySuppliers[feature.properties.name];
+                const cityKey = getCityKey(stateCode, feature.properties.name);
+                const supplier = citySuppliers[cityKey];
 
                 return {
                     color: STROKE_COLOR,
                     weight: 1,
-                    fillColor: supplier ? colors[Math.floor(Math.random() * colors.length)] : FILL_COLOR,
+                    fillColor: supplier ? CV_COLOR : FILL_COLOR,
                     fillOpacity: 1,
                 };
             },
             onEachFeature: function (feature, layer) {
                 layer.options.active = true;
+                const cityKey = getCityKey(stateCode, feature.properties.name);
 
                 if (feature.properties && feature.properties.name) {
                     layer.bindTooltip(feature.properties.name, {
@@ -199,25 +177,35 @@ async function loadCities(uf) {
                             layer.closeTooltip();
                         },
                         click: function (e) {
-                            const layer = e.target;
-                            openDetails(layer.feature.properties.name);
+                            openDetails(cityKey);
                         },
                     });
                 }
             },
         }).addTo(map);
     } catch (error) {
-        console.error("Erro ao carregar municípios:", error);
+        console.error("Error loading cities:", error);
     }
 }
 
 async function loadSuppliers() {
     const response = await fetch(CONFIG.api.suppliers);
-    citySuppliers = await response.json();
+    const supplierData = await response.json();
+
+    const suppliers = {};
+    for (const supplier of supplierData) {
+        const cityKey = `${stateCodeMap[supplier.estado.sigla]}-${supplier.cidade.nome}`;
+        if (!suppliers[cityKey]) {
+            suppliers[cityKey] = [];
+        }
+        suppliers[cityKey].push(supplier);
+    }
+
+    citySuppliers = suppliers;
 }
 
 async function preloadCities() {
-    const promises = Object.keys(ufMap).map((uf) => loadGeoJSON("cities", ufMap[uf]));
+    const promises = Object.keys(stateCodeMap).map((uf) => loadGeoJSON("cities", stateCodeMap[uf]));
     await Promise.all(promises);
 }
 
@@ -227,7 +215,7 @@ async function init() {
         await loadStates();
         await preloadCities();
     } catch (error) {
-        console.error("Erro:", error);
+        console.error("Error:", error);
     }
 }
 
