@@ -1,5 +1,6 @@
 from pathlib import Path
 from .config import settings
+from django.templatetags.static import static
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -10,13 +11,17 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = [
-    'jazzmin',
+    'unfold',
+    'unfold.contrib.filters',
+    'unfold.contrib.forms',
+    'unfold.contrib.inlines',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'map',
 ]
 
 MIDDLEWARE = [
@@ -88,9 +93,36 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-JAZZMIN_SETTINGS = {
-    'site_title': 'GELFSID',
-    'site_header': 'GELFSID Admin',
-    'copyright': 'gelfsid',
-    'welcome_sign': 'Login to GELFSID Admin Panel',
+UNFOLD = {
+    'SITE_TITLE': 'GELFSID ADMIN PANEL',
+    'SITE_HEADER': 'GELFSID ADMIN',
+    'SITE_URL': '/',
+    'SHOW_HISTORY': True,
+    'THEME': 'dark',
+    'COLORS': {
+        'font': {
+            'subtle-light': '107 114 128',
+            'subtle-dark': '156 163 175',
+            'default-light': '75 85 99',
+            'default-dark': '209 213 219',
+            'important-light': '17 24 39',
+            'important-dark': '243 244 246',
+        },
+        'primary': {
+            '50': '255 243 230',
+            '100': '255 224 204',
+            '200': '255 191 153',
+            '300': '255 153 102',
+            '400': '255 128 51',
+            '500': '255 102 0',
+            '600': '230 92 0',
+            '700': '204 82 0',
+            '800': '179 72 0',
+            '900': '153 61 0',
+            '950': '102 41 0',
+        },
+    },
+    'STYLES': [
+        lambda request: static('css/unfold_style.css'),
+    ],
 }
