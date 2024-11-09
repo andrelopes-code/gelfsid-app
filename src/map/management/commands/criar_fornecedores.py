@@ -42,7 +42,6 @@ class Command(BaseCommand):
             registro_ibama = fake.bothify(text='IBAMA-####')
             nota_qualidade = round(random.uniform(0, 100), 1)
             cidade = random.choice(cidades_mg)
-            coordenadas_gps = f'{fake.latitude()}, {fake.longitude()}'
 
             try:
                 # Criar a instância do fornecedor
@@ -56,7 +55,6 @@ class Command(BaseCommand):
                     nota_qualidade=nota_qualidade,
                     estado=estado_mg,
                     cidade=cidade,
-                    coordenadas_gps=coordenadas_gps,
                 )
                 self.stdout.write(
                     self.style.SUCCESS(f'Fornecedor criado: {fornecedor.razao_social} - {fornecedor.cnpj}')

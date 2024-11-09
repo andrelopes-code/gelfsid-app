@@ -40,9 +40,17 @@ class DistanceCalculator:
     API_KEY = config.settings.GRAPHHOPPER_API_KEY
 
     @classmethod
-    def get_distance(cls, origin, destination):
+    def get_distance(cls, origin, destination, fetch_new=False):
         if existing_distance := cls.existing_distance(origin, destination):
             return existing_distance
+
+        if not fetch_new:
+            return RouteInfo(
+                destination='N/A',
+                origin='N/A',
+                distance_in_meters='N/A',
+                duration_in_seconds='N/A',
+            )
 
         origin_coordinates = OpenStreetMap.get_coordinates(origin)
         destination_coordinates = OpenStreetMap.get_coordinates(destination)
