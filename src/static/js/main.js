@@ -1,8 +1,15 @@
 const BRAZIL_COORDINATES = [-14.235, -51.925];
+const HOST_CITY_KEY = "31-Sete Lagoas";
 const FILL_COLOR = "#151b25";
 const STROKE_COLOR = "#4b5260";
-const MIN_COLOR = "#f7a399";
-const CV_COLOR = "#B8DFD0";
+
+const CARV_TYPE = "Carvão Vegetal";
+const MINE_TYPE = "Minério";
+const MINE_COLOR = "var(--highlight)";
+const CARV_COLOR = "var(--green-highlight)";
+
+const GOOD_RATING_COLOR = CARV_COLOR;
+const BAD_RATING_COLOR = MINE_COLOR;
 
 const CONFIG = {
     geojson: {
@@ -53,6 +60,9 @@ const cache = {
 };
 
 let citySuppliers;
+let geojsonLayer;
+let currentStateCode;
+let currentType = CARV_TYPE;
 
 function generateSupplierCards(suppliers) {
     const container = document.getElementById("supplier-cards-container");
@@ -62,6 +72,32 @@ function generateSupplierCards(suppliers) {
 
     suppliers.forEach((supplier) => {
         const card = template.cloneNode(true);
+        fields = card.querySelectorAll(".field");
+
+        fields[0].textContent = supplier.razao_social;
+        fields[1].textContent = supplier.cidade.nome + " - " + supplier.estado.nome;
+        fields[2].textContent = supplier.cnpj;
+        fields[3].textContent = supplier.tipo_material;
+        fields[4].textContent = supplier.licenca_operacao;
+        fields[5].textContent = supplier.certificacao_ambiental
+            ? "Com Licença Ambiental"
+            : "Sem Licença Ambiental";
+
+        fields[6].textContent =
+            supplier.distancia_em_metros !== null ? supplier.distancia_em_metros / 1000 + " km" : "N/A";
+
+        // Muda a cor da borda para refletir o tipo de material
+        card.querySelector("#card").style.borderColor =
+            supplier.tipo_material === CARV_TYPE ? CARV_COLOR : MINE_COLOR;
+
+        ratingDiv = card.querySelector("#supplier-rating");
+        if (supplier.avaliacao > 80) {
+            ratingDiv.style.color = GOOD_RATING_COLOR;
+        } else {
+            ratingDiv.style.color = BAD_RATING_COLOR;
+        }
+        ratingDiv.querySelector(".field").textContent = supplier.avaliacao;
+
         container.appendChild(card);
     });
 }
@@ -137,6 +173,7 @@ async function loadStates() {
 async function loadCities(stateCode) {
     try {
         const data = await loadGeoJSON("cities", stateCode);
+        currentStateCode = stateCode;
 
         map.eachLayer((layer) => {
             if (layer.options && layer.options.active) {
@@ -144,28 +181,27 @@ async function loadCities(stateCode) {
             }
         });
 
-        L.geoJSON(data, {
-            style: function (feature) {
-                const cityKey = getCityKey(stateCode, feature.properties.name);
-                const supplier = citySuppliers[cityKey];
-
-                return {
-                    color: STROKE_COLOR,
-                    weight: 1,
-                    fillColor: supplier ? CV_COLOR : FILL_COLOR,
-                    fillOpacity: 1,
-                };
-            },
+        geojsonLayer = L.geoJSON(data, {
+            style: cityStyleFunction,
             onEachFeature: function (feature, layer) {
                 layer.options.active = true;
                 const cityKey = getCityKey(stateCode, feature.properties.name);
+                const isHostCity = cityKey === HOST_CITY_KEY;
 
                 if (feature.properties && feature.properties.name) {
-                    layer.bindTooltip(feature.properties.name, {
-                        permanent: false,
-                        direction: "top",
-                        className: "city-tooltip custom-tooltip",
-                    });
+                    if (isHostCity) {
+                        layer.bindTooltip("GELF Sete Lagoas", {
+                            permanent: true,
+                            direction: "top",
+                            className: "city-tooltip custom-tooltip-gelf",
+                        });
+                    } else {
+                        layer.bindTooltip(feature.properties.name, {
+                            permanent: false,
+                            direction: "top",
+                            className: "city-tooltip custom-tooltip",
+                        });
+                    }
 
                     layer.on({
                         mouseover: function (e) {
@@ -174,7 +210,9 @@ async function loadCities(stateCode) {
                         },
                         mouseout: function (e) {
                             const layer = e.target;
-                            layer.closeTooltip();
+                            if (!isHostCity) {
+                                layer.closeTooltip();
+                            }
                         },
                         click: function (e) {
                             openDetails(cityKey);
@@ -188,13 +226,41 @@ async function loadCities(stateCode) {
     }
 }
 
+function cityStyleFunction(feature) {
+    const cityKey = getCityKey(currentStateCode, feature.properties.name);
+    const suppliers = citySuppliers[cityKey];
+
+    const base = {
+        color: STROKE_COLOR,
+        weight: 1,
+        fillColor: FILL_COLOR,
+        fillOpacity: 1,
+    };
+
+    if (suppliers && suppliers.some((s) => s.tipo_material === currentType)) {
+        base.fillColor = "var(--material)";
+    }
+
+    if (suppliers && base.fillColor === FILL_COLOR) {
+        base.fillColor = "var(--material-off)";
+    }
+
+    return base;
+}
+
+function updateGeoJSONStyle() {
+    if (geojsonLayer) {
+        geojsonLayer.setStyle(cityStyleFunction);
+    }
+}
+
 async function loadSuppliers() {
     const response = await fetch(CONFIG.api.suppliers);
     const supplierData = await response.json();
 
     const suppliers = {};
     for (const supplier of supplierData) {
-        const cityKey = `${stateCodeMap[supplier.estado.sigla]}-${supplier.cidade.nome}`;
+        const cityKey = getCityKey(stateCodeMap[supplier.estado.sigla], supplier.cidade.nome);
         if (!suppliers[cityKey]) {
             suppliers[cityKey] = [];
         }
@@ -209,8 +275,24 @@ async function preloadCities() {
     await Promise.all(promises);
 }
 
+async function configureFilter() {
+    const filter = document.getElementById("filter");
+
+    filter.addEventListener("change", function () {
+        if (this.checked) {
+            currentType = MINE_TYPE;
+            document.documentElement.style.setProperty("--material", "#d68367");
+        } else {
+            currentType = CARV_TYPE;
+            document.documentElement.style.setProperty("--material", "#98e089");
+        }
+        updateGeoJSONStyle();
+    });
+}
+
 async function init() {
     try {
+        await configureFilter();
         await loadSuppliers();
         await loadStates();
         await preloadCities();
@@ -219,4 +301,4 @@ async function init() {
     }
 }
 
-init();
+document.addEventListener("DOMContentLoaded", init);

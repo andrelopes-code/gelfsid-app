@@ -1,44 +1,54 @@
-<div
-    class="bg-[#222c3d] bg-opacity-60 shadow-lg hover:shadow-xl mx-auto px-6 py-4 rounded-lg w-full fixtransition transition-transform hover:translate-x-1 duration-300"
->
-    <div class="flex flex-col gap-2 text-md text-slate-200">
-        <!-- Nome da Empresa -->
-        <p class="font-semibold text-2xl text-white tracking-wide">Almeida LTDA.</p>
+<div class="p-3 w-full" id="supplier-card-template">
+    <div
+        id="card"
+        class="bg-dark-200 bg-opacity-60 shadow-lg hover:shadow-xl px-4 py-4 border-t-[3px] border-transparent rounded-lg w-full fixtransition transition-transform hover:translate-x-1 duration-300"
+    >
+        <div class="flex justify-between text-md text-slate-200">
+            <div class="flex flex-col gap-1 text-zinc-200">
+                <p class="mb-3 font-medium text-2xl text-white text-wrap break-words tracking-wide">
+                    <span class="field">XXXXXXXXXXXX</span>
+                </p>
 
-        <!-- Localização -->
-        <div class="flex items-center gap-2">
-            <i class="flex justify-center items-center ph-map-pin w-5 h-5 ph"></i>
-            <span>Pimenta, MG</span>
-        </div>
+                <div class="flex items-center gap-4">
+                    <i class="ph-map-pin ph-fill"></i>
+                    <span class="font-medium field">XXXXXXX, XX</span>
+                </div>
 
-        <!-- CNPJ -->
-        <div class="flex items-center gap-2">
-            <i class="flex justify-center items-center w-5 h-5 ph-identification-card ph"></i>
-            <span>CNPJ 61.284.350/0001-11</span>
-        </div>
+                <div class="flex items-center gap-4">
+                    <i class="ph-fill ph-identification-card"></i>
+                    <span class="font-medium field">000000000000</span>
+                </div>
 
-        <!-- Tipo de Material -->
-        <div class="flex items-center gap-2">
-            <i class="flex justify-center items-center w-5 h-5 ph-package ph"></i>
-            <span>Minério</span>
-        </div>
+                <div class="flex items-center gap-4">
+                    <i class="ph-fill ph-package"></i>
+                    <span class="font-medium field">XXXXXX</span>
+                </div>
 
-        <!-- Licença de Operação -->
-        <div class="flex items-center gap-2">
-            <i class="flex justify-center items-center w-5 h-5 ph-file-text ph"></i>
-            <span>Licença LIC-1049-5781</span>
-        </div>
+                <div class="flex items-center gap-4">
+                    <i class="ph-file-text ph-fill"></i>
+                    <span class="font-semibold"><span class="field">LIC-XXXXX-XXXX</span></span>
+                </div>
 
-        <!-- Certificação Ambiental -->
-        <div class="flex items-center gap-2">
-            <i class="flex justify-center items-center w-5 h-5 ph-leaf ph"></i>
-            <span>Sem Certificação Ambiental</span>
-        </div>
-
-        <!-- Avaliação -->
-        <div class="flex items-center gap-2">
-            <i class="flex justify-center items-center w-5 h-5 ph-star ph"></i>
-            <span>Avaliação 87</span>
+                <div class="flex items-center gap-4">
+                    <i class="ph-fill ph-leaf"></i>
+                    <span class="font-medium field">XXXXXXXXXXXX</span>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 w-fit">
+                <div
+                    class="flex items-center gap-4 bg-black bg-opacity-20 px-3 py-1 rounded-md w-fit h-full max-h-fit"
+                >
+                    <i class="ph-fill ph-truck text-xl"></i>
+                    <span class="font-medium text-nowrap field">[X] km</span>
+                </div>
+                <div
+                    class="flex items-center gap-2 bg-black bg-opacity-20 px-3 py-1 rounded-md w-fit h-full max-h-fit text-green-300"
+                    id="supplier-rating"
+                >
+                    <i class="ph-fill ph-star text-xl"></i>
+                    <span class="font-medium field">XXX</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

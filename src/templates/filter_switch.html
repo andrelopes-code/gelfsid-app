@@ -1,0 +1,69 @@
+<style>
+    .switch {
+        --_switch-bg-clr: #181e29;
+        --_switch-padding: 4px;
+        --_slider-bg-clr: #232830;
+        --_label-padding: 0.6rem 1rem;
+        --_switch-easing: cubic-bezier(0.47, 1.64, 0.41, 0.8);
+        color: white;
+        width: fit-content;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        border-radius: 9999px;
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        position: relative;
+        isolation: isolate;
+        background-color: var(--_switch-bg-clr);
+    }
+
+    .switch input[type="checkbox"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+
+    .switch > span {
+        display: grid;
+        place-content: center;
+        transition: color 300ms ease-in-out 150ms;
+        padding: var(--_label-padding);
+        font-weight: 500;
+        color: #ffffff3b;
+    }
+
+    .switch::before {
+        content: "";
+        position: absolute;
+        background-color: var(--_slider-bg-clr);
+        border-radius: inherit;
+        inset: var(--_switch-padding) 50% var(--_switch-padding) var(--_switch-padding);
+        transition: inset 500ms var(--_switch-easing);
+        z-index: -1;
+    }
+
+    .switch:has(input:checked)::before {
+        inset: var(--_switch-padding) var(--_switch-padding) var(--_switch-padding) 50%;
+    }
+
+    .switch:has(input:checked) > span:last-of-type {
+        color: var(--highlight);
+    }
+    .switch:has(input:not(:checked)) > span:first-of-type {
+        color: var(--green-highlight);
+    }
+</style>
+
+<label for="filter" class="switch" aria-label="Toggle Filter">
+    <input type="checkbox" id="filter" />
+    <span>Carvão</span>
+    <span>Minério</span>
+</label>

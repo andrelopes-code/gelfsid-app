@@ -46,10 +46,10 @@ class DistanceCalculator:
 
         if not fetch_new:
             return RouteInfo(
-                destination='N/A',
-                origin='N/A',
-                distance_in_meters='N/A',
-                duration_in_seconds='N/A',
+                destination=None,
+                origin=None,
+                distance_in_meters=None,
+                duration_in_seconds=None,
             )
 
         origin_coordinates = OpenStreetMap.get_coordinates(origin)

@@ -2,12 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* body {
+    font-family: "Poppins", sans-serif !important;
+} */
+
 :root {
     --highlight: #d68367;
+    --green-highlight: #98e089;
+    --material: #98e089;
+    --material-off: #00000075;
 }
 
 svg path:hover {
-    fill: var(--highlight);
+    fill: var(--material);
+    transition: none;
+}
+
+svg path {
+    transition: fill 0.1s ease-in-out;
 }
 
 svg path:focus {
@@ -21,6 +33,19 @@ svg path:focus {
 }
 
 .custom-tooltip::before {
+    border-top-color: #272b31 !important;
+}
+
+.custom-tooltip-gelf {
+    background-color: #272b31 !important;
+    border-color: #272b31 !important;
+    opacity: 1 !important;
+    font-size: 0.7rem !important;
+    font-weight: bold;
+    color: var(--material) !important;
+}
+
+.custom-tooltip-gelf::before {
     border-top-color: #272b31 !important;
 }
 
@@ -48,29 +73,6 @@ html::-webkit-scrollbar-thumb {
 
 html::-webkit-scrollbar-thumb:hover {
     background: #151b25;
-}
-
-.error-notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #ff4444;
-    color: white;
-    padding: 15px 25px;
-    border-radius: 4px;
-    z-index: 1000;
-    animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
 }
 
 .fixtransition {

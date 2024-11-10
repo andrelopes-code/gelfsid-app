@@ -18,7 +18,7 @@ def get_fornecedores(request):
             'tipo_material': fornecedor.get_tipo_material_display(),
             'certificacao_ambiental': fornecedor.certificacao_ambiental,
             'licenca_operacao': fornecedor.licenca_operacao,
-            'registroidade': fornecedor.nota_qualidade,
+            'avaliacao': fornecedor.nota_qualidade,
             'estado': {
                 'sigla': fornecedor.estado.sigla,
                 'nome': fornecedor.cidade.estado.nome,
