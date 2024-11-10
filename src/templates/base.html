@@ -12,8 +12,8 @@
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
         <!-- App Scripts -->
-        <script defer src="{% static 'js/main.js' %}"></script>
-        <script defer src="{% static 'js/error.js' %}"></script>
+        <script defer src="{% static 'js/dist/bundle.js' %}"></script>
+        <script defer src="{% static 'js/_errorHandling.js' %}"></script>
     </head>
     <body>
         {% block content %}{% endblock %}

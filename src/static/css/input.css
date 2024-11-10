@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* body {
-    font-family: "Poppins", sans-serif !important;
-} */
-
 :root {
     --highlight: #d68367;
     --green-highlight: #98e089;
