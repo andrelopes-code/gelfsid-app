@@ -2,15 +2,15 @@ from django.http import JsonResponse
 from map.models import FornecedorMateriaPrima
 from map.utils.distance_calculator import DistanceCalculator
 
+HOST_CITY = 'Sete Lagoas, MG'
+
 
 def get_fornecedores(request):
     fornecedores = FornecedorMateriaPrima.objects.select_related('cidade', 'estado').all()
 
     data = []
     for fornecedor in fornecedores:
-        distance = DistanceCalculator.get_distance(
-            f'{fornecedor.cidade.nome}, {fornecedor.cidade.estado}', 'Sete Lagoas, MG'
-        )
+        distance = DistanceCalculator.get_distance(f'{fornecedor.cidade.nome}, {fornecedor.cidade.estado}', HOST_CITY)
         data.append({
             'id': fornecedor.id,
             'razao_social': fornecedor.razao_social,

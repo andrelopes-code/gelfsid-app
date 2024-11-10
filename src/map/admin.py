@@ -95,8 +95,8 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
 
     def certificacao_status(self, obj):
         if obj.certificacao_ambiental:
-            return format_html('<span style="color: green;">✔ Certificado</span>')
-        return format_html('<span style="color: red;">✘ Não Certificado</span>')
+            return 'Certificado'
+        return 'Não Certificado'
 
     certificacao_status.short_description = 'Certificação'
 
@@ -105,11 +105,9 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
             return '-'
 
         if obj.nota_qualidade >= 80:
-            cor = 'green'
-        elif obj.nota_qualidade >= 60:
-            cor = 'orange'
+            cor = 'var(--green-highlight)'
         else:
-            cor = 'red'
+            cor = 'var(--highlight)'
 
         return format_html('<span style="color: {}; font-weight: bold;">{}</span>', cor, f'{obj.nota_qualidade}')
 

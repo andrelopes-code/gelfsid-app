@@ -24,3 +24,6 @@ quote-style = 'single'
 
 [tool.taskipy.tasks]
 run = "python src/manage.py runserver"
+su = "python src/manage.py createsuperuser"
+makemigrations = "python src/manage.py makemigrations"
+migrate = "python src/manage.py migrate"
