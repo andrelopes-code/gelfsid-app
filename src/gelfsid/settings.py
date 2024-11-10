@@ -41,7 +41,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',
 ]
 
-ROOT_URLCONF = 'mpgsid.urls'
+ROOT_URLCONF = 'gelfsid.urls'
 
 TEMPLATES = [
     {
@@ -59,7 +59,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'mpgsid.wsgi.application'
+WSGI_APPLICATION = 'gelfsid.wsgi.application'
 
 
 DATABASES = {

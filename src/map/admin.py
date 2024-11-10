@@ -102,7 +102,7 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
 
     def nota_qualidade_colorida(self, obj):
         if obj.nota_qualidade is None:
-            return '-'
+            return 'N/A'
 
         if obj.nota_qualidade >= 80:
             cor = 'var(--green-highlight)'

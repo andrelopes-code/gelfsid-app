@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import httpx
 
-from mpgsid import config
+from gelfsid import config
 from ..models import InfoRota
 
 
