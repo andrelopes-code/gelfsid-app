@@ -37,9 +37,9 @@ class Command(BaseCommand):
             razao_social = fake.company()
             cnpj = fake.cnpj().replace('.', '').replace('/', '').replace('-', '')
             tipo_material = random.choice(['CAR', 'MIN'])
-            certificacao_ambiental = fake.boolean()
-            licenca_operacao = fake.bothify(text='LIC-####-####')
-            registro_ibama = fake.bothify(text='IBAMA-####')
+            licenca = fake.bothify(text='LA-2024-#####')
+            registro_ief = fake.bothify(text=' IEF-REG-######')
+            cadastro_tecnico_federal = fake.bothify(text='CTF-APP-######')
             nota_qualidade = round(random.uniform(0, 100), 1)
             cidade = random.choice(cidades_mg)
 
@@ -49,9 +49,9 @@ class Command(BaseCommand):
                     razao_social=razao_social,
                     cnpj=cnpj,
                     tipo_material=tipo_material,
-                    certificacao_ambiental=certificacao_ambiental,
-                    licenca_operacao=licenca_operacao,
-                    registro_ibama=registro_ibama,
+                    licenca=licenca,
+                    registro_ief=registro_ief,
+                    cadastro_tecnico_federal=cadastro_tecnico_federal,
                     nota_qualidade=nota_qualidade,
                     estado=estado_mg,
                     cidade=cidade,

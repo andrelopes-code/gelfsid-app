@@ -1,7 +1,6 @@
 {% load static %} {% include "base.html" %} {% block content %}
-<div class="top-0 left-5 z-50 absolute flex items-center gap-5">
-    <img src="{% static 'img/logo.png' %}" class="opacity-50 grayscale size-24" />
-    <div>{% include "filter_switch.html" %}</div>
+<div class="top-0 z-50 absolute flex justify-between items-center gap-5 p-5 w-full pointer-events-none">
+    <div class="pointer-events-auto">{% include "filter_switch.html" %}</div>
 </div>
 
 <div class="w-screen h-screen">

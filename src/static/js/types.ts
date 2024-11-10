@@ -40,8 +40,9 @@ export interface Supplier {
     estado: State;
     cnpj: string;
     tipo_material: string;
-    licenca_operacao: string;
-    certificacao_ambiental: boolean;
+    licenca: string;
+    cadastro_tecnico_federal: string;
+    registro_ief: string;
     distancia_em_metros: number | null;
     avaliacao: number;
 }

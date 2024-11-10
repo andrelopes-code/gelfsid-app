@@ -39,20 +39,23 @@ class SupplierService {
             const card = template.cloneNode(true) as HTMLElement;
             const fields = card.querySelectorAll(".field");
 
+            console.log(supplier);
+
             if (fields[0]) fields[0].textContent = supplier.razao_social;
             if (fields[1]) fields[1].textContent = `${supplier.cidade.nome} - ${supplier.estado.nome}`;
             if (fields[2]) fields[2].textContent = supplier.cnpj;
             if (fields[3]) fields[3].textContent = supplier.tipo_material;
-            if (fields[4]) fields[4].textContent = supplier.licenca_operacao;
-            if (fields[5])
-                fields[5].textContent = supplier.certificacao_ambiental
-                    ? "Com Licença Ambiental"
-                    : "Sem Licença Ambiental";
-            if (fields[6])
-                fields[6].textContent =
+
+            if (fields[4])
+                fields[4].textContent =
                     supplier.distancia_em_metros !== null
                         ? `${supplier.distancia_em_metros / 1000} km`
                         : "N/A";
+
+            if (fields[5]) fields[5].textContent = supplier.licenca || "Sem Licença";
+            if (fields[6])
+                fields[6].textContent = supplier.cadastro_tecnico_federal || "Sem Cadastro Técnico Federal";
+            if (fields[7]) fields[7].textContent = supplier.registro_ief || "Sem Registro IEF";
 
             const cardElement = card.querySelector("#card") as HTMLElement;
             if (cardElement) {
@@ -64,7 +67,7 @@ class SupplierService {
             if (ratingDiv) {
                 ratingDiv.style.color = supplier.avaliacao > 80 ? GOOD_RATING_COLOR : BAD_RATING_COLOR;
 
-                const ratingField = ratingDiv.querySelector(".field");
+                const ratingField = ratingDiv.querySelector("span");
                 if (ratingField) {
                     ratingField.textContent = supplier.avaliacao.toString();
                 }

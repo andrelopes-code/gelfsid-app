@@ -1,40 +1,30 @@
-<div class="p-3 w-full" id="supplier-card-template">
+<div class="p-3 w-full text-slate-200" id="supplier-card-template">
     <div
         id="card"
         class="bg-dark-200 bg-opacity-60 shadow-lg hover:shadow-xl px-4 py-4 border-t-[3px] border-transparent rounded-lg w-full fixtransition transition-transform hover:translate-x-1 duration-300"
     >
-        <div class="flex justify-between text-md text-slate-200">
-            <div class="flex flex-col gap-1 text-zinc-200">
+        <div class="flex justify-between text-md">
+            <div class="flex flex-col gap-1">
                 <p class="mb-3 font-medium text-2xl text-white text-wrap break-words tracking-wide">
-                    <span class="field">XXXXXXXXXXXX</span>
+                    <span class="field">RAZAO SOCIAL</span>
                 </p>
 
                 <div class="flex items-center gap-4">
                     <i class="ph-map-pin ph-fill"></i>
-                    <span class="font-medium field">XXXXXXX, XX</span>
+                    <span class="font-medium field">ENDERECO, XX</span>
                 </div>
 
                 <div class="flex items-center gap-4">
                     <i class="ph-fill ph-identification-card"></i>
-                    <span class="font-medium field">000000000000</span>
+                    <span class="font-medium field">CNPJXXXXXX</span>
                 </div>
 
                 <div class="flex items-center gap-4">
                     <i class="ph-fill ph-package"></i>
-                    <span class="font-medium field">XXXXXX</span>
-                </div>
-
-                <div class="flex items-center gap-4">
-                    <i class="ph-file-text ph-fill"></i>
-                    <span class="font-semibold"><span class="field">LIC-XXXXX-XXXX</span></span>
-                </div>
-
-                <div class="flex items-center gap-4">
-                    <i class="ph-fill ph-leaf"></i>
-                    <span class="font-medium field">XXXXXXXXXXXX</span>
+                    <span class="font-medium field">MATERIAL</span>
                 </div>
             </div>
-            <div class="flex justify-end gap-2 w-fit">
+            <div class="flex justify-end gap-2 w-fit wf">
                 <div
                     class="flex items-center gap-4 bg-black bg-opacity-20 px-3 py-1 rounded-md w-fit h-full max-h-fit"
                 >
@@ -46,8 +36,55 @@
                     id="supplier-rating"
                 >
                     <i class="ph-fill ph-star text-xl"></i>
-                    <span class="font-medium field">XXX</span>
+                    <span class="font-medium">XXX</span>
                 </div>
+            </div>
+        </div>
+        <div class="mt-5 w-full">
+            <!-- Card Content -->
+            <div class="bg-black bg-opacity-20 shadow-sm rounded-lg overflow-hidden">
+                <table class="w-full">
+                    <tbody>
+                        <!-- Licença -->
+                        <tr class="border-slate-800 border-b">
+                            <td class="px-4 py-3">
+                                <div class="flex items-center text-slate-400 gap-2">
+                                    <i class="ph-fill ph-file-text"></i>
+                                    <span class="font-medium text-sm">LICENÇA</span>
+                                </div>
+                            </td>
+                            <td class="text-right px-4 py-3">
+                                <span class="font-medium text-sm field">LICENCA-XXXXX</span>
+                            </td>
+                        </tr>
+
+                        <!-- CTF -->
+                        <tr class="border-slate-800 border-b">
+                            <td class="px-4 py-3">
+                                <div class="flex items-center text-slate-400 gap-2">
+                                    <i class="ph-fill ph-file-text"></i>
+                                    <span class="font-medium text-sm">CADASTRO TÉCNICO FEDERAL</span>
+                                </div>
+                            </td>
+                            <td class="text-right px-4 py-3">
+                                <span class="font-medium text-sm field">CTF-XXXXX</span>
+                            </td>
+                        </tr>
+
+                        <!-- IEF -->
+                        <tr class="">
+                            <td class="px-4 py-3">
+                                <div class="flex items-center text-slate-400 gap-2">
+                                    <i class="ph-fill ph-file-text"></i>
+                                    <span class="font-medium text-sm">REGISTRO IEF</span>
+                                </div>
+                            </td>
+                            <td class="text-right px-4 py-3">
+                                <span class="font-medium text-sm field">IEF-XXXXX</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

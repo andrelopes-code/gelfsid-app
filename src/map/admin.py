@@ -41,14 +41,12 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
         'tipo_material',
         'cnpj',
         'cidade',
-        'certificacao_status',
         'nota_qualidade_colorida',
     )
 
     list_filter = (
         'tipo_material',
         'estado',
-        'certificacao_ambiental',
     )
 
     search_fields = (
@@ -71,9 +69,9 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
             'Certificações',
             {
                 'fields': (
-                    'certificacao_ambiental',
-                    'licenca_operacao',
-                    'registro_ibama',
+                    'licenca',
+                    'cadastro_tecnico_federal',
+                    'registro_ief',
                 )
             },
         ),
@@ -92,13 +90,6 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
             },
         ),
     )
-
-    def certificacao_status(self, obj):
-        if obj.certificacao_ambiental:
-            return 'Certificado'
-        return 'Não Certificado'
-
-    certificacao_status.short_description = 'Certificação'
 
     def nota_qualidade_colorida(self, obj):
         if obj.nota_qualidade is None:

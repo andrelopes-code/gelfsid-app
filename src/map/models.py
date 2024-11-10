@@ -49,9 +49,9 @@ class FornecedorMateriaPrima(models.Model):
     cnpj = models.CharField(max_length=14, unique=True, validators=[RegexValidator(r'^\w{14}$')], verbose_name='CNPJ')
     tipo_material = models.CharField(max_length=3, choices=TIPO_MATERIAL_CHOICES, verbose_name='Tipo de Material')
 
-    certificacao_ambiental = models.BooleanField(default=False, verbose_name='Certificação Ambiental')
-    licenca_operacao = models.CharField(max_length=50, blank=True, verbose_name='Licenca de Operação')
-    registro_ibama = models.CharField(max_length=50, blank=True, verbose_name='Registro IBAMA')
+    licenca = models.CharField(max_length=50, blank=True, verbose_name='Licença')
+    cadastro_tecnico_federal = models.CharField(max_length=50, blank=True, verbose_name='Cadastro Técnico Federal')
+    registro_ief = models.CharField(max_length=50, blank=True, verbose_name='Registro IEF')
 
     nota_qualidade = models.DecimalField(
         max_digits=3,
@@ -63,7 +63,6 @@ class FornecedorMateriaPrima(models.Model):
 
     estado = models.ForeignKey(Estado, on_delete=models.PROTECT, related_name='fornecedores')
     cidade = models.ForeignKey(Cidade, on_delete=models.PROTECT, related_name='fornecedores')
-    coordenadas_gps = models.CharField(max_length=100, blank=True, verbose_name='Coordenadas GPS')
     data_cadastro = models.DateTimeField(auto_now_add=True)
 
     class Meta:

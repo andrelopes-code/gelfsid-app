@@ -16,12 +16,13 @@ def get_fornecedores(request):
             'razao_social': fornecedor.razao_social,
             'cnpj': fornecedor.cnpj,
             'tipo_material': fornecedor.get_tipo_material_display(),
-            'certificacao_ambiental': fornecedor.certificacao_ambiental,
-            'licenca_operacao': fornecedor.licenca_operacao,
+            'licenca': fornecedor.licenca,
+            'cadastro_tecnico_federal': fornecedor.cadastro_tecnico_federal,
+            'registro_ief': fornecedor.registro_ief,
             'avaliacao': fornecedor.nota_qualidade,
             'estado': {
                 'sigla': fornecedor.estado.sigla,
-                'nome': fornecedor.cidade.estado.nome,
+                'nome': fornecedor.estado.nome,
             },
             'cidade': {
                 'id': fornecedor.cidade.id,
