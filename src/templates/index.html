@@ -1,9 +1,15 @@
 {% load static %} {% include "base.html" %} {% block content %}
-<div class="top-0 z-50 absolute flex justify-between items-center gap-5 p-5 w-full pointer-events-none">
+<div class="top-0 z-30 absolute flex justify-between items-center gap-5 p-5 w-full pointer-events-none">
     <div class="pointer-events-auto">{% include "filter_switch.html" %}</div>
 </div>
 
-<div class="w-screen h-screen">
+<div class="relative w-screen h-screen">
+    <div
+        id="main-loader"
+        class="z-30 absolute flex justify-center items-center w-full h-full pointer-events-none"
+    >
+        {% include "loader.html" %}
+    </div>
     <div
         id="details"
         class="right-0 z-20 fixed flex flex-col gap-5 bg-clip-padding bg-dark-100 bg-opacity-75 shadow-[0_0_10px_#11151c] backdrop-blur-sm backdrop-filter p-3 rounded-md w-[40vw] min-w-96 max-w-[40rem] h-full transition-transform translate-x-full duration-500"

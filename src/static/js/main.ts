@@ -34,13 +34,25 @@ class App {
         });
     }
 
+    private hideLoader(): void {
+        const loader = document.getElementById("main-loader") as HTMLElement;
+        if (!loader) {
+            throw new Error("Loader element not found");
+        }
+        loader.style.display = "none";
+    }
+
     async init(): Promise<void> {
         try {
             await this.configureEventListeners();
             const suppliers = await supplierService.loadSuppliers();
             this.mapService.setCitySuppliers(suppliers);
             supplierService.setCitySuppliers(suppliers);
+
             await this.mapService.loadStates();
+
+            this.hideLoader();
+
             await this.mapService.preloadCities();
         } catch (error) {
             console.error("Error:", error);
