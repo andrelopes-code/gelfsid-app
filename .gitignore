@@ -163,3 +163,4 @@ cython_debug/
 
 .env
 node_modules
+tmp
