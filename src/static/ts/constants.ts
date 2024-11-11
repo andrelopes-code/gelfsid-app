@@ -13,6 +13,8 @@ export const CARV_COLOR = "var(--green-highlight)";
 export const GOOD_RATING_COLOR = CARV_COLOR;
 export const BAD_RATING_COLOR = MINE_COLOR;
 
+export const html = String.raw;
+
 export const CONFIG: Config = {
     geojson: {
         states: "static/data/geojson/br_states.json",

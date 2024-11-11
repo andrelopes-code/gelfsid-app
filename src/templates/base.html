@@ -1,22 +1,25 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="pt-BR">
     <head>
+        <title>{% block title %} GELFSID Map {% endblock title %}</title>
         <meta charset="UTF-8" />
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-        <title>{% block title %}GELFSID Map{% endblock %}</title>
-        <link rel="stylesheet" href="{% static 'css/style.css' %}?{% now 'U' %}" />
+        <meta name="description" content="GELFSID Map - Interactive map application." />
+        <meta name="keywords" content="GELFSID, map, interactive, data visualization" />
+
+        <link rel="stylesheet" href='{% static "css/style.css" %}?{% now "U" %}' />
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
         <link rel="shortcut icon" href="{% static 'img/icon.png' %}" type="image/x-icon" />
+
         <script src="https://unpkg.com/@phosphor-icons/web"></script>
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
         <!-- App Scripts -->
-        <script defer src="{% static 'js/dist/bundle.js' %}"></script>
-        <script defer src="{% static 'js/_errorHandling.js' %}"></script>
+        <script defer src="{% static 'ts/dist/bundle.js' %}"></script>
+        <script defer src="{% static 'ts/_errorHandling.js' %}"></script>
     </head>
     <body>
-        {% block content %}{% endblock %}
+        {% block content %} {% endblock content %}
     </body>
 </html>

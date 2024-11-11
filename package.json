@@ -14,7 +14,7 @@
         "tw": "npx tailwindcss -i ./src/static/css/input.css -o ./src/static/css/style.css --watch",
         "build": "webpack --mode production",
         "watch": "webpack --watch",
-        "django": "task run",
+        "django": "task runserver",
         "all": "npm-run-all --parallel django tw watch"
     },
     "dependencies": {

@@ -2,10 +2,10 @@ const path = require("path");
 
 module.exports = {
     mode: "development",
-    entry: "./src/static/js/main.ts",
+    entry: "./src/static/ts/main.ts",
     output: {
         filename: "bundle.js",
-        path: path.resolve(__dirname, "src/static/js/dist"),
+        path: path.resolve(__dirname, "src/static/ts/dist"),
     },
     module: {
         rules: [

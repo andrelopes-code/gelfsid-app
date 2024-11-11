@@ -672,20 +672,8 @@ video {
   z-index: 20;
 }
 
-.z-50 {
-  z-index: 50;
-}
-
-.z-\[100\] {
-  z-index: 100;
-}
-
 .z-30 {
   z-index: 30;
-}
-
-.z-40 {
-  z-index: 40;
 }
 
 .mb-3 {
@@ -863,10 +851,6 @@ video {
 .border-slate-800 {
   --tw-border-opacity: 1;
   border-color: rgb(30 41 59 / var(--tw-border-opacity));
-}
-
-.border-transparent {
-  border-color: transparent;
 }
 
 .\!bg-dark {

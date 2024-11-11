@@ -1,14 +1,13 @@
 {% load static %} {% include "base.html" %} {% block content %}
 <div class="top-0 z-30 absolute flex justify-between items-center gap-5 p-5 w-full pointer-events-none">
-    <div class="pointer-events-auto">{% include "filter_switch.html" %}</div>
+    <div class="pointer-events-auto">{% include "components/filter_switch.html" %}</div>
 </div>
-
 <div class="relative w-screen h-screen">
     <div
         id="main-loader"
         class="z-30 absolute flex justify-center items-center w-full h-full pointer-events-none"
     >
-        {% include "loader.html" %}
+        {% include "components/loader.html" %}
     </div>
     <div
         id="details"
@@ -23,10 +22,6 @@
         </div>
         <div id="supplier-cards-container" class="flex flex-col gap-1 overflow-auto"></div>
     </div>
-
     <div id="map" class="z-10 !bg-dark w-full h-full"></div>
 </div>
-
-<div hidden>{% include "supplier_card.html" %}</div>
-
-{% endblock %}
+{% endblock content %}
