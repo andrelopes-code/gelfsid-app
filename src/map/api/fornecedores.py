@@ -14,12 +14,12 @@ def get_fornecedores(request):
         data.append({
             'id': fornecedor.id,
             'razao_social': fornecedor.razao_social,
-            'cnpj': fornecedor.cnpj,
+            'cpf_cnpj': fornecedor.cpf_cnpj,
             'tipo_material': fornecedor.get_tipo_material_display(),
-            'licenca': fornecedor.licenca,
+            'licenca_ambiental': fornecedor.licenca_ambiental,
             'cadastro_tecnico_federal': fornecedor.cadastro_tecnico_federal,
             'registro_ief': fornecedor.registro_ief,
-            'avaliacao': fornecedor.nota_qualidade,
+            'avaliacao': fornecedor.avaliacao,
             'estado': {
                 'sigla': fornecedor.estado.sigla,
                 'nome': fornecedor.estado.nome,

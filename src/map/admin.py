@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import FornecedorMateriaPrima, Estado, Cidade
+from .models import FornecedorMateriaPrima, Estado, Cidade, LicencaAmbiental, CadastroTecnicoFederal, RegistroIEF
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -34,12 +34,30 @@ class CidadeAdmin(ModelAdmin):
     search_fields = ('nome',)
 
 
+@admin.register(LicencaAmbiental)
+class LicencaAmbientalAdmin(ModelAdmin):
+    list_display = ('documento', 'validade', 'status', 'fornecedor')
+    list_filter = ('status',)
+
+
+@admin.register(CadastroTecnicoFederal)
+class CadastroTecnicoFederalAdmin(ModelAdmin):
+    list_display = ('documento', 'validade', 'status', 'fornecedor')
+    list_filter = ('status',)
+
+
+@admin.register(RegistroIEF)
+class RegistroIEFAdmin(ModelAdmin):
+    list_display = ('documento', 'validade', 'status', 'fornecedor')
+    list_filter = ('status',)
+
+
 @admin.register(FornecedorMateriaPrima)
 class FornecedorMateriaPrimaAdmin(ModelAdmin):
     list_display = (
         'razao_social',
         'tipo_material',
-        'cnpj',
+        'cpf_cnpj',
         'cidade',
         'nota_qualidade_colorida',
     )
@@ -51,7 +69,7 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
 
     search_fields = (
         'razao_social',
-        'cnpj',
+        'cpf_cnpj',
     )
 
     fieldsets = (
@@ -60,7 +78,7 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
             {
                 'fields': (
                     'razao_social',
-                    'cnpj',
+                    'cpf_cnpj',
                     'tipo_material',
                 )
             },
@@ -69,7 +87,7 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
             'Certificações',
             {
                 'fields': (
-                    'licenca',
+                    'licenca_ambiental',
                     'cadastro_tecnico_federal',
                     'registro_ief',
                 )
@@ -77,7 +95,7 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
         ),
         (
             'Avaliação',
-            {'fields': ('nota_qualidade',)},
+            {'fields': ('avaliacao',)},
         ),
         (
             'Localização',
@@ -85,7 +103,6 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
                 'fields': (
                     'estado',
                     'cidade',
-                    'coordenadas_gps',
                 )
             },
         ),

@@ -57,7 +57,7 @@ class Command(BaseCommand):
                     cidade=cidade,
                 )
                 self.stdout.write(
-                    self.style.SUCCESS(f'Fornecedor criado: {fornecedor.razao_social} - {fornecedor.cnpj}')
+                    self.style.SUCCESS(f'Fornecedor criado: {fornecedor.razao_social} - {fornecedor.cpf_cnpj}')
                 )
             except IntegrityError as e:
                 self.stdout.write(self.style.ERROR(f'Erro ao criar fornecedor: {e}'))
