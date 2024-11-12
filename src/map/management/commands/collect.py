@@ -1,7 +1,7 @@
-from .collect_excel import collect
+from .collect_excel import collect_data
 from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        collect.run()
+        collect_data.run()

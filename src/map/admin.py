@@ -59,7 +59,7 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
         'tipo_material',
         'cpf_cnpj',
         'cidade',
-        'nota_qualidade_colorida',
+        'avaliacao_colorida',
     )
 
     list_filter = (
@@ -108,18 +108,18 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
         ),
     )
 
-    def nota_qualidade_colorida(self, obj):
-        if obj.nota_qualidade is None:
+    def avaliacao_colorida(self, obj):
+        if obj.avaliacao is None:
             return 'N/A'
 
-        if obj.nota_qualidade >= 80:
+        if obj.avaliacao >= 80:
             cor = 'var(--green-highlight)'
         else:
             cor = 'var(--highlight)'
 
-        return format_html('<span style="color: {}; font-weight: bold;">{}</span>', cor, f'{obj.nota_qualidade}')
+        return format_html('<span style="color: {}; font-weight: bold;">{}</span>', cor, f'{obj.avaliacao}')
 
-    nota_qualidade_colorida.short_description = 'Nota'
+    avaliacao_colorida.short_description = 'Nota'
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'cidade':
