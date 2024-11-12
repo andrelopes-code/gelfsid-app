@@ -9,9 +9,19 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
             : "N/A";
 
     const avaliacaoFmt = supplier.avaliacao || "N/A";
-    const licencaFmt = supplier.licenca_ambiental?.documento || "N/A";
-    const cadastroTecnicoFederalFmt = supplier.cadastro_tecnico_federal?.documento || "N/A";
-    const registroIefFmt = supplier.registro_ief?.documento || "N/A";
+    const licencaValidade = supplier.licenca_ambiental?.validade
+        ? ` válida até ${supplier.licenca_ambiental?.validade}`
+        : "";
+    const licencaFmt = supplier.licenca_ambiental?.documento + licencaValidade || "N/A";
+
+    const ctfValidade = supplier.cadastro_tecnico_federal?.validade
+        ? ` válido até ${supplier.cadastro_tecnico_federal?.validade}`
+        : "";
+    const cadastroTecnicoFederalFmt = supplier.cadastro_tecnico_federal?.documento + ctfValidade || "N/A";
+    const regIEFValidade = supplier.registro_ief?.validade
+        ? ` válido até ${supplier.registro_ief?.validade}`
+        : "";
+    const registroIefFmt = supplier.registro_ief?.documento + regIEFValidade || "N/A";
 
     return html`
         <div class="p-3 w-full text-slate-200" id="supplier-card-template">

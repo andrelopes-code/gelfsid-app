@@ -22,7 +22,6 @@ class SupplierService {
             if (!suppliers[cityKey]) {
                 suppliers[cityKey] = [];
             }
-            console.log(supplier);
             suppliers[cityKey].push(supplier);
         }
 
