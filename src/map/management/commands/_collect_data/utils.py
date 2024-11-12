@@ -5,6 +5,19 @@ import Levenshtein
 from gelfsid.logger import logger
 from map.models import Cidade, Estado
 from .constants import FILES_BASE_PATH
+from datetime import datetime, date
+
+
+def datetime_or_none(dt):
+    if isinstance(dt, (date, datetime)):
+        return dt
+    return None
+
+
+def hyperlink_or_none(cell):
+    if hasattr(cell, 'hyperlink') and hasattr(cell.hyperlink, 'target'):
+        return os.path.join(FILES_BASE_PATH, cell.hyperlink.target)
+    return None
 
 
 def sanitize(value):
@@ -21,12 +34,6 @@ def format_cpf_or_cnpj(value):
 
 def is_similar(a, b):
     return Levenshtein.ratio(a, b) > 0.8
-
-
-def get_hyperlink_or_empty(cell):
-    if hasattr(cell, 'hyperlink') and hasattr(cell.hyperlink, 'target'):
-        return os.path.join(FILES_BASE_PATH, cell.hyperlink.target)
-    return ''
 
 
 def get_cidade(cidade, estado, tolerance_ratio=0.7):
@@ -51,7 +58,7 @@ def get_cidade(cidade, estado, tolerance_ratio=0.7):
             if abs(ratio) > tolerance_ratio:
                 return cc
 
-        logger.error(f'nenhuma cidade encontrada para: {cidade} ||| {estado}')
+        raise Exception(f'nenhuma cidade encontrada para: {cidade} ||| {estado}')
 
     except Exception as e:
         logger.error(f'erro ao buscar cidade: {e}')

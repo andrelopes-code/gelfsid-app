@@ -2,7 +2,6 @@ from dataclasses import dataclass
 import httpx
 
 from gelfsid import config
-from ..models import InfoRota
 
 
 @dataclass
@@ -41,9 +40,6 @@ class DistanceCalculator:
 
     @classmethod
     def get_distance(cls, origin, destination, fetch_new=False):
-        if existing_distance := cls.existing_distance(origin, destination):
-            return existing_distance
-
         if not fetch_new:
             return RouteInfo(
                 destination=None,
@@ -77,24 +73,7 @@ class DistanceCalculator:
                 duration_in_seconds=int(data['paths'][0]['time'] / 1000),
             )
 
-            InfoRota.objects.create(
-                origem=origin,
-                destino=destination,
-                distancia_em_metros=distance.distance_in_meters,
-                duracao_em_segundos=distance.duration_in_seconds,
-            )
-
             return distance
 
         except Exception:
             raise Exception(f'Error getting distance: {response.text}')
-
-    def existing_distance(origin, destination):
-        info_rota = InfoRota.objects.filter(origem=origin, destino=destination).first()
-        if info_rota:
-            return RouteInfo(
-                destination=info_rota.destino,
-                origin=info_rota.origem,
-                distance_in_meters=info_rota.distancia_em_metros,
-                duration_in_seconds=info_rota.duracao_em_segundos,
-            )

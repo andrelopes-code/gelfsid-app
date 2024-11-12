@@ -34,15 +34,36 @@ export interface City {
     nome: string;
 }
 
+export interface LicencaAmbiental {
+    documento: string;
+    hyperlink: string;
+    validade: string;
+    status: string;
+}
+
+export interface CadastroTecnicoFederal {
+    documento: string;
+    hyperlink: string;
+    validade: string;
+    status: string;
+}
+
+export interface RegistroIEF {
+    documento: string;
+    hyperlink: string;
+    validade: string;
+    status: string;
+}
+
 export interface Supplier {
     razao_social: string;
     cidade: City;
     estado: State;
-    cnpj: string;
+    cpf_cnpj: string;
     tipo_material: string;
-    licenca: string;
-    cadastro_tecnico_federal: string;
-    registro_ief: string;
+    licenca_ambiental: LicencaAmbiental | null;
+    cadastro_tecnico_federal: CadastroTecnicoFederal | null;
+    registro_ief: RegistroIEF | null;
     distancia_em_metros: number | null;
     avaliacao: number;
 }

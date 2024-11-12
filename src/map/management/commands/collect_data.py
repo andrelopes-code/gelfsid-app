@@ -1,4 +1,4 @@
-from .collect_excel import collect_data
+from ._collect_data import collect_data
 from django.core.management.base import BaseCommand
 
 

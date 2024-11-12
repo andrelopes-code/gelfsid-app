@@ -1,12 +1,17 @@
 import { html } from "../constants";
 import { Supplier } from "../types";
+import { formatCPFAndCNPJ } from "../utils";
 
 export function SupplierCard(supplier: Supplier, borderColor: string, ratingColor: string): string {
     const distanciaFmt =
-        supplier.distancia_em_metros !== null ? `${supplier.distancia_em_metros / 1000} km` : "N/A";
-    const licencaFmt = supplier.licenca || "Sem Licença";
-    const cadastroTecnicoFederalFmt = supplier.cadastro_tecnico_federal || "Sem Cadastro Técnico Federal";
-    const registroIefFmt = supplier.registro_ief || "Sem Registro IEF";
+        supplier.distancia_em_metros !== null
+            ? `${Math.round((supplier.distancia_em_metros / 1000) * 10) / 10} km`
+            : "N/A";
+
+    const avaliacaoFmt = supplier.avaliacao || "N/A";
+    const licencaFmt = supplier.licenca_ambiental?.documento || "N/A";
+    const cadastroTecnicoFederalFmt = supplier.cadastro_tecnico_federal?.documento || "N/A";
+    const registroIefFmt = supplier.registro_ief?.documento || "N/A";
 
     return html`
         <div class="p-3 w-full text-slate-200" id="supplier-card-template">
@@ -30,7 +35,7 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
 
                         <div class="flex items-center gap-4">
                             <i class="ph-fill ph-identification-card"></i>
-                            <span class="font-medium">${supplier.cnpj}</span>
+                            <span class="font-medium">${formatCPFAndCNPJ(supplier.cpf_cnpj)}</span>
                         </div>
 
                         <div class="flex items-center gap-4">
@@ -38,24 +43,23 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                             <span class="font-medium">${supplier.tipo_material}</span>
                         </div>
                     </div>
-                    <div class="flex justify-end gap-2 w-fit wf">
+                    <div class="flex justify-end gap-2 ml-5 w-fit wf">
                         <div
-                            class="flex items-center gap-2 bg-black bg-opacity-20 px-3 py-1 rounded-md w-fit h-full max-h-fit"
+                            class="flex items-center gap-2 bg-black bg-opacity-20 px-3 py-1 rounded-md w-fit h-fit"
                         >
                             <i class="ph-fill ph-path text-xl"></i>
                             <span class="font-medium text-nowrap">${distanciaFmt}</span>
                         </div>
                         <div
-                            class="flex items-center gap-2 bg-black bg-opacity-20 px-3 py-1 rounded-md w-fit h-full max-h-fit text-green-300"
+                            class="flex items-center gap-2 bg-black bg-opacity-20 px-3 py-1 rounded-md w-fit h-fit text-green-300"
                             id="supplier-rating"
                         >
                             <i class="ph-fill ph-star text-xl"></i>
-                            <span class="font-medium">${supplier.avaliacao}</span>
+                            <span class="font-medium">${avaliacaoFmt}</span>
                         </div>
                     </div>
                 </div>
                 <div class="mt-5 w-full">
-                    <!-- Card Content -->
                     <div class="bg-black bg-opacity-20 shadow-sm rounded-lg overflow-hidden">
                         <table class="w-full">
                             <tbody>

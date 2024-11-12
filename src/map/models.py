@@ -2,22 +2,6 @@ from django.db import models
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 
 
-class InfoRota(models.Model):
-    origem = models.CharField(max_length=255)
-    destino = models.CharField(max_length=255)
-    distancia_em_metros = models.IntegerField()
-    duracao_em_segundos = models.IntegerField()
-
-    class Meta:
-        unique_together = ('origem', 'destino')
-        constraints = [
-            models.UniqueConstraint(fields=['origem', 'destino'], name='unique_origem_destino'),
-        ]
-
-    def __str__(self):
-        return f'{self.origem} -> {self.destino}: {self.distancia_em_metros}m, {self.duracao_em_segundos}s'
-
-
 class Estado(models.Model):
     sigla = models.CharField(max_length=2, primary_key=True)
     nome = models.CharField(max_length=100)
@@ -56,7 +40,7 @@ class LicencaAmbiental(models.Model):
 class RegistroIEF(models.Model):
     documento = models.CharField(max_length=50)
     hyperlink = models.CharField(max_length=255, blank=True, null=True)
-    validade = models.DateField()
+    validade = models.DateField(blank=True, null=True)
     status = models.CharField(max_length=50)
 
     fornecedor = models.OneToOneField('FornecedorMateriaPrima', on_delete=models.CASCADE)
@@ -69,7 +53,7 @@ class RegistroIEF(models.Model):
 class CadastroTecnicoFederal(models.Model):
     documento = models.CharField(max_length=50)
     hyperlink = models.CharField(max_length=255, blank=True, null=True)
-    validade = models.DateField()
+    validade = models.DateField(blank=True, null=True)
     status = models.CharField(max_length=50)
 
     fornecedor = models.OneToOneField('FornecedorMateriaPrima', on_delete=models.CASCADE)
@@ -90,10 +74,11 @@ class FornecedorMateriaPrima(models.Model):
         max_length=14, unique=True, validators=[RegexValidator(r'^(\w{14}|\d{11})$')], verbose_name='CPF ou CNPJ'
     )
     tipo_material = models.CharField(max_length=3, choices=TIPO_MATERIAL_CHOICES, verbose_name='Tipo de Material')
+    distancia_em_metros = models.IntegerField(blank=True, null=True, verbose_name='Distância em Metros')
 
     licenca_ambiental = models.OneToOneField(
         LicencaAmbiental,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
         verbose_name='Licenca Ambiental',
         blank=True,
         null=True,
@@ -101,7 +86,7 @@ class FornecedorMateriaPrima(models.Model):
 
     cadastro_tecnico_federal = models.OneToOneField(
         CadastroTecnicoFederal,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
         verbose_name='Cadastro Técnico Federal',
@@ -109,7 +94,7 @@ class FornecedorMateriaPrima(models.Model):
 
     registro_ief = models.OneToOneField(
         RegistroIEF,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
         verbose_name='Registro IEF',
