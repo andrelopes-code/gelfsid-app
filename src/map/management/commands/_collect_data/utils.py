@@ -1,10 +1,8 @@
 import heapq
-import os
 import re
 import Levenshtein
 from gelfsid.logger import logger
 from map.models import Cidade, Estado
-from .constants import FILES_BASE_PATH
 from datetime import datetime, date
 
 
@@ -16,7 +14,7 @@ def datetime_or_none(dt):
 
 def hyperlink_or_none(cell):
     if hasattr(cell, 'hyperlink') and hasattr(cell.hyperlink, 'target'):
-        return os.path.join(FILES_BASE_PATH, cell.hyperlink.target)
+        return cell.hyperlink.target
     return None
 
 

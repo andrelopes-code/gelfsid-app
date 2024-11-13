@@ -1,4 +1,4 @@
-import { html } from "../constants";
+import { CONFIG, html } from "../constants";
 import { Supplier } from "../types";
 import { formatCPFAndCNPJ } from "../utils";
 
@@ -17,6 +17,22 @@ function statusColor(status?: string): string {
         default:
             return "text-white";
     }
+}
+
+function hyperlink(value: string, hyperlink?: string) {
+    if (!hyperlink) {
+        return value;
+    }
+
+    return html`
+        <a
+            href="${CONFIG.fileServerBaseUrl}/${hyperlink}"
+            class="hover:text-slate-300"
+            target="_blank"
+            rel="noopener noreferrer"
+            >${value}</a
+        >
+    `;
 }
 
 export function SupplierCard(supplier: Supplier, borderColor: string, ratingColor: string): string {
@@ -93,7 +109,12 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                                         </div>
                                     </td>
                                     <td class="text-right px-4 py-3">
-                                        <span class="font-medium text-sm">${licencaFmt}</span>
+                                        <span class="font-medium text-sm"
+                                            >${hyperlink(
+                                                licencaFmt,
+                                                supplier.licenca_ambiental?.hyperlink
+                                            )}</span
+                                        >
                                     </td>
                                     <td class="text-right px-4 py-3 w-fit">
                                         <span class="font-medium ${licencaStatusColor} text-sm"
@@ -113,7 +134,12 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                                         </div>
                                     </td>
                                     <td class="text-right px-4 py-3">
-                                        <span class="font-medium text-sm">${cadastroTecnicoFederalFmt}</span>
+                                        <span class="font-medium text-sm"
+                                            >${hyperlink(
+                                                cadastroTecnicoFederalFmt,
+                                                supplier.cadastro_tecnico_federal?.hyperlink
+                                            )}</span
+                                        >
                                     </td>
                                     <td class="text-right px-4 py-3 w-fit">
                                         <span class="font-medium ${ctfStatusColor} text-sm"
@@ -133,7 +159,12 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                                         </div>
                                     </td>
                                     <td class="text-right px-4 py-3">
-                                        <span class="font-medium text-sm">${registroIefFmt}</span>
+                                        <span class="font-medium text-sm"
+                                            >${hyperlink(
+                                                registroIefFmt,
+                                                supplier.registro_ief?.hyperlink
+                                            )}</span
+                                        >
                                     </td>
                                     <td class="text-right px-4 py-3 w-fit">
                                         <span class="font-medium ${registroIefStatusColor} text-sm"

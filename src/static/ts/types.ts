@@ -17,6 +17,8 @@ export interface Config {
     api: {
         suppliers: string;
     };
+
+    fileServerBaseUrl: string;
 }
 
 export interface Cache {

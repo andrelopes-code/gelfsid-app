@@ -23,6 +23,7 @@ export const CONFIG: Config = {
     api: {
         suppliers: "http://localhost:8000/fornecedores/",
     },
+    fileServerBaseUrl: "http://localhost:8080",
 };
 
 export const STATE_CODE_MAP: StateCodeMapping = {

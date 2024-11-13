@@ -1,4 +1,3 @@
-from time import sleep
 from django.core.management.base import BaseCommand
 from gelfsid.logger import logger
 from map.models import FornecedorMateriaPrima
@@ -14,7 +13,6 @@ class Command(BaseCommand):
                 continue
 
             try:
-                sleep(0.1)
                 route_info = DistanceCalculator.get_distance(
                     f'{fornecedor.cidade.nome}, {fornecedor.cidade.estado}', 'Sete Lagoas MG', fetch_new=True
                 )
