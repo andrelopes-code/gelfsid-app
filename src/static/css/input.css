@@ -22,6 +22,21 @@ svg path:focus {
     outline: none !important;
 }
 
+.noscrollbar::-webkit-scrollbar {
+    display: none !important;
+}
+
+.texthover {
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+}
+
+.texthover:hover {
+    height: auto;
+    text-wrap: pretty;
+}
+
 .custom-tooltip {
     background-color: #272b31 !important;
     border-color: #272b31 !important;
@@ -45,14 +60,11 @@ svg path:focus {
     border-top-color: #272b31 !important;
 }
 
-/* Solução universal para todos os navegadores */
 html {
-    /* Firefox */
     scrollbar-width: thin;
     scrollbar-color: #19212e #151b25;
 }
 
-/* WebKit e Blink */
 html::-webkit-scrollbar {
     width: 10px;
 }

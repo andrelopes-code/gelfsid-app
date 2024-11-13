@@ -2,7 +2,7 @@ import type { Config, StateCodeMapping } from "./types";
 
 export const BRAZIL_COORDINATES: [number, number] = [-14.235, -51.925];
 export const HOST_CITY_KEY = "31-Sete Lagoas";
-export const FILL_COLOR = "#151b25";
+export const FILL_COLOR = "#151b2500";
 export const STROKE_COLOR = "#4b5260";
 
 export const CARV_TYPE = "Carvão Vegetal";

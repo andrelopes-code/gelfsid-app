@@ -21,13 +21,27 @@ class MapService {
     private currentStateCode: number | null = null;
     private currentType: string;
     private citySuppliers: CitySuppliers = {};
+    private satelliteLayer: L.TileLayer;
 
     constructor(currentType: string) {
         this.map = L.map("map", {
             zoomControl: false,
             attributionControl: false,
+            maxZoom: 17,
         }).setView(BRAZIL_COORDINATES, 4);
         this.currentType = currentType;
+        this.satelliteLayer = this.setSatelliteLayer();
+    }
+
+    setSatelliteLayer() {
+        return L.tileLayer(
+            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            {
+                attribution:
+                    "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+                maxZoom: 19,
+            }
+        );
     }
 
     async loadGeoJSON(type: "states" | "cities", uf: string | null = null): Promise<any> {
