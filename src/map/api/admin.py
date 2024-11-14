@@ -1,38 +1,38 @@
+from django.contrib.admin.views.decorators import staff_member_required
 from django.forms import model_to_dict
 from django.http import JsonResponse
-from ..models import Cidade, FornecedorMateriaPrima
-from django.contrib.admin.views.decorators import staff_member_required
+
+from ..models import City, Supplier
 
 
 @staff_member_required
-def get_cidades(request):
-    estado_id = request.GET.get('estado')
+def get_cities(request):
+    state_id = request.GET.get('state')
 
-    if estado_id:
-        cidades = Cidade.objects.filter(estado_id=estado_id).values('id', 'nome')
-        return JsonResponse(list(cidades), safe=False)
-
+    if state_id:
+        cities = City.objects.filter(state_id=state_id).values('id', 'name')
+        return JsonResponse(list(cities), safe=False)
     return JsonResponse([], safe=False)
 
 
 @staff_member_required
-def get_fornecedor(request):
-    fornecedor_id = request.GET.get('id')
+def get_supplier(request):
+    supplier_id = request.GET.get('id')
 
-    if fornecedor_id:
-        fornecedor = FornecedorMateriaPrima.objects.filter(id=fornecedor_id).first()
+    if supplier_id:
+        supplier = Supplier.objects.filter(id=supplier_id).first()
 
-        if fornecedor:
-            fornecedor_data = model_to_dict(fornecedor)
+        if supplier:
+            supplier_data = model_to_dict(supplier)
 
-            if fornecedor.cidade:
-                fornecedor_data['cidade'] = {
-                    'id': fornecedor.cidade.id,
-                    'nome': fornecedor.cidade.nome,
+            if supplier.city:
+                supplier_data['city'] = {
+                    'id': supplier.city.id,
+                    'name': supplier.city.name,
                 }
 
-            return JsonResponse(fornecedor_data)
+            return JsonResponse(supplier_data)
         else:
-            return JsonResponse({'error': 'Fornecedor not found'}, status=404)
+            return JsonResponse({'error': 'supplier not found'}, status=404)
     else:
-        return JsonResponse({'error': 'Fornecedor ID is required'}, status=400)
+        return JsonResponse({'error': 'supplier ID is required'}, status=400)

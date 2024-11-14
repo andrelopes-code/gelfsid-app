@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import FornecedorMateriaPrima, Estado, Cidade, LicencaAmbiental, CadastroTecnicoFederal, RegistroIEF
+from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import Group, User
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.models import User
-from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
-from django.contrib.auth.models import Group
+
+from .models import City, Document, State, Supplier
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -21,54 +21,42 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     pass
 
 
-@admin.register(Estado)
+@admin.register(State)
 class EstadoAdmin(ModelAdmin):
-    list_display = ('sigla', 'nome')
-    search_fields = ('nome', 'sigla')
+    list_display = ('abbr', 'name')
+    search_fields = ('name', 'abbr')
 
 
-@admin.register(Cidade)
+@admin.register(City)
 class CidadeAdmin(ModelAdmin):
-    list_display = ('nome', 'estado')
-    list_filter = ('estado',)
-    search_fields = ('nome',)
+    list_display = ('name', 'state')
+    list_filter = ('state',)
+    search_fields = ('name',)
 
 
-@admin.register(LicencaAmbiental)
-class LicencaAmbientalAdmin(ModelAdmin):
-    list_display = ('documento', 'validade', 'status', 'fornecedor')
-    list_filter = ('status',)
+@admin.register(Document)
+class DocumentAdmin(ModelAdmin):
+    list_display = ('document', 'type', 'validity', 'status', 'supplier')
+    list_filter = ('status', 'type', 'supplier')
 
 
-@admin.register(CadastroTecnicoFederal)
-class CadastroTecnicoFederalAdmin(ModelAdmin):
-    list_display = ('documento', 'validade', 'status', 'fornecedor')
-    list_filter = ('status',)
-
-
-@admin.register(RegistroIEF)
-class RegistroIEFAdmin(ModelAdmin):
-    list_display = ('documento', 'validade', 'status', 'fornecedor')
-    list_filter = ('status',)
-
-
-@admin.register(FornecedorMateriaPrima)
-class FornecedorMateriaPrimaAdmin(ModelAdmin):
+@admin.register(Supplier)
+class SupplierAdmin(ModelAdmin):
     list_display = (
-        'razao_social',
-        'tipo_material',
+        'corporate_name',
+        'material_type',
         'cpf_cnpj',
-        'cidade',
-        'avaliacao_colorida',
+        'city',
+        'colorful_rating',
     )
 
     list_filter = (
-        'tipo_material',
-        'estado',
+        'material_type',
+        'state',
     )
 
     search_fields = (
-        'razao_social',
+        'corporate_name',
         'cpf_cnpj',
     )
 
@@ -77,59 +65,49 @@ class FornecedorMateriaPrimaAdmin(ModelAdmin):
             'Informações Básicas',
             {
                 'fields': (
-                    'razao_social',
+                    'corporate_name',
                     'cpf_cnpj',
-                    'tipo_material',
-                )
-            },
-        ),
-        (
-            'Certificações',
-            {
-                'fields': (
-                    'licenca_ambiental',
-                    'cadastro_tecnico_federal',
-                    'registro_ief',
+                    'material_type',
                 )
             },
         ),
         (
             'Avaliação',
-            {'fields': ('avaliacao',)},
+            {'fields': ('rating',)},
         ),
         (
             'Localização',
             {
                 'fields': (
-                    'estado',
-                    'cidade',
+                    'state',
+                    'city',
                 )
             },
         ),
     )
 
-    def avaliacao_colorida(self, obj):
-        if obj.avaliacao is None:
+    def colorful_rating(self, supplier, good_rating=80):
+        if supplier.rating is None:
             return 'N/A'
 
-        if obj.avaliacao >= 80:
+        if supplier.rating >= good_rating:
             cor = 'var(--green-highlight)'
         else:
             cor = 'var(--highlight)'
 
-        return format_html('<span style="color: {}; font-weight: bold;">{}</span>', cor, f'{obj.avaliacao}')
+        return format_html('<span style="color: {}; font-weight: bold;">{}</span>', cor, f'{supplier.rating}')
 
-    avaliacao_colorida.short_description = 'Nota'
+    colorful_rating.short_description = 'Nota'
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'cidade':
-            if request.POST.get('estado'):
-                kwargs['queryset'] = Cidade.objects.filter(estado_id=request.POST.get('estado'))
-            elif request.GET.get('estado'):
-                kwargs['queryset'] = Cidade.objects.filter(estado_id=request.GET.get('estado'))
+        if db_field.name == 'city':
+            if request.POST.get('state'):
+                kwargs['queryset'] = City.objects.filter(state_id=request.POST.get('state'))
+            elif request.GET.get('state'):
+                kwargs['queryset'] = City.objects.filter(state_id=request.GET.get('state'))
             else:
-                kwargs['queryset'] = Cidade.objects.none()
+                kwargs['queryset'] = City.objects.none()
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     class Media:
-        js = ('admin/js/cidade_estado_dependencia.js',)
+        js = ('admin/js/city_state_dependency.js',)

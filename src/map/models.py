@@ -1,106 +1,61 @@
+from tabnanny import verbose
+from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.db import models
-from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 
 
-class Estado(models.Model):
-    sigla = models.CharField(max_length=2, primary_key=True)
-    nome = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.nome
-
-    class Meta:
-        ordering = ['nome']
-
-
-class Cidade(models.Model):
-    nome = models.CharField(max_length=100)
-    estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
+class State(models.Model):
+    abbr = models.CharField(max_length=2, primary_key=True, verbose_name='Sigla')
+    name = models.CharField(max_length=100, verbose_name='Nome')
 
     def __str__(self):
-        return f'{self.nome} - {self.estado.sigla}'
+        return self.name
 
     class Meta:
-        ordering = ['nome']
+        ordering = ['name']
+        verbose_name = 'Estado'
+        verbose_name_plural = 'Estados'
 
 
-class LicencaAmbiental(models.Model):
-    documento = models.CharField(max_length=50)
-    hyperlink = models.CharField(max_length=255, blank=True, null=True)
-    validade = models.DateField(blank=True, null=True)
-    status = models.CharField(max_length=50)
+class City(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Nome')
+    state = models.ForeignKey(State, on_delete=models.CASCADE, verbose_name='Estado')
 
-    fornecedor = models.OneToOneField('FornecedorMateriaPrima', on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = 'Licença Ambiental'
-        verbose_name_plural = verbose_name
-
-
-class RegistroIEF(models.Model):
-    documento = models.CharField(max_length=50)
-    hyperlink = models.CharField(max_length=255, blank=True, null=True)
-    validade = models.DateField(blank=True, null=True)
-    status = models.CharField(max_length=50)
-
-    fornecedor = models.OneToOneField('FornecedorMateriaPrima', on_delete=models.CASCADE)
+    def __str__(self):
+        return f'{self.name} - {self.state.abbr}'
 
     class Meta:
-        verbose_name = 'Registro IEF'
-        verbose_name_plural = verbose_name
+        ordering = ['name']
+        verbose_name = 'Cidade'
+        verbose_name_plural = 'Cidades'
 
 
-class CadastroTecnicoFederal(models.Model):
-    documento = models.CharField(max_length=50)
-    hyperlink = models.CharField(max_length=255, blank=True, null=True)
-    validade = models.DateField(blank=True, null=True)
-    status = models.CharField(max_length=50)
-
-    fornecedor = models.OneToOneField('FornecedorMateriaPrima', on_delete=models.CASCADE)
+class Document(models.Model):
+    document = models.CharField(max_length=50, verbose_name='Documento')
+    type = models.CharField(max_length=50, verbose_name='Tipo de Documento')
+    filepath = models.CharField(max_length=255, blank=True, null=True, verbose_name='Link do Arquivo')
+    validity = models.DateField(blank=True, null=True, verbose_name='Validade')
+    status = models.CharField(max_length=50, verbose_name='Status')
+    supplier = models.OneToOneField('Supplier', on_delete=models.CASCADE, verbose_name='Fornecedor')
 
     class Meta:
-        verbose_name = 'Cadastro Técnico Federal'
-        verbose_name_plural = verbose_name
+        verbose_name = 'Documento'
+        verbose_name_plural = 'Documentos'
 
 
-class FornecedorMateriaPrima(models.Model):
-    TIPO_MATERIAL_CHOICES = [
+class Supplier(models.Model):
+    MATERIAL_TYPE_CHOICES = [
         ('CAR', 'Carvão Vegetal'),
         ('MIN', 'Minério'),
     ]
 
-    razao_social = models.CharField(max_length=200, verbose_name='Razão Social')
+    corporate_name = models.CharField(max_length=200, verbose_name='Razão Social')
     cpf_cnpj = models.CharField(
         max_length=14, unique=True, validators=[RegexValidator(r'^(\w{14}|\d{11})$')], verbose_name='CPF ou CNPJ'
     )
-    tipo_material = models.CharField(max_length=3, choices=TIPO_MATERIAL_CHOICES, verbose_name='Tipo de Material')
-    distancia_em_metros = models.IntegerField(blank=True, null=True, verbose_name='Distância em Metros')
+    material_type = models.CharField(max_length=3, choices=MATERIAL_TYPE_CHOICES, verbose_name='Tipo de Material')
+    distance_in_meters = models.IntegerField(blank=True, null=True, verbose_name='Distância em Metros')
 
-    licenca_ambiental = models.OneToOneField(
-        LicencaAmbiental,
-        on_delete=models.SET_NULL,
-        verbose_name='Licenca Ambiental',
-        blank=True,
-        null=True,
-    )
-
-    cadastro_tecnico_federal = models.OneToOneField(
-        CadastroTecnicoFederal,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name='Cadastro Técnico Federal',
-    )
-
-    registro_ief = models.OneToOneField(
-        RegistroIEF,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name='Registro IEF',
-    )
-
-    avaliacao = models.DecimalField(
+    rating = models.DecimalField(
         max_digits=3,
         decimal_places=1,
         validators=[MinValueValidator(0), MaxValueValidator(100)],
@@ -108,18 +63,18 @@ class FornecedorMateriaPrima(models.Model):
         verbose_name='Avaliação',
     )
 
-    estado = models.ForeignKey(Estado, on_delete=models.PROTECT, related_name='fornecedores')
-    cidade = models.ForeignKey(Cidade, on_delete=models.PROTECT, related_name='fornecedores')
-    data_cadastro = models.DateTimeField(auto_now_add=True)
+    state = models.ForeignKey(State, on_delete=models.PROTECT, related_name='suppliers')
+    city = models.ForeignKey(City, on_delete=models.PROTECT, related_name='suppliers')
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['razao_social']
+        ordering = ['corporate_name']
         indexes = [
-            models.Index(fields=['tipo_material']),
-            models.Index(fields=['estado']),
+            models.Index(fields=['material_type']),
+            models.Index(fields=['state']),
         ]
-        verbose_name = 'Fornecedor de Matéria Prima'
-        verbose_name_plural = 'Fornecedores de Matéria Prima'
+        verbose_name = 'Fornecedor'
+        verbose_name_plural = 'Fornecedores'
 
     def __str__(self):
-        return f'{self.razao_social} - {self.get_tipo_material_display()} - {self.cpf_cnpj}'
+        return f'{self.corporate_name} - {self.get_material_type_display()} - {self.cpf_cnpj}'

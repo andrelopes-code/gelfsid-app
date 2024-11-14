@@ -1,10 +1,10 @@
-from pathlib import Path
 import sys
+from pathlib import Path
+
 from loguru import logger
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# Remove o logger padrão
 logger.remove()
 
 logger.add(

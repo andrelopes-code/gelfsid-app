@@ -1,15 +1,11 @@
-from ...models import (
-    FornecedorMateriaPrima,
-    RegistroIEF,
-    CadastroTecnicoFederal,
-    LicencaAmbiental,
-)
 from django.core.management.base import BaseCommand
+
+from ...models import Document, Supplier
 
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        LicencaAmbiental.objects.all().delete()
-        CadastroTecnicoFederal.objects.all().delete()
-        RegistroIEF.objects.all().delete()
-        FornecedorMateriaPrima.objects.all().delete()
+        Supplier.objects.all().delete()
+        Document.objects.all().delete()
+
+        self.stdout.write(self.style.SUCCESS('Database reset successfully!'))

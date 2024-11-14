@@ -1,7 +1,9 @@
 from dataclasses import dataclass
+from http import HTTPStatus
+
 import httpx
 
-from gelfsid import config
+from gelfsid.settings import settings
 
 
 @dataclass
@@ -19,13 +21,13 @@ class RouteInfo:
 
 
 class OpenStreetMap:
-    URL = 'https://nominatim.openstreetmap.org/search?q={}&format=json'
+    API_URL = 'https://nominatim.openstreetmap.org/search?q={}&format=json'
 
     @classmethod
     def get_coordinates(cls, address):
-        response = httpx.get(cls.URL.format(address))
-        if response.status_code != 200:
-            raise Exception(f'Could not find address: {address}')
+        response = httpx.get(cls.API_URL.format(address))
+        if response.status_code != HTTPStatus.OK:
+            raise Exception(f'could not find address: {address}')
 
         data = response.json()
         return Coordinate(
@@ -36,7 +38,7 @@ class OpenStreetMap:
 
 class DistanceCalculator:
     URL = 'https://graphhopper.com/api/1/route'
-    API_KEY = config.settings.GRAPHHOPPER_API_KEY
+    API_KEY = settings.GRAPHHOPPER_API_KEY
 
     @classmethod
     def get_distance(cls, origin, destination, fetch_new=False):
@@ -76,4 +78,4 @@ class DistanceCalculator:
             return distance
 
         except Exception:
-            raise Exception(f'Error getting distance: {response.text}')
+            raise Exception(f'error getting distance: {response.text}')

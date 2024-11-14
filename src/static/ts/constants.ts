@@ -1,4 +1,22 @@
-import type { Config, StateCodeMapping } from "./types";
+import type { StateCodeMapping } from "./types";
+
+export const CONFIG: {
+    geojson: { states: string; cities: string };
+    api: { suppliers: string };
+    fileServerBaseUrl: string;
+} = {
+    geojson: {
+        states: "static/data/geojson/br_states.json",
+        cities: "static/data/geojson/geojs-{uf}-mun.json",
+    },
+    api: {
+        suppliers: "http://localhost:8000/suppliers/",
+    },
+
+    fileServerBaseUrl: "http://localhost:8080",
+};
+
+export const html = String.raw;
 
 export const BRAZIL_COORDINATES: [number, number] = [-14.235, -51.925];
 export const HOST_CITY_KEY = "31-Sete Lagoas";
@@ -12,19 +30,6 @@ export const CARV_COLOR = "var(--green-highlight)";
 
 export const GOOD_RATING_COLOR = CARV_COLOR;
 export const BAD_RATING_COLOR = MINE_COLOR;
-
-export const html = String.raw;
-
-export const CONFIG: Config = {
-    geojson: {
-        states: "static/data/geojson/br_states.json",
-        cities: "static/data/geojson/mun/geojs-{uf}-mun.json",
-    },
-    api: {
-        suppliers: "http://localhost:8000/fornecedores/",
-    },
-    fileServerBaseUrl: "http://localhost:8080",
-};
 
 export const STATE_CODE_MAP: StateCodeMapping = {
     RO: 11,

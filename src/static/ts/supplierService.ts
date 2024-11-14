@@ -18,7 +18,7 @@ class SupplierService {
 
         const suppliers: CitySuppliers = {};
         for (const supplier of supplierData) {
-            const cityKey = this.getCityKey(STATE_CODE_MAP[supplier.estado.sigla], supplier.cidade.nome);
+            const cityKey = this.getCityKey(STATE_CODE_MAP[supplier.state.abbr], supplier.city.name);
             if (!suppliers[cityKey]) {
                 suppliers[cityKey] = [];
             }
@@ -37,8 +37,8 @@ class SupplierService {
             const newCard = document.createElement("div");
             newCard.innerHTML = SupplierCard(
                 supplier,
-                supplier.tipo_material === CARV_TYPE ? CARV_COLOR : MINE_COLOR,
-                supplier.avaliacao > 80 ? GOOD_RATING_COLOR : BAD_RATING_COLOR
+                supplier.material_type === CARV_TYPE ? CARV_COLOR : MINE_COLOR,
+                supplier.rating > 80 ? GOOD_RATING_COLOR : BAD_RATING_COLOR
             );
             container.appendChild(newCard);
         });
@@ -52,7 +52,7 @@ class SupplierService {
         const detailsElement = document.getElementById("details");
 
         if (detailsTitle) {
-            detailsTitle.textContent = suppliers[0].cidade.nome;
+            detailsTitle.textContent = suppliers[0].city.name;
         }
 
         this.generateSupplierCards(suppliers);

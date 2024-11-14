@@ -17,7 +17,12 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["openpyxl>=3.1.5", "rich>=13.9.4"]
+dev = [
+    "isort>=5.13.2",
+    "openpyxl>=3.1.5",
+    "rich>=13.9.4",
+    "ruff>=0.7.3",
+]
 
 [tool.ruff]
 line-length = 120
@@ -25,6 +30,10 @@ line-length = 120
 [tool.ruff.format]
 preview = true
 quote-style = 'single'
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
 
 [tool.taskipy.tasks]
 runserver = "python src/manage.py runserver"

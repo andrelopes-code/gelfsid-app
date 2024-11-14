@@ -1,26 +1,26 @@
 from django.core.management.base import BaseCommand
-from gelfsid.logger import logger
-from map.models import FornecedorMateriaPrima
+
+from map.models import Supplier
 from map.utils.distance_calculator import DistanceCalculator
 
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        fornecedores = FornecedorMateriaPrima.objects.all()
+        fornecedores = Supplier.objects.all()
 
         for fornecedor in fornecedores:
-            if fornecedor.distancia_em_metros:
+            if fornecedor.distance_in_meters:
                 continue
 
             try:
-                route_info = DistanceCalculator.get_distance(
-                    f'{fornecedor.cidade.nome}, {fornecedor.cidade.estado}', 'Sete Lagoas MG', fetch_new=True
-                )
-                print(route_info)
+                target = f'{fornecedor.city.name}, {fornecedor.city.state}'
+                route_info = DistanceCalculator.get_distance(target, 'Sete Lagoas MG', fetch_new=True)
+                self.stdout.write(self.style.SUCCESS(f'Fornecedor: {fornecedor.corporate_name}'))
 
             except Exception as e:
-                logger.error(e)
+                self.stderr.write(self.style.ERROR(e))
                 continue
 
-            fornecedor.distancia_em_metros = route_info.distance_in_meters
+            fornecedor.distance_in_meters = route_info.distance_in_meters
+
             fornecedor.save()

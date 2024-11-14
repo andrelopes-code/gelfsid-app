@@ -23,6 +23,8 @@ class MapService {
     private citySuppliers: CitySuppliers = {};
     private satelliteLayer: L.TileLayer;
 
+    private HOST_CITY_TOOLTIP_TEXT: string = "GELF Sete Lagoas";
+
     constructor(currentType: string) {
         this.map = L.map("map", {
             zoomControl: false,
@@ -37,8 +39,6 @@ class MapService {
         return L.tileLayer(
             "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
             {
-                attribution:
-                    "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
                 maxZoom: 19,
             }
         );
@@ -55,14 +55,16 @@ class MapService {
                         : CONFIG.geojson.cities.replace("{uf}", uf as string);
 
                 const response = await fetch(url);
-                if (!response.ok) throw new Error(`Failed to load ${key}`);
+                if (!response.ok) throw new Error(`failed to load ${key}`);
+
                 const data = await response.json();
                 this.cache.geojson.set(key, data);
             } catch (error) {
-                console.error(`Error loading ${key}:`, error);
+                console.error(`error loading ${key}:`, error);
                 throw error;
             }
         }
+
         return this.cache.geojson.get(key);
     }
 
@@ -72,12 +74,12 @@ class MapService {
 
         const base: L.PathOptions = {
             color: STROKE_COLOR,
-            weight: 1,
             fillColor: FILL_COLOR,
             fillOpacity: 1,
+            weight: 1,
         };
 
-        if (suppliers && suppliers.some((s) => s.tipo_material === this.currentType)) {
+        if (suppliers && suppliers.some((s) => s.material_type === this.currentType)) {
             base.fillColor = "var(--material)";
         }
 
@@ -94,10 +96,10 @@ class MapService {
 
             L.geoJSON(data, {
                 style: {
-                    weight: 1,
-                    fillOpacity: 1,
                     color: STROKE_COLOR,
                     fillColor: FILL_COLOR,
+                    fillOpacity: 1,
+                    weight: 1,
                 },
                 onEachFeature: (feature, layer) => {
                     layer.on({
@@ -109,7 +111,7 @@ class MapService {
                 },
             }).addTo(this.map);
         } catch (error) {
-            console.error("Error loading states:", error);
+            console.error("error loading states:", error);
         }
     }
 
@@ -133,7 +135,7 @@ class MapService {
 
                     if (feature.properties?.name) {
                         if (isHostCity) {
-                            layer.bindTooltip("GELF Sete Lagoas", {
+                            layer.bindTooltip(this.HOST_CITY_TOOLTIP_TEXT, {
                                 permanent: true,
                                 direction: "top",
                                 className: "city-tooltip custom-tooltip-gelf",
@@ -165,7 +167,7 @@ class MapService {
                 },
             }).addTo(this.map);
         } catch (error) {
-            console.error("Error loading cities:", error);
+            console.error("error loading cities:", error);
         }
     }
 

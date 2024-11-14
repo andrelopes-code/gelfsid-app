@@ -9,18 +9,6 @@ export interface StateCodeMapping {
     [key: string]: number;
 }
 
-export interface Config {
-    geojson: {
-        states: string;
-        cities: string;
-    };
-    api: {
-        suppliers: string;
-    };
-
-    fileServerBaseUrl: string;
-}
-
 export interface Cache {
     geojson: Map<string, any>;
     suppliers: null | any;
@@ -28,46 +16,31 @@ export interface Cache {
 }
 
 export interface State {
-    nome: string;
-    sigla: string;
+    name: string;
+    abbr: string;
 }
 
 export interface City {
-    nome: string;
+    name: string;
 }
 
-export interface LicencaAmbiental {
-    documento: string;
-    hyperlink: string;
-    validade: string;
+export interface Document {
+    document: string;
+    filepath?: string;
+    validity?: string;
     status: string;
-}
-
-export interface CadastroTecnicoFederal {
-    documento: string;
-    hyperlink: string;
-    validade: string;
-    status: string;
-}
-
-export interface RegistroIEF {
-    documento: string;
-    hyperlink: string;
-    validade: string;
-    status: string;
+    type: string;
 }
 
 export interface Supplier {
-    razao_social: string;
-    cidade: City;
-    estado: State;
+    corporate_name: string;
+    city: City;
+    state: State;
     cpf_cnpj: string;
-    tipo_material: string;
-    licenca_ambiental: LicencaAmbiental | null;
-    cadastro_tecnico_federal: CadastroTecnicoFederal | null;
-    registro_ief: RegistroIEF | null;
-    distancia_em_metros: number | null;
-    avaliacao: number;
+    material_type: string;
+    distance_in_meters: number | null;
+    rating: number;
+    documents: Document[];
 }
 
 export interface CitySuppliers {

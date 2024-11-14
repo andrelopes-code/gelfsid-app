@@ -1,4 +1,4 @@
-window.onerror = function (message, source, lineno, colno, error) {
+window.onerror = function (message, source, lineno, colno, _) {
     const errorElement = document.createElement("div");
     errorElement.style.position = "fixed";
     errorElement.style.bottom = "20px";

@@ -1,10 +1,23 @@
 from pathlib import Path
-from .config import settings
+
 from django.templatetags.static import static
+from pydantic_settings import BaseSettings
+
+
+class Settings(BaseSettings):
+    DEBUG: bool
+    SECRET_KEY: str
+
+    GRAPHHOPPER_API_KEY: str = ''
+    CITIES_STATES_PATH: str = 'src/static/data/states_cities.json'
+
+    class Config:
+        env_file = '.env'
+
+
+settings = Settings()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
 SECRET_KEY = settings.SECRET_KEY
 DEBUG = settings.DEBUG
 ALLOWED_HOSTS = []

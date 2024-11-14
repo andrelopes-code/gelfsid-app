@@ -12,7 +12,7 @@ class App {
     private async configureEventListeners(): Promise<void> {
         const filter = document.getElementById("filter") as HTMLInputElement;
         if (!filter) {
-            throw new Error("Filter element not found");
+            throw new Error("filter element not found");
         }
 
         filter.addEventListener("change", () => {
@@ -29,6 +29,7 @@ class App {
         if (!closeDetails) {
             throw new Error("Close Details element not found");
         }
+
         closeDetails.addEventListener("click", () => {
             supplierService.closeDetails();
         });
@@ -39,12 +40,14 @@ class App {
         if (!loader) {
             throw new Error("Loader element not found");
         }
+
         loader.style.display = "none";
     }
 
     async init(): Promise<void> {
         try {
             await this.configureEventListeners();
+
             const suppliers = await supplierService.loadSuppliers();
             this.mapService.setCitySuppliers(suppliers);
             supplierService.setCitySuppliers(suppliers);
@@ -55,7 +58,7 @@ class App {
 
             await this.mapService.preloadCities();
         } catch (error) {
-            console.error("Error:", error);
+            console.error("error:", error);
         }
     }
 }
