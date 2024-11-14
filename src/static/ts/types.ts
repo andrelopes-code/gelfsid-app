@@ -25,7 +25,7 @@ export interface City {
 }
 
 export interface Document {
-    document: string;
+    name: string;
     filepath?: string;
     validity?: string;
     status: string;

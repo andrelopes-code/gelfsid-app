@@ -19,14 +19,14 @@ function statusColor(status?: string): string {
     }
 }
 
-function linkfy(value: string, hyperlink?: string) {
-    if (!hyperlink) {
+function linkfy(value: string, link?: string) {
+    if (!link) {
         return value;
     }
 
     return html`
         <a
-            href="${CONFIG.fileServerBaseUrl}/${hyperlink}"
+            href="${CONFIG.fileServerBaseUrl}/${link}"
             class="hover:text-slate-300"
             target="_blank"
             rel="noopener noreferrer"
@@ -35,11 +35,7 @@ function linkfy(value: string, hyperlink?: string) {
     `;
 }
 
-function documentRow(label: string, document: Document) {
-    if (!document) {
-        return "";
-    }
-
+function documentTableRow(label: string, document: Document) {
     return html`
         <tr class="border-slate-800 border-b">
             <td class="px-4 py-3">
@@ -49,7 +45,7 @@ function documentRow(label: string, document: Document) {
                 </div>
             </td>
             <td class="text-right px-4 py-3">
-                <span class="font-medium text-sm">${linkfy(document.document, document?.filepath)}</span>
+                <span class="font-medium text-sm">${linkfy(document.name, document?.filepath)}</span>
             </td>
             <td class="text-right px-4 py-3 w-fit">
                 <span class="font-medium ${statusColor(document?.status)} text-sm"
@@ -70,7 +66,8 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
 
     const documents = supplier.documents
         .map((document) => {
-            return documentRow(document.type.toUpperCase(), document);
+            console.log(document);
+            return documentTableRow(document.type.toUpperCase(), document);
         })
         .join("");
 

@@ -1,6 +1,10 @@
-from tabnanny import verbose
 from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.db import models
+
+MATERIAL_TYPE_CHOICES = [
+    ('CAR', 'Carvão Vegetal'),
+    ('MIN', 'Minério'),
+]
 
 
 class State(models.Model):
@@ -30,12 +34,18 @@ class City(models.Model):
 
 
 class Document(models.Model):
-    document = models.CharField(max_length=50, verbose_name='Documento')
+    name = models.CharField(max_length=50, verbose_name='Nome')
     type = models.CharField(max_length=50, verbose_name='Tipo de Documento')
     filepath = models.CharField(max_length=255, blank=True, null=True, verbose_name='Link do Arquivo')
     validity = models.DateField(blank=True, null=True, verbose_name='Validade')
     status = models.CharField(max_length=50, verbose_name='Status')
-    supplier = models.OneToOneField('Supplier', on_delete=models.CASCADE, verbose_name='Fornecedor')
+
+    supplier = models.ForeignKey(
+        'Supplier',
+        on_delete=models.CASCADE,
+        related_name='documents',
+        verbose_name='Fornecedor',
+    )
 
     class Meta:
         verbose_name = 'Documento'
@@ -43,17 +53,19 @@ class Document(models.Model):
 
 
 class Supplier(models.Model):
-    MATERIAL_TYPE_CHOICES = [
-        ('CAR', 'Carvão Vegetal'),
-        ('MIN', 'Minério'),
-    ]
-
     corporate_name = models.CharField(max_length=200, verbose_name='Razão Social')
-    cpf_cnpj = models.CharField(
-        max_length=14, unique=True, validators=[RegexValidator(r'^(\w{14}|\d{11})$')], verbose_name='CPF ou CNPJ'
-    )
     material_type = models.CharField(max_length=3, choices=MATERIAL_TYPE_CHOICES, verbose_name='Tipo de Material')
     distance_in_meters = models.IntegerField(blank=True, null=True, verbose_name='Distância em Metros')
+    state = models.ForeignKey(State, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Estado')
+    city = models.ForeignKey(City, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Cidade')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+
+    cpf_cnpj = models.CharField(
+        max_length=14,
+        unique=True,
+        validators=[RegexValidator(r'^(\w{14}|\d{11})$')],
+        verbose_name='CPF ou CNPJ',
+    )
 
     rating = models.DecimalField(
         max_digits=3,
@@ -63,9 +75,8 @@ class Supplier(models.Model):
         verbose_name='Avaliação',
     )
 
-    state = models.ForeignKey(State, on_delete=models.PROTECT, related_name='suppliers')
-    city = models.ForeignKey(City, on_delete=models.PROTECT, related_name='suppliers')
-    created_at = models.DateTimeField(auto_now_add=True)
+    def get_documents(self) -> list[Document]:
+        return self.documents.all()
 
     class Meta:
         ordering = ['corporate_name']
@@ -77,4 +88,4 @@ class Supplier(models.Model):
         verbose_name_plural = 'Fornecedores'
 
     def __str__(self):
-        return f'{self.corporate_name} - {self.get_material_type_display()} - {self.cpf_cnpj}'
+        return f'{self.corporate_name}'

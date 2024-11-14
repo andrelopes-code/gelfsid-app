@@ -5,20 +5,24 @@ import openpyxl
 from django.db import transaction
 from pydantic import BaseModel
 
-from ....models import City, State, Supplier
+from ....models import City, Document, State, Supplier
 from .constants import DOCUMENTS_SPREADSHEET_PATH, MIN_ROW
 from .utils import datetime_or_none, get_db_city, hyperlink_or_none, normalize_cpf_cnpj, sanitize
 
+ENVIRONMENTAL_PERMIT_TYPE = 'LIC. AMBIENTAL'
+CTF_TYPE = 'CTF'
+REGIEF_TYPE = 'REG IEF'
 
-class Document(BaseModel):
-    document: Optional[str]
+
+class DocumentData(BaseModel):
+    name: Optional[str]
     status: Optional[str]
     filepath: Optional[str]
     validity: Optional[datetime]
     type: str = ''
 
 
-class SupplierDocRow(BaseModel):
+class SupplierData(BaseModel):
     id: int
     rm_code: Optional[str]
     corporate_name: str
@@ -26,9 +30,9 @@ class SupplierDocRow(BaseModel):
     cpf_cnpj: str
     state: str
     material_type: str
-    environmental_permit: Document
-    ctf: Document
-    regief: Document
+    environmental_permit: DocumentData
+    ctf: DocumentData
+    regief: DocumentData
 
 
 def run():
@@ -45,7 +49,7 @@ def run():
         if not row[0].value:
             break
 
-        supplier = SupplierDocRow(
+        supplier = SupplierData(
             id=sanitize(row[0].value),
             rm_code=sanitize(row[1].value),
             corporate_name=sanitize(row[2].value),
@@ -53,23 +57,26 @@ def run():
             city='',
             state='',
             cpf_cnpj=normalize_cpf_cnpj(sanitize(row[11].value)),
-            environmental_permit=Document(
-                document=sanitize(row[7].value),
+            environmental_permit=DocumentData(
+                name=sanitize(row[7].value),
                 filepath=hyperlink_or_none(row[7]),
                 validity=datetime_or_none(sanitize(row[8].value)),
                 status=sanitize(row[9].value),
+                type=ENVIRONMENTAL_PERMIT_TYPE,
             ),
-            ctf=Document(
-                document=sanitize(row[10].value),
+            ctf=DocumentData(
+                name=sanitize(row[10].value),
                 filepath=hyperlink_or_none(row[10]),
                 validity=datetime_or_none(sanitize(row[12].value)),
                 status=sanitize(row[13].value),
+                type=CTF_TYPE,
             ),
-            regief=Document(
-                document=sanitize(row[14].value),
+            regief=DocumentData(
+                name=sanitize(row[14].value),
                 filepath=hyperlink_or_none(row[14]),
                 validity=datetime_or_none(sanitize(row[15].value)),
                 status=sanitize(row[16].value),
+                type=REGIEF_TYPE,
             ),
         )
 
@@ -88,7 +95,7 @@ def run():
     save_suppliers(suppliers)
 
 
-def save_suppliers(suppliers: list[SupplierDocRow]):
+def save_suppliers(suppliers: list[SupplierData]):
     with transaction.atomic():
         for supplier in suppliers:
             db_city = City.objects.filter(name=supplier.city, state=supplier.state).first()
@@ -116,11 +123,40 @@ def save_suppliers(suppliers: list[SupplierDocRow]):
                 cpf_cnpj=supplier.cpf_cnpj,
             )
 
-            if not supplier.environmental_permit.document:
+            if not supplier.environmental_permit.name:
                 error_message = f'environmental permit not found for: {supplier.corporate_name}'
                 raise ValueError(error_message)
 
             if new:
                 print(f'created new supplier: {db_supplier.corporate_name} - {db_supplier.cpf_cnpj}')
 
+            create_or_update_document(db_supplier, supplier.environmental_permit, ENVIRONMENTAL_PERMIT_TYPE)
+            create_or_update_document(db_supplier, supplier.ctf, CTF_TYPE)
+            create_or_update_document(db_supplier, supplier.regief, REGIEF_TYPE)
+
             db_supplier.save()
+
+
+def create_or_update_document(supplier, document_data: DocumentData, doc_type: str):
+    if not document_data.name:
+        return
+
+    existing_document = Document.objects.filter(supplier=supplier, type=doc_type).first()
+
+    if existing_document:
+        print(f'updating document: {existing_document.name} for supplier: {supplier.corporate_name}')
+
+        existing_document.name = document_data.name
+        existing_document.validity = document_data.validity
+        existing_document.status = document_data.status
+        existing_document.filepath = document_data.filepath
+        existing_document.save()
+    else:
+        Document.objects.create(
+            supplier=supplier,
+            type=doc_type,
+            name=document_data.name,
+            validity=document_data.validity,
+            status=document_data.status,
+            filepath=document_data.filepath,
+        )

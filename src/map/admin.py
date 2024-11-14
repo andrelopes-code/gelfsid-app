@@ -36,7 +36,7 @@ class CidadeAdmin(ModelAdmin):
 
 @admin.register(Document)
 class DocumentAdmin(ModelAdmin):
-    list_display = ('document', 'type', 'validity', 'status', 'supplier')
+    list_display = ('name', 'type', 'validity', 'status', 'supplier')
     list_filter = ('status', 'type', 'supplier')
 
 
@@ -86,7 +86,8 @@ class SupplierAdmin(ModelAdmin):
         ),
     )
 
-    def colorful_rating(self, supplier, good_rating=80):
+    @staticmethod
+    def colorful_rating(supplier, good_rating=80):
         if supplier.rating is None:
             return 'N/A'
 

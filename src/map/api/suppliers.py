@@ -24,8 +24,17 @@ def get_suppliers(request):
                 'name': supplier.city.name,
             },
             'distance_in_meters': supplier.distance_in_meters,
-            # TODO: add documents
-            'documents': [],
+            'documents': [
+                {
+                    'id': document.id,
+                    'name': document.name,
+                    'type': document.type,
+                    'filepath': document.filepath,
+                    'validity': document.validity,
+                    'status': document.status,
+                }
+                for document in supplier.get_documents()
+            ],
         }
         for supplier in suppliers
     ]

@@ -14,7 +14,7 @@ async function checkUpdate(citySelect) {
         }
 
         const data = await response.json();
-        citySelect.value = String(data.cidade.id);
+        citySelect.value = String(data.city.id);
     }
 }
 
@@ -34,13 +34,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             try {
                 const response = await fetch(`/cities/?state=${stateID}`);
-                const cidades = await response.json();
+                const cities = await response.json();
 
                 citySelect.innerHTML = DEFAULT_OPTION;
-                cidades.forEach((city) => {
+                cities.forEach((city) => {
                     const option = document.createElement("option");
                     option.value = city.id;
-                    option.textContent = city.nome;
+                    option.textContent = city.name;
                     citySelect.appendChild(option);
                 });
 
