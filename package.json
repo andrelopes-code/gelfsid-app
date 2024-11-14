@@ -14,8 +14,11 @@
         "tw": "npx tailwindcss -i ./src/static/css/input.css -o ./src/static/css/style.css --watch",
         "build": "webpack --mode production",
         "watch": "webpack --watch",
-        "django": "task runserver",
+        "django": "python src/manage.py runserver 0.0.0.0:8000",
         "files": "python fileserver.py",
+        "su": "python src/manage.py createsuperuser",
+        "makemigrations": "python src/manage.py makemigrations",
+        "migrate": "python src/manage.py migrate",
         "all": "npm-run-all --parallel django tw watch files"
     },
     "dependencies": {
