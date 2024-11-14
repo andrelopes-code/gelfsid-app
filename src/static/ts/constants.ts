@@ -3,7 +3,7 @@ import type { StateCodeMapping } from "./types";
 export const CONFIG: {
     geojson: { states: string; cities: string };
     api: { suppliers: string };
-    fileServerBaseUrl: string;
+    docFilesBaseUrl: string;
 } = {
     geojson: {
         states: "static/data/geojson/br_states.json",
@@ -13,7 +13,7 @@ export const CONFIG: {
         suppliers: "http://localhost:8000/suppliers/",
     },
 
-    fileServerBaseUrl: "http://localhost:8080",
+    docFilesBaseUrl: "http://localhost:9000",
 };
 
 export const html = String.raw;

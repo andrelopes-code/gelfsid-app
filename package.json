@@ -15,7 +15,7 @@
         "build": "webpack --mode production",
         "watch": "webpack --watch",
         "django": "task runserver",
-        "files": "python -m http.server 8080 --bind 0.0.0.0 --directory \"H:\\DEMAT\\Público\\10 - DOCUMENTAÇÃO - CLIENTES E FORNECEDORES\"",
+        "files": "python fileserver.py",
         "all": "npm-run-all --parallel django tw watch files"
     },
     "dependencies": {
