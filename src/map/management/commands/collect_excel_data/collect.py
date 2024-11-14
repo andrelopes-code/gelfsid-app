@@ -115,20 +115,23 @@ def save_suppliers(suppliers: list[SupplierData]):
             else:
                 continue
 
-            db_supplier, new = Supplier.objects.update_or_create(
-                corporate_name=supplier.corporate_name,
-                city=db_city,
-                state=db_state,
-                material_type=supplier.material_type,
+            db_supplier = Supplier.objects.filter(
                 cpf_cnpj=supplier.cpf_cnpj,
-            )
+            ).first()
+
+            if not db_supplier:
+                db_supplier = Supplier.objects.create(
+                    corporate_name=supplier.corporate_name,
+                    city=db_city,
+                    state=db_state,
+                    material_type=supplier.material_type,
+                    cpf_cnpj=supplier.cpf_cnpj,
+                )
+                print(f'created new supplier: {db_supplier.corporate_name} - {db_supplier.cpf_cnpj}')
 
             if not supplier.environmental_permit.name:
                 error_message = f'environmental permit not found for: {supplier.corporate_name}'
                 raise ValueError(error_message)
-
-            if new:
-                print(f'created new supplier: {db_supplier.corporate_name} - {db_supplier.cpf_cnpj}')
 
             create_or_update_document(db_supplier, supplier.environmental_permit, ENVIRONMENTAL_PERMIT_TYPE)
             create_or_update_document(db_supplier, supplier.ctf, CTF_TYPE)
@@ -144,7 +147,7 @@ def create_or_update_document(supplier, document_data: DocumentData, doc_type: s
     existing_document = Document.objects.filter(supplier=supplier, type=doc_type).first()
 
     if existing_document:
-        print(f'updating document: {existing_document.name} for supplier: {supplier.corporate_name}')
+        print(f'updating document: {existing_document.name} for supplier: {supplier.id}')
 
         existing_document.name = document_data.name
         existing_document.validity = document_data.validity

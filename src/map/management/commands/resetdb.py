@@ -8,4 +8,4 @@ class Command(BaseCommand):
         Supplier.objects.all().delete()
         Document.objects.all().delete()
 
-        self.stdout.write(self.style.SUCCESS('Database reset successfully!'))
+        self.stdout.write(self.style.SUCCESS('database reset successfully!'))
