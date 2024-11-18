@@ -14,14 +14,15 @@
         "tw": "npx tailwindcss -i ./src/static/css/input.css -o ./src/static/css/style.css --watch",
         "build": "webpack --mode production",
         "watch": "webpack --watch",
-        "django": "python src/manage.py runserver 0.0.0.0:8000",
-        "files": "python fileserver.py",
+        "django": "python src/manage.py runserver 0.0.0.0:8000 --insecure",
+        "files": "python src/fileserver.py",
         "su": "python src/manage.py createsuperuser",
         "makemigrations": "python src/manage.py makemigrations",
         "migrate": "python src/manage.py migrate",
         "all": "npm-run-all --parallel django tw watch files"
     },
     "dependencies": {
-        "leaflet": "^1.9.4"
+        "leaflet": "^1.9.4",
+        "leaflet.tilelayer.nogap": "^0.3.0"
     }
 }

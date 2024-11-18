@@ -1,24 +1,7 @@
-import socket
 from pathlib import Path
 
 from django.templatetags.static import static
 from pydantic_settings import BaseSettings
-
-
-def get_local_ip():
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.settimeout(0)
-        s.connect(('8.8.8.8', 80))
-        ip = s.getsockname()[0]
-    except Exception:
-        ip = '127.0.0.1'
-    finally:
-        s.close()
-    return ip
-
-
-print(get_local_ip())
 
 
 class Settings(BaseSettings):
@@ -37,7 +20,9 @@ settings = Settings()
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = settings.SECRET_KEY
 DEBUG = settings.DEBUG
+
 ALLOWED_HOSTS = []
+
 
 if settings.DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
@@ -126,7 +111,7 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]

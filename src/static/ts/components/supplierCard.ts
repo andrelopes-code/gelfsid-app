@@ -78,14 +78,14 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                 style="border-color: ${borderColor};"
                 class="bg-dark-200 bg-opacity-60 shadow-lg hover:shadow-xl px-4 py-4 border-t-[3px] rounded-lg w-full max-w-full fixtransition transition-transform hover:translate-x-1 duration-300"
             >
-                <div class="flex justify-between w-full text-md">
-                    <div class="flex flex-col w-full gap-1">
+                <div class="flex justify-between w-full text-md overflow-hidden">
+                    <div class="flex flex-col gap-1 max-w-80 text-nowrap overflow-hidden">
                         <p
-                            class="mb-3 font-medium w-fullbg-violet-600 verflow-hidden text-ellipsis text-white"
+                            class="mb-3 w-full font-medium text-ellipsis text-white hover:text-wrap overflow-hidden"
                         >
                             ${supplier.corporate_name}
                         </p>
-                        <div class="flex items-center w-full gap-4">
+                        <div class="flex items-center gap-4 w-full">
                             <i class="ph-map-pin ph-fill"></i>
                             <span class="font-medium">${supplier.city.name} - ${supplier.state.abbr}</span>
                         </div>

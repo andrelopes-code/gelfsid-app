@@ -21,25 +21,23 @@ class MapService {
     private currentStateCode: number | null = null;
     private currentType: string;
     private citySuppliers: CitySuppliers = {};
-    private satelliteLayer: L.TileLayer;
+    private satelliteLayer: L.Layer;
 
     private HOST_CITY_TOOLTIP_TEXT: string = "GELF Sete Lagoas";
+    private MAX_ZOOM = 17;
 
     constructor(currentType: string) {
         this.map = L.map("map", {
             zoomControl: false,
             attributionControl: false,
-            maxZoom: 17,
+            maxZoom: this.MAX_ZOOM,
         }).setView(BRAZIL_COORDINATES, 4);
         this.currentType = currentType;
-        this.satelliteLayer = this.setSatelliteLayer();
-    }
 
-    setSatelliteLayer() {
-        return L.tileLayer(
-            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        this.satelliteLayer = L.tileLayer(
+            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg",
             {
-                maxZoom: 19,
+                maxZoom: this.MAX_ZOOM,
             }
         );
     }
