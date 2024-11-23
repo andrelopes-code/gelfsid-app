@@ -145,7 +145,7 @@ def create_or_update_document(supplier, document_data: DocumentData, doc_type: s
         return
 
     existing_document = Document.objects.filter(supplier=supplier, type=doc_type).first()
-
+    print(document_data.filepath)
     if existing_document:
         print(f'updating document: {existing_document.name} for supplier: {supplier.id}')
 

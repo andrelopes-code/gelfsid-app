@@ -1,37 +1,22 @@
 from pathlib import Path
 
 from django.templatetags.static import static
-from pydantic_settings import BaseSettings
-
-
-class Settings(BaseSettings):
-    DEBUG: bool
-    SECRET_KEY: str
-
-    GRAPHHOPPER_API_KEY: str = ''
-    CITIES_STATES_PATH: str = 'src/static/data/states_cities.json'
-
-    class Config:
-        env_file = '.env'
-
-
-settings = Settings()
+from environ import Env
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = settings.SECRET_KEY
-DEBUG = settings.DEBUG
-
-ALLOWED_HOSTS = []
+env = Env()
+env.read_env('.env')
 
 
-if settings.DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
-    ALLOWED_HOSTS = ['*']
+DEBUG = env.bool('DEBUG', False)
+SECRET_KEY = env.str('SECRET_KEY')
+GRAPHHOPPER_API_KEY = env.str('GRAPHHOPPER_API_KEY', '')
+CITIES_STATES_PATH = 'src/static/data/states_cities.json'
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-]
+
+CORS_ALLOW_ALL_ORIGINS = True
+ALLOWED_HOSTS = ['*']
+SECURE_SSL_REDIRECT = False
 
 INSTALLED_APPS = [
     'unfold',
@@ -110,11 +95,11 @@ TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 USE_TZ = True
 
-
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

@@ -166,3 +166,4 @@ node_modules
 tmp
 *.xls
 *.xlsx
+logs

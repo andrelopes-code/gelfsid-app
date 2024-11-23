@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
-from static import docs_server
+from static_server import docs_server
 
 
 class MapConfig(AppConfig):

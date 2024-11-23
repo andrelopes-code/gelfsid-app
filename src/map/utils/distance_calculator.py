@@ -2,8 +2,7 @@ from dataclasses import dataclass
 from http import HTTPStatus
 
 import httpx
-
-from gelfsid.settings import settings
+from django.conf import settings
 
 
 @dataclass

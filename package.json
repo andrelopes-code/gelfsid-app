@@ -15,11 +15,10 @@
         "build": "webpack --mode production",
         "watch": "webpack --watch",
         "django": "python src/manage.py runserver 0.0.0.0:8000 --insecure",
-        "static": "python src/static.py",
         "su": "python src/manage.py createsuperuser",
         "makemigrations": "python src/manage.py makemigrations",
         "migrate": "python src/manage.py migrate",
-        "all": "npm-run-all --parallel django tw watch static"
+        "all": "npm-run-all --parallel django tw watch"
     },
     "dependencies": {
         "leaflet": "^1.9.4",
