@@ -20,8 +20,9 @@ SECURE_SSL_REDIRECT = False
 
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = Path('/staticfiles')
+STATICFILES_DIRS = [BASE_DIR / 'map/static']
+STATIC_ROOT = Path('/static')
+
 DOC_FILES_BASE_URL = env.str('DOC_FILES_BASE_URL')
 
 MEDIA_URL = '/media/'
@@ -69,7 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'map.context_processors.global_context'
+                'map.context_processors.global_context',
             ],
         },
     },
