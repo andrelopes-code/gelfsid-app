@@ -168,3 +168,4 @@ tmp
 *.xlsx
 logs
 staticfiles
+certs

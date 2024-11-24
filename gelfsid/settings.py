@@ -11,7 +11,7 @@ env.read_env('.env')
 DEBUG = env.bool('DEBUG', False)
 SECRET_KEY = env.str('SECRET_KEY', 'secret')
 GRAPHHOPPER_API_KEY = env.str('GRAPHHOPPER_API_KEY', '')
-CITIES_STATES_PATH = 'src/static/data/states_cities.json'
+CITIES_STATES_PATH = 'static/data/states_cities.json'
 
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -20,8 +20,8 @@ SECURE_SSL_REDIRECT = False
 
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'map/static']
-STATIC_ROOT = BASE_DIR / 'static'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DOC_FILES_BASE_URL = env.str('DOC_FILES_BASE_URL')
 
