@@ -21,7 +21,7 @@ SECURE_SSL_REDIRECT = False
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'map/static']
-STATIC_ROOT = Path('/static')
+STATIC_ROOT = BASE_DIR / 'static'
 
 DOC_FILES_BASE_URL = env.str('DOC_FILES_BASE_URL')
 
