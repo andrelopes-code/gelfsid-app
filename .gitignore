@@ -167,3 +167,4 @@ tmp
 *.xls
 *.xlsx
 logs
+staticfiles

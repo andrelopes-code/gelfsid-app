@@ -9,7 +9,7 @@ env.read_env('.env')
 
 
 DEBUG = env.bool('DEBUG', False)
-SECRET_KEY = env.str('SECRET_KEY')
+SECRET_KEY = env.str('SECRET_KEY', 'secret')
 GRAPHHOPPER_API_KEY = env.str('GRAPHHOPPER_API_KEY', '')
 CITIES_STATES_PATH = 'src/static/data/states_cities.json'
 
@@ -17,6 +17,17 @@ CITIES_STATES_PATH = 'src/static/data/states_cities.json'
 CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = ['*']
 SECURE_SSL_REDIRECT = False
+
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = Path('/staticfiles')
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 INSTALLED_APPS = [
     'unfold',
@@ -42,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 
@@ -94,15 +106,6 @@ LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 USE_TZ = True
-
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 UNFOLD = {
     'SITE_TITLE': 'GELFSID ADMIN PANEL',
