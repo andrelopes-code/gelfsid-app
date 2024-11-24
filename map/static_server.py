@@ -3,6 +3,8 @@ from functools import partial
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from threading import Thread
 
+STATIC_SERVER_ADDRESS = '127.0.0.1'
+
 
 class LocalStaticServer:
     def __init__(self, directory, port=0):
@@ -14,7 +16,7 @@ class LocalStaticServer:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             try:
                 sock.settimeout(1)
-                result = sock.connect_ex(('127.0.0.1', self.port))
+                result = sock.connect_ex((STATIC_SERVER_ADDRESS, self.port))
                 return result == 0
             except Exception:
                 return False
@@ -25,7 +27,7 @@ class LocalStaticServer:
 
         print(f'Initializing static server on port {self.port}')
         handler = partial(SimpleHTTPRequestHandler, directory=self.directory)
-        self.server = HTTPServer(('127.0.0.1', self.port), handler)
+        self.server = HTTPServer((STATIC_SERVER_ADDRESS, self.port), handler)
         self.port = self.server.server_port
 
         thread = Thread(target=self.server.serve_forever, daemon=True)

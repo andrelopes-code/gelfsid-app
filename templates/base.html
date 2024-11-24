@@ -15,12 +15,17 @@
         <meta name="keywords"
               content="GELFSID, map, interactive, data visualization" />
         <link rel="stylesheet" type="text/css" href='{% static "css/style.css" %}' />
-        <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://unpkg.com/leaflet/dist/leaflet.css" />
         <link rel="shortcut icon"
               href="{% static 'img/icon.ico' %}"
               type="image/x-icon" />
         <script src="https://unpkg.com/@phosphor-icons/web"></script>
         <!-- App Scripts -->
+        <script>
+            window.docFilesBaseUrl = "{{ DOC_FILES_BASE_URL }}"
+        </script>
         <script defer type="module" src="{% static 'ts/dist/bundle.js' %}"></script>
     </head>
     <body>

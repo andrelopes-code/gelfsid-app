@@ -10,10 +10,10 @@ export const CONFIG: {
         cities: "static/data/geojson/geojs-{uf}-mun.json",
     },
     api: {
-        suppliers: "http://127.0.0.1:8000/suppliers/",
+        suppliers: "/suppliers/",
     },
 
-    docFilesBaseUrl: "http://127.0.0.1:9000",
+    docFilesBaseUrl: (window as any)?.docFilesBaseUrl,
 };
 
 export const html = String.raw;
