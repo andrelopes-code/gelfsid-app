@@ -3,19 +3,14 @@
 @tailwind utilities;
 
 :root {
-    --highlight: #d68367;
-    --green-highlight: #98e089;
-    --material: #98e089;
-    --material-off: #00000075;
+    --primary-color: #d68367;
+    --secondary-color: #98e089;
+    --off: #00000075;
 }
 
 svg path:hover {
-    fill: var(--material);
+    fill: var(--primary-color);
     transition: none;
-}
-
-svg path {
-    transition: fill 0.1s ease-in-out;
 }
 
 svg path:focus {
@@ -53,7 +48,7 @@ svg path:focus {
     opacity: 1 !important;
     font-size: 0.7rem !important;
     font-weight: bold;
-    color: var(--material) !important;
+    color: var(--primary-color) !important;
 }
 
 .custom-tooltip-gelf::before {

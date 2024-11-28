@@ -2,7 +2,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.forms import model_to_dict
 from django.http import JsonResponse
 
-from ..models import City, Supplier
+from map.models import City, Supplier
 
 
 @staff_member_required
@@ -12,6 +12,7 @@ def get_cities(request):
     if state_id:
         cities = City.objects.filter(state_id=state_id).values('id', 'name')
         return JsonResponse(list(cities), safe=False)
+
     return JsonResponse([], safe=False)
 
 

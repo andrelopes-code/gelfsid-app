@@ -22,13 +22,13 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
 
 
 @admin.register(State)
-class EstadoAdmin(ModelAdmin):
+class StateAdmin(ModelAdmin):
     list_display = ('abbr', 'name')
     search_fields = ('name', 'abbr')
 
 
 @admin.register(City)
-class CidadeAdmin(ModelAdmin):
+class CityAdmin(ModelAdmin):
     list_display = ('name', 'state')
     list_filter = ('state',)
     search_fields = ('name',)
@@ -92,9 +92,9 @@ class SupplierAdmin(ModelAdmin):
             return 'N/A'
 
         if supplier.rating >= good_rating:
-            cor = 'var(--green-highlight)'
+            cor = 'var(--secondary-color)'
         else:
-            cor = 'var(--highlight)'
+            cor = 'var(--primary-color)'
 
         return format_html('<span style="color: {}; font-weight: bold;">{}</span>', cor, f'{supplier.rating}')
 

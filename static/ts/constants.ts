@@ -1,8 +1,10 @@
 import type { StateCodeMapping } from "./types";
 
+export const html = String.raw;
+
 export const CONFIG: {
     geojson: { states: string; cities: string };
-    api: { suppliers: string };
+    api: { suppliers: string; materials: string };
     docFilesBaseUrl: string;
 } = {
     geojson: {
@@ -10,26 +12,23 @@ export const CONFIG: {
         cities: "static/data/geojson/geojs-{uf}-mun.json",
     },
     api: {
-        suppliers: "/suppliers/",
+        suppliers: "/api/suppliers/",
+        materials: "/api/materials/",
     },
 
     docFilesBaseUrl: (window as any)?.docFilesBaseUrl,
 };
 
-export const html = String.raw;
-
 export const BRAZIL_COORDINATES: [number, number] = [-14.235, -51.925];
 export const HOST_CITY_KEY = "31-Sete Lagoas";
 export const FILL_COLOR = "#151b2500";
 export const STROKE_COLOR = "#4b5260";
+export const WEAK_STROKE_COLOR = "#4b526033";
 
-export const CARV_TYPE = "Carvão Vegetal";
-export const MINE_TYPE = "Minério";
-export const MINE_COLOR = "var(--highlight)";
-export const CARV_COLOR = "var(--green-highlight)";
+export const DEFAULT_MATERIAL_TYPE = "Carvão Vegetal";
 
-export const GOOD_RATING_COLOR = CARV_COLOR;
-export const BAD_RATING_COLOR = MINE_COLOR;
+export const GOOD_RATING_COLOR = "var(--secondary-color)";
+export const BAD_RATING_COLOR = "var(--primary-color)";
 
 export const STATE_CODE_MAP: StateCodeMapping = {
     RO: 11,

@@ -1,11 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.db import models
 
-MATERIAL_TYPE_CHOICES = [
-    ('CAR', 'Carvão Vegetal'),
-    ('MIN', 'Minério'),
-]
-
 
 class State(models.Model):
     abbr = models.CharField(max_length=2, primary_key=True, verbose_name='Sigla')
@@ -54,7 +49,7 @@ class Document(models.Model):
 
 class Supplier(models.Model):
     corporate_name = models.CharField(max_length=200, verbose_name='Razão Social')
-    material_type = models.CharField(max_length=3, choices=MATERIAL_TYPE_CHOICES, verbose_name='Tipo de Material')
+    material_type = models.CharField(max_length=30, verbose_name='Tipo de Material')
     distance_in_meters = models.IntegerField(blank=True, null=True, verbose_name='Distância em Metros')
     state = models.ForeignKey(State, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Estado')
     city = models.ForeignKey(City, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Cidade')

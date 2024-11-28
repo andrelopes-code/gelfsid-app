@@ -11,17 +11,16 @@
         "webpack-cli": "^5.1.4"
     },
     "scripts": {
+        "dev": "npm-run-all --parallel django tw watch",
         "tw": "npx tailwindcss -i ./static/css/input.css -o ./static/css/style.css --watch",
         "build": "webpack --mode production",
         "watch": "webpack --watch",
         "django": "python manage.py runserver 0.0.0.0:8000",
-        "su": "python manage.py createsuperuser",
         "makemigrations": "python manage.py makemigrations",
         "migrate": "python manage.py migrate",
-        "all": "npm-run-all --parallel django tw watch"
+        "su": "python manage.py createsuperuser"
     },
     "dependencies": {
-        "leaflet": "^1.9.4",
-        "leaflet.tilelayer.nogap": "^0.3.0"
+        "leaflet": "^1.9.4"
     }
 }

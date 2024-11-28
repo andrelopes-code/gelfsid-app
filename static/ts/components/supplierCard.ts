@@ -9,11 +9,11 @@ function statusColor(status?: string): string {
 
     switch (status.toLowerCase()) {
         case "válida":
-            return "text-[var(--green-highlight)]";
+            return "text-[var(--secondary-color)]";
         case "renovação/válida":
-            return "text-[var(--green-highlight)]";
+            return "text-[var(--secondary-color)]";
         case "vencida":
-            return "text-[var(--highlight)]";
+            return "text-[var(--primary-color)]";
         default:
             return "text-white";
     }
@@ -60,7 +60,6 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
 
     const documents = supplier.documents
         .map((document) => {
-            console.log(document);
             return documentTableRow(document.type.toUpperCase(), document);
         })
         .join("");

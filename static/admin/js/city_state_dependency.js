@@ -6,7 +6,7 @@ async function checkUpdate(citySelect) {
 
     if (updating) {
         const supplierID = updating[0].split("/")[0];
-        const response = await fetch(`/supplier?id=${supplierID}`);
+        const response = await fetch(`/api/supplier?id=${supplierID}`);
 
         if (!response.ok) {
             console.error("error loading supplier:", response.statusText);
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             try {
-                const response = await fetch(`/cities/?state=${stateID}`);
+                const response = await fetch(`/api/cities/?state=${stateID}`);
                 const cities = await response.json();
 
                 citySelect.innerHTML = DEFAULT_OPTION;

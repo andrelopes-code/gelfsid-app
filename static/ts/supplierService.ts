@@ -1,17 +1,10 @@
-// supplierService.ts
 import type { Supplier, CitySuppliers } from "./types";
-import {
-    STATE_CODE_MAP,
-    CONFIG,
-    CARV_TYPE,
-    CARV_COLOR,
-    MINE_COLOR,
-    GOOD_RATING_COLOR,
-    BAD_RATING_COLOR,
-} from "./constants";
+import { STATE_CODE_MAP, CONFIG, GOOD_RATING_COLOR, BAD_RATING_COLOR } from "./constants";
 import { SupplierCard } from "./components/supplierCard";
 
 class SupplierService {
+    private citySuppliers: CitySuppliers = {};
+
     async loadSuppliers(): Promise<CitySuppliers> {
         const response = await fetch(CONFIG.api.suppliers);
         const supplierData: Supplier[] = await response.json();
@@ -37,16 +30,15 @@ class SupplierService {
             const newCard = document.createElement("div");
             newCard.innerHTML = SupplierCard(
                 supplier,
-                supplier.material_type === CARV_TYPE ? CARV_COLOR : MINE_COLOR,
+                BAD_RATING_COLOR,
                 supplier.rating > 80 ? GOOD_RATING_COLOR : BAD_RATING_COLOR
             );
             container.appendChild(newCard);
         });
     }
 
-    openDetails(cityKey: string): void {
-        const suppliers = this.citySuppliers[cityKey];
-        if (!suppliers) return;
+    openDetails(cityKey: string, currentType: string | null): void {
+        let suppliers = this.citySuppliers[cityKey];
 
         const detailsTitle = document.querySelector("#details-title");
         const detailsElement = document.getElementById("details");
@@ -55,6 +47,11 @@ class SupplierService {
             detailsTitle.textContent = suppliers[0].city.name;
         }
 
+        if (currentType != null) {
+            suppliers = suppliers.filter((s) => s.material_type === currentType);
+        }
+
+        if (suppliers.length === 0) return;
         this.generateSupplierCards(suppliers);
 
         if (detailsElement) {
@@ -74,8 +71,6 @@ class SupplierService {
     private getCityKey(stateCode: number, cityName: string): string {
         return `${stateCode}-${cityName}`;
     }
-
-    private citySuppliers: CitySuppliers = {};
 
     setCitySuppliers(suppliers: CitySuppliers): void {
         this.citySuppliers = suppliers;

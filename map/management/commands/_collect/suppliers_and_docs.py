@@ -5,13 +5,12 @@ import openpyxl
 from django.db import transaction
 from pydantic import BaseModel
 
-from ....models import City, Document, State, Supplier
-from .constants import DOCUMENTS_SPREADSHEET_PATH, MIN_ROW
+from map.models import City, Document, State, Supplier
+
+from .constants import CTF_TYPE, ENVIRONMENTAL_PERMIT_TYPE, REGIEF_TYPE, SUPPLIERS_DOCS_PATH
 from .utils import datetime_or_none, get_db_city, hyperlink_or_none, normalize_cpf_cnpj, sanitize
 
-ENVIRONMENTAL_PERMIT_TYPE = 'LIC. AMBIENTAL'
-CTF_TYPE = 'CTF'
-REGIEF_TYPE = 'REG IEF'
+MIN_ROW = 17
 
 
 class DocumentData(BaseModel):
@@ -35,17 +34,17 @@ class SupplierData(BaseModel):
     regief: DocumentData
 
 
-def run():
-    documents_workbook = openpyxl.load_workbook(DOCUMENTS_SPREADSHEET_PATH, data_only=True)
+def collect():
+    documents_workbook = openpyxl.load_workbook(SUPPLIERS_DOCS_PATH, data_only=True)
     documents_sheet = documents_workbook.active
 
     if not documents_sheet:
-        raise ValueError(f'document `{DOCUMENTS_SPREADSHEET_PATH}` does not have an active sheet')
+        raise ValueError(f'document `{SUPPLIERS_DOCS_PATH}` does not have an active sheet')
 
     suppliers = []
 
     for row in documents_sheet.iter_rows(min_row=MIN_ROW):
-        # break if is an empty row
+        # Interrompe o loop quando a primeira coluna estiver vazia
         if not row[0].value:
             break
 
@@ -84,8 +83,8 @@ def run():
         city = city_state[0].strip()
         state = city_state[1].strip().upper()
 
-        # try to get an existing city in
-        # the database that matches
+        # Tenta encontrar uma cidade
+        # existente no banco de dados
         city = get_db_city(city, state)
 
         supplier.city = city
@@ -100,38 +99,32 @@ def save_suppliers(suppliers: list[SupplierData]):
         for supplier in suppliers:
             db_city = City.objects.filter(name=supplier.city, state=supplier.state).first()
             if not db_city:
-                error_message = f'database city not found for: {supplier.city} - {supplier.state}'
-                raise ValueError(error_message)
+                raise ValueError(f'database city not found for: {supplier.city} - {supplier.state}')
 
             db_state = State.objects.filter(abbr=supplier.state).first()
             if not db_state:
-                error_message = f'database state not found for: {supplier.city} - {supplier.state}'
-                raise ValueError(error_message)
-
-            if supplier.material_type == 'Carvão Vegetal':
-                supplier.material_type = 'CAR'
-            elif supplier.material_type == 'Minério de Ferro':
-                supplier.material_type = 'MIN'
-            else:
-                continue
+                raise ValueError(f'database state not found for: {supplier.city} - {supplier.state}')
 
             db_supplier = Supplier.objects.filter(
                 cpf_cnpj=supplier.cpf_cnpj,
             ).first()
 
-            if not db_supplier:
-                db_supplier = Supplier.objects.create(
-                    corporate_name=supplier.corporate_name,
-                    city=db_city,
-                    state=db_state,
-                    material_type=supplier.material_type,
-                    cpf_cnpj=supplier.cpf_cnpj,
-                )
+            db_supplier, created = Supplier.objects.update_or_create(
+                cpf_cnpj=supplier.cpf_cnpj,
+                defaults={
+                    'corporate_name': supplier.corporate_name,
+                    'city': db_city,
+                    'state': db_state,
+                    'material_type': supplier.material_type,
+                    'cpf_cnpj': supplier.cpf_cnpj,
+                },
+            )
+
+            if created:
                 print(f'created new supplier: {db_supplier.corporate_name} - {db_supplier.cpf_cnpj}')
 
             if not supplier.environmental_permit.name:
-                error_message = f'environmental permit not found for: {supplier.corporate_name}'
-                raise ValueError(error_message)
+                raise ValueError(f'environmental permit not found for: {supplier.corporate_name}')
 
             create_or_update_document(db_supplier, supplier.environmental_permit, ENVIRONMENTAL_PERMIT_TYPE)
             create_or_update_document(db_supplier, supplier.ctf, CTF_TYPE)
@@ -144,22 +137,18 @@ def create_or_update_document(supplier, document_data: DocumentData, doc_type: s
     if not document_data.name:
         return
 
-    existing_document = Document.objects.filter(supplier=supplier, type=doc_type).first()
-    print(document_data.filepath)
-    if existing_document:
-        print(f'updating document: {existing_document.name} for supplier: {supplier.id}')
+    document, created = Document.objects.update_or_create(
+        supplier=supplier,
+        type=doc_type,
+        defaults={
+            'name': document_data.name,
+            'validity': document_data.validity,
+            'status': document_data.status,
+            'filepath': document_data.filepath,
+        },
+    )
 
-        existing_document.name = document_data.name
-        existing_document.validity = document_data.validity
-        existing_document.status = document_data.status
-        existing_document.filepath = document_data.filepath
-        existing_document.save()
+    if created:
+        print(f'Created new document: {document.name} for supplier: {supplier.id}')
     else:
-        Document.objects.create(
-            supplier=supplier,
-            type=doc_type,
-            name=document_data.name,
-            validity=document_data.validity,
-            status=document_data.status,
-            filepath=document_data.filepath,
-        )
+        print(f'Updated document: {document.name} for supplier: {supplier.id}')

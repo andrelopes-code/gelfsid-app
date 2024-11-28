@@ -169,3 +169,4 @@ tmp
 logs
 staticfiles
 certs
+.sample-data

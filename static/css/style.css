@@ -664,10 +664,6 @@ video {
   top: 0px;
 }
 
-.isolate {
-  isolation: isolate;
-}
-
 .z-10 {
   z-index: 10;
 }
@@ -979,12 +975,12 @@ video {
   text-transform: uppercase;
 }
 
-.text-\[var\(--green-highlight\)\] {
-  color: var(--green-highlight);
+.text-\[var\(--primary-color\)\] {
+  color: var(--primary-color);
 }
 
-.text-\[var\(--highlight\)\] {
-  color: var(--highlight);
+.text-\[var\(--secondary-color\)\] {
+  color: var(--secondary-color);
 }
 
 .text-green-300 {
@@ -1046,10 +1042,6 @@ video {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
-.\!filter {
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow) !important;
-}
-
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
@@ -1102,19 +1094,14 @@ video {
 }
 
 :root {
-  --highlight: #d68367;
-  --green-highlight: #98e089;
-  --material: #98e089;
-  --material-off: #00000075;
+  --primary-color: #d68367;
+  --secondary-color: #98e089;
+  --off: #00000075;
 }
 
 svg path:hover {
-  fill: var(--material);
+  fill: var(--primary-color);
   transition: none;
-}
-
-svg path {
-  transition: fill 0.1s ease-in-out;
 }
 
 svg path:focus {
@@ -1152,7 +1139,7 @@ svg path:focus {
   opacity: 1 !important;
   font-size: 0.7rem !important;
   font-weight: bold;
-  color: var(--material) !important;
+  color: var(--primary-color) !important;
 }
 
 .custom-tooltip-gelf::before {
@@ -1202,6 +1189,11 @@ html::-webkit-scrollbar-thumb:hover {
 .hover\:text-slate-300:hover {
   --tw-text-opacity: 1;
   color: rgb(203 213 225 / var(--tw-text-opacity));
+}
+
+.hover\:text-slate-500:hover {
+  --tw-text-opacity: 1;
+  color: rgb(100 116 139 / var(--tw-text-opacity));
 }
 
 .hover\:shadow-xl:hover {

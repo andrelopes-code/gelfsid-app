@@ -1,4 +1,4 @@
-import { CARV_TYPE, MINE_TYPE } from "./constants";
+import { CONFIG, DEFAULT_MATERIAL_TYPE, html } from "./constants";
 import { MapService } from "./mapService";
 import { supplierService } from "./supplierService";
 
@@ -6,41 +6,51 @@ class App {
     private mapService: MapService;
 
     constructor() {
-        this.mapService = new MapService(CARV_TYPE);
+        this.mapService = new MapService();
+        this.mapService.setCurrentType(DEFAULT_MATERIAL_TYPE);
+    }
+
+    async setupFilter() {
+        const filter = document.getElementById("material-filter") as HTMLInputElement;
+        const response = await fetch(CONFIG.api.materials);
+        const materials = await response.json();
+
+        for (const material of materials) {
+            const option = document.createElement("div");
+            option.classList.add("hover:text-slate-500", "material-filter-option");
+            if (material === DEFAULT_MATERIAL_TYPE) {
+                option.classList.add("active-material");
+            }
+            option.setAttribute("data-value", material);
+            option.textContent = material;
+
+            option.addEventListener("click", () => {
+                const allOptions = filter.querySelectorAll(".material-filter-option");
+                allOptions.forEach((opt) => opt.classList.remove("active-material"));
+                option.classList.add("active-material");
+
+                const value = option.getAttribute("data-value");
+                if (value) {
+                    this.mapService.setCurrentType(value);
+                }
+            });
+
+            filter.appendChild(option);
+        }
     }
 
     private async configureEventListeners(): Promise<void> {
-        const filter = document.getElementById("filter") as HTMLInputElement;
-        if (!filter) {
-            throw new Error("filter element not found");
-        }
-
-        filter.addEventListener("change", () => {
-            if (filter.checked) {
-                this.mapService.setCurrentType(MINE_TYPE);
-                document.documentElement.style.setProperty("--material", "#d68367");
-            } else {
-                this.mapService.setCurrentType(CARV_TYPE);
-                document.documentElement.style.setProperty("--material", "#98e089");
-            }
-        });
-
         const closeDetails = document.getElementById("close-details") as HTMLElement;
-        if (!closeDetails) {
-            throw new Error("Close Details element not found");
-        }
 
         closeDetails.addEventListener("click", () => {
             supplierService.closeDetails();
         });
+
+        this.setupFilter();
     }
 
     private hideLoader(): void {
         const loader = document.getElementById("main-loader") as HTMLElement;
-        if (!loader) {
-            throw new Error("Loader element not found");
-        }
-
         loader.style.display = "none";
     }
 

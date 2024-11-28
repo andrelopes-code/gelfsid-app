@@ -59,7 +59,7 @@ class DistanceCalculator:
             cls.URL + '?point=' + origin_point + '&point=' + destination_point,
             params={
                 'key': cls.API_KEY,
-                'vehicle': 'truck',
+                'vehicle': 'car',
                 'instructions': 'false',
             },
         )

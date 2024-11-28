@@ -2,8 +2,6 @@ from django.http import JsonResponse
 
 from map.models import Supplier
 
-HOST_CITY = 'Sete Lagoas, MG'
-
 
 def get_suppliers(request):
     suppliers = Supplier.objects.select_related('city', 'state').all()
@@ -13,7 +11,7 @@ def get_suppliers(request):
             'id': supplier.id,
             'corporate_name': supplier.corporate_name,
             'cpf_cnpj': supplier.cpf_cnpj,
-            'material_type': supplier.get_material_type_display(),
+            'material_type': supplier.material_type,
             'rating': supplier.rating,
             'state': {
                 'abbr': supplier.state.abbr,
@@ -40,3 +38,11 @@ def get_suppliers(request):
     ]
 
     return JsonResponse(data, safe=False)
+
+
+def get_materials(request):
+    materials = Supplier.objects.values_list('material_type', flat=True)
+    materials_list = list(set(list(materials)))
+    materials_list.sort()
+
+    return JsonResponse(materials_list, safe=False)

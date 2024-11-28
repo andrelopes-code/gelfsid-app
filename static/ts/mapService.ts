@@ -6,6 +6,7 @@ import {
     STROKE_COLOR,
     HOST_CITY_KEY,
     STATE_CODE_MAP,
+    WEAK_STROKE_COLOR,
 } from "./constants";
 import type { Cache, CitySuppliers } from "./types";
 import { supplierService } from "./supplierService";
@@ -19,27 +20,18 @@ class MapService {
     };
     private geojsonLayer: L.GeoJSON | null = null;
     private currentStateCode: number | null = null;
-    private currentType: string;
+    private currentType: string | null = null;
     private citySuppliers: CitySuppliers = {};
-    private satelliteLayer: L.Layer;
 
     private HOST_CITY_TOOLTIP_TEXT: string = "GELF Sete Lagoas";
-    private MAX_ZOOM = 17;
+    private MAX_ZOOM = 18;
 
-    constructor(currentType: string) {
+    constructor() {
         this.map = L.map("map", {
             zoomControl: false,
             attributionControl: false,
             maxZoom: this.MAX_ZOOM,
         }).setView(BRAZIL_COORDINATES, 4);
-        this.currentType = currentType;
-
-        this.satelliteLayer = L.tileLayer(
-            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg",
-            {
-                maxZoom: this.MAX_ZOOM,
-            }
-        );
     }
 
     async loadGeoJSON(type: "states" | "cities", uf: string | null = null): Promise<any> {
@@ -71,18 +63,18 @@ class MapService {
         const suppliers = this.citySuppliers[cityKey];
 
         const base: L.PathOptions = {
-            color: STROKE_COLOR,
+            color: WEAK_STROKE_COLOR,
             fillColor: FILL_COLOR,
             fillOpacity: 1,
             weight: 1,
         };
 
         if (suppliers && suppliers.some((s) => s.material_type === this.currentType)) {
-            base.fillColor = "var(--material)";
+            base.fillColor = "var(--primary-color)";
         }
 
         if (suppliers && base.fillColor === FILL_COLOR) {
-            base.fillColor = "var(--material-off)";
+            base.fillColor = "var(--off)";
         }
 
         return base;
@@ -141,8 +133,9 @@ class MapService {
                         } else {
                             layer.bindTooltip(feature.properties.name, {
                                 permanent: false,
-                                direction: "top",
+                                direction: "center",
                                 className: "city-tooltip custom-tooltip",
+                                interactive: false,
                             });
                         }
 
@@ -158,7 +151,7 @@ class MapService {
                                 }
                             },
                             click: () => {
-                                supplierService.openDetails(cityKey);
+                                supplierService.openDetails(cityKey, this.currentType);
                             },
                         });
                     }
