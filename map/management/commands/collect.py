@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from ._collect import charcoal_entries, suppliers_and_docs, suppliers_ratings
+from map.management.collectors import charcoal_entries, suppliers_and_docs, suppliers_ratings
 
 
 class Command(BaseCommand):

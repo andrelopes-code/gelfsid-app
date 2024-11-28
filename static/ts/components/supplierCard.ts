@@ -25,7 +25,9 @@ function linkfy(value: string, link?: string) {
     }
 
     return html`
-        <a href="${CONFIG.docFilesBaseUrl}/${link}" class="hover:text-slate-300" target="_blank">${value}</a>
+        <a href="${CONFIG.staticFilesBaseUrl}/${link}" class="hover:text-slate-300" target="_blank"
+            >${value}</a
+        >
     `;
 }
 

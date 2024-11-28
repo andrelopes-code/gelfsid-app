@@ -23,7 +23,14 @@ def hyperlink_or_none(cell):
     return None
 
 
-def sanitize(value):
+def rmna(value):
+    """
+    Remove valores 'nulos' como:
+        - na
+        - n/a
+        - não aplicável
+        ...
+    """
     if isinstance(value, str):
         options = {'na', 'n/a', '-', 'não aplicável', 'não aplicavel'}
         if value.strip().lower() in options:
@@ -75,7 +82,7 @@ def normalize_text(text):
     text = re.sub(r'[^\w\s]', '', text)
 
     # Remove palavras desnecessárias
-    text = re.sub(r'\b(ltda|sa|fazenda|mina|me|eireli|do|da|de|e|faz.|fazenfa)\b', '', text)
+    text = re.sub(r'\b(sa|fazenda|mina|me|do|da|de|e|faz.|fazenfa)\b', '', text)
 
     # Remove espaços extras
     text = re.sub(r'\s+', ' ', text)
@@ -90,4 +97,4 @@ def normalize_and_compare(s1, s2):
 
 
 def get_best_matches(s, candidates, limit=10):
-    return sorted(((normalize_and_compare(s, c), c) for c in candidates), reverse=True)[:limit]
+    return sorted(((round(normalize_and_compare(s, c), ndigits=2), c) for c in candidates), reverse=True)[:limit]

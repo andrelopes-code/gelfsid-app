@@ -2,12 +2,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
     <head>
+        <meta charset="UTF-8" />
         <title>
             {% block title %}
                 GELFSID Map
             {% endblock title %}
         </title>
-        <meta charset="UTF-8" />
         <meta http-equiv="Content-Security-Policy"
               content="upgrade-insecure-requests" />
         <meta name="description"
@@ -22,7 +22,7 @@
               href="{% static 'assets/icon.ico' %}"
               type="image/x-icon" />
         <!-- App Scripts -->
-        <script>window.docFilesBaseUrl = "{{ DOC_FILES_BASE_URL }}"</script>
+        <script>window.staticFilesBaseUrl = "{{ STATIC_FILES_BASE_URL }}";</script>
         <script src="https://unpkg.com/@phosphor-icons/web"></script>
         <script defer type="module" src="{% static 'ts/dist/bundle.js' %}"></script>
     </head>

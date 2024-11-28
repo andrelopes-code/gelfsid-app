@@ -1,9 +1,10 @@
 import pandas as pd
 import rich
 
-from map.management.commands._collect.constants import IQF_PATH, IQF_SHEET_NAME
-from map.management.commands._collect.utils import get_best_matches, normalize_and_compare
 from map.models import Supplier
+
+from .constants import IQF_PATH, IQF_SHEET_NAME
+from .utils import get_best_matches, normalize_and_compare
 
 
 def get_iqf_data():

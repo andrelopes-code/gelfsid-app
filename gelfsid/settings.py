@@ -23,7 +23,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-DOC_FILES_BASE_URL = env.str('DOC_FILES_BASE_URL')
+STATIC_FILES_BASE_URL = env.str('STATIC_FILES_BASE_URL')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

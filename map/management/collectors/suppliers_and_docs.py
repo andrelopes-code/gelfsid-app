@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from map.models import City, Document, State, Supplier
 
 from .constants import CTF_TYPE, ENVIRONMENTAL_PERMIT_TYPE, REGIEF_TYPE, SUPPLIERS_DOCS_PATH
-from .utils import datetime_or_none, get_db_city, hyperlink_or_none, normalize_cpf_cnpj, sanitize
+from .utils import datetime_or_none, get_db_city, hyperlink_or_none, normalize_cpf_cnpj, rmna
 
 MIN_ROW = 17
 
@@ -49,32 +49,32 @@ def collect():
             break
 
         supplier = SupplierData(
-            id=sanitize(row[0].value),
-            rm_code=sanitize(row[1].value),
-            corporate_name=sanitize(row[2].value),
-            material_type=sanitize(row[6].value),
+            id=rmna(row[0].value),
+            rm_code=rmna(row[1].value),
+            corporate_name=rmna(row[2].value),
+            material_type=rmna(row[6].value),
             city='',
             state='',
-            cpf_cnpj=normalize_cpf_cnpj(sanitize(row[11].value)),
+            cpf_cnpj=normalize_cpf_cnpj(rmna(row[11].value)),
             environmental_permit=DocumentData(
-                name=sanitize(row[7].value),
+                name=rmna(row[7].value),
                 filepath=hyperlink_or_none(row[7]),
-                validity=datetime_or_none(sanitize(row[8].value)),
-                status=sanitize(row[9].value),
+                validity=datetime_or_none(rmna(row[8].value)),
+                status=rmna(row[9].value),
                 type=ENVIRONMENTAL_PERMIT_TYPE,
             ),
             ctf=DocumentData(
-                name=sanitize(row[10].value),
+                name=rmna(row[10].value),
                 filepath=hyperlink_or_none(row[10]),
-                validity=datetime_or_none(sanitize(row[12].value)),
-                status=sanitize(row[13].value),
+                validity=datetime_or_none(rmna(row[12].value)),
+                status=rmna(row[13].value),
                 type=CTF_TYPE,
             ),
             regief=DocumentData(
-                name=sanitize(row[14].value),
+                name=rmna(row[14].value),
                 filepath=hyperlink_or_none(row[14]),
-                validity=datetime_or_none(sanitize(row[15].value)),
-                status=sanitize(row[16].value),
+                validity=datetime_or_none(rmna(row[15].value)),
+                status=rmna(row[16].value),
                 type=REGIEF_TYPE,
             ),
         )

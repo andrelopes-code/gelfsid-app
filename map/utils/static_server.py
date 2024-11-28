@@ -4,6 +4,7 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from threading import Thread
 
 STATIC_SERVER_ADDRESS = '127.0.0.1'
+DOCUMENTS_BASE_PATH = r'H:\DEMAT\Público\10 - DOCUMENTAÇÃO - CLIENTES E FORNECEDORES'
 
 
 class LocalStaticServer:
@@ -39,4 +40,4 @@ class LocalStaticServer:
             self.server.server_close()
 
 
-docs_server = LocalStaticServer(r'C:\Users\André\Documents\Adobe', 9000)
+docs_server = LocalStaticServer(DOCUMENTS_BASE_PATH, 9000)

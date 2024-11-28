@@ -5,7 +5,7 @@ export const html = String.raw;
 export const CONFIG: {
     geojson: { states: string; cities: string };
     api: { suppliers: string; materials: string };
-    docFilesBaseUrl: string;
+    staticFilesBaseUrl: string;
 } = {
     geojson: {
         states: "static/data/geojson/br_states.json",
@@ -16,7 +16,7 @@ export const CONFIG: {
         materials: "/api/materials/",
     },
 
-    docFilesBaseUrl: (window as any)?.docFilesBaseUrl,
+    staticFilesBaseUrl: (window as any)?.staticFilesBaseUrl,
 };
 
 export const BRAZIL_COORDINATES: [number, number] = [-14.235, -51.925];
