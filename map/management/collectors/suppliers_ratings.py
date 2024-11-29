@@ -37,7 +37,6 @@ def collect(threshold=95):
                 get_best_matches(
                     iqf_corporate_name,
                     corporate_names,
-                    threshold=0,
                 )
             )
             input()

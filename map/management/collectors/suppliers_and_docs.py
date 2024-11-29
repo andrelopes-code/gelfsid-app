@@ -1,37 +1,13 @@
-from datetime import datetime
-from typing import Optional
-
 import openpyxl
 from django.db import transaction
-from pydantic import BaseModel
 
 from map.models import City, Document, State, Supplier
 
 from .constants import CTF_TYPE, ENVIRONMENTAL_PERMIT_TYPE, REGIEF_TYPE, SUPPLIERS_DOCS_PATH
+from .types import DocumentData, SupplierData
 from .utils import datetime_or_none, get_db_city, hyperlink_or_none, normalize_cpf_cnpj, rmna
 
 MIN_ROW = 17
-
-
-class DocumentData(BaseModel):
-    name: Optional[str]
-    status: Optional[str]
-    filepath: Optional[str]
-    validity: Optional[datetime]
-    type: str = ''
-
-
-class SupplierData(BaseModel):
-    id: int
-    rm_code: Optional[str]
-    corporate_name: str
-    city: str
-    cpf_cnpj: str
-    state: str
-    material_type: str
-    environmental_permit: DocumentData
-    ctf: DocumentData
-    regief: DocumentData
 
 
 def collect():

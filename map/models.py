@@ -47,8 +47,34 @@ class Document(models.Model):
         verbose_name_plural = 'Documentos'
 
 
+class CharcoalEntry(models.Model):
+    entry_date = models.DateField(verbose_name='Data de Entrada')
+    origin_ticket = models.CharField(max_length=50, unique=True, verbose_name='Ticket de Origem')
+    vehicle_plate = models.CharField(max_length=50, verbose_name='Placa do Veículo')
+
+    entry_volume = models.FloatField(verbose_name='Volume de Entrada')
+    moisture = models.FloatField(verbose_name='Umidade de Origem')
+    fines = models.FloatField(verbose_name='Finos')
+    density = models.FloatField(verbose_name='Densidade')
+
+    dcf = models.CharField(max_length=50, verbose_name='DCF')
+    gcae = models.CharField(max_length=50, verbose_name='GCAE')
+
+    supplier = models.ForeignKey(
+        'Supplier',
+        on_delete=models.CASCADE,
+        related_name='charcoal_entries',
+        verbose_name='Fornecedor',
+    )
+
+    class Meta:
+        indexes = [models.Index(fields=['entry_date'])]
+        verbose_name = 'Entrada de Carvão'
+        verbose_name_plural = 'Entradas de Carvão'
+
+
 class Supplier(models.Model):
-    corporate_name = models.CharField(max_length=200, verbose_name='Razão Social')
+    corporate_name = models.CharField(max_length=200, verbose_name='Razão Social', unique=True)
     material_type = models.CharField(max_length=30, verbose_name='Tipo de Material')
     distance_in_meters = models.IntegerField(blank=True, null=True, verbose_name='Distância em Metros')
     state = models.ForeignKey(State, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Estado')
