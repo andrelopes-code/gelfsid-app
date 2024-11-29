@@ -12,13 +12,14 @@ import { SupplierCard } from "./components/supplierCard";
 
 class SupplierService {
     private citySuppliers: CitySuppliers = {};
+    public supplierData: Supplier[] = [];
 
     async loadSuppliers(): Promise<CitySuppliers> {
         const response = await fetch(CONFIG.api.suppliers);
-        const supplierData: Supplier[] = await response.json();
+        this.supplierData = await response.json();
 
         const suppliers: CitySuppliers = {};
-        for (const supplier of supplierData) {
+        for (const supplier of this.supplierData) {
             const cityKey = this.getCityKey(STATE_CODE_MAP[supplier.state.abbr], supplier.city.name);
             if (!suppliers[cityKey]) {
                 suppliers[cityKey] = [];
