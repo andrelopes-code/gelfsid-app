@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group, User
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 
-from .models import City, Document, State, Supplier
+from .models import CharcoalEntry, City, Document, State, Supplier
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -19,6 +19,12 @@ class GroupAdmin(BaseGroupAdmin, ModelAdmin):
 @admin.register(User)
 class UserAdmin(BaseUserAdmin, ModelAdmin):
     pass
+
+
+@admin.register(CharcoalEntry)
+class CharcoalEntryAdmin(ModelAdmin):
+    list_display = ('supplier', 'entry_volume', 'entry_date')
+    search_fields = ('supplier__corporate_name',)
 
 
 @admin.register(State)
