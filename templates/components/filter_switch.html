@@ -30,8 +30,8 @@
         color: var(--primary-color) !important;
     }
 </style>
-<div class="px-2 pb-2 h-12 material-filter" id="material-filter">
-    <button class="w-40 h-12 font-semibold text-[var(--primary-color)] text-center"
+<div class="px-2 pb-2 h-10 text-sm material-filter" id="material-filter">
+    <button class="w-36 h-10 font-semibold text-[var(--primary-color)] text-center"
             id="material-filter-toggle">MOSTRAR FILTRO</button>
 </div>
 <script>
@@ -39,7 +39,7 @@
     const materialFilter = document.getElementById("material-filter");
 
     toggleBtn.addEventListener("click", (e) => {
-        const closed = materialFilter.classList.toggle("h-12");
+        const closed = materialFilter.classList.toggle("h-10");
         if (closed) {
             toggleBtn.textContent = "MOSTRAR FILTRO";
         } else {
