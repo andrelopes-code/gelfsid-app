@@ -5,7 +5,7 @@ from map.management.collectors import charcoal_entries, suppliers_and_docs, supp
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        # suppliers_and_docs.collect()
+        suppliers_and_docs.collect()
         # suppliers_ratings.collect()
         charcoal_entries.collect()
 

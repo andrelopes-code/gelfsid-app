@@ -1,5 +1,13 @@
 import type { Supplier, CitySuppliers } from "./types";
-import { STATE_CODE_MAP, CONFIG, GOOD_RATING_COLOR, BAD_RATING_COLOR } from "./constants";
+import {
+    STATE_CODE_MAP,
+    CONFIG,
+    GOOD_RATING_COLOR,
+    BAD_RATING_COLOR,
+    GREEN_COLOR,
+    ORANGE_COLOR,
+    STROKE_COLOR,
+} from "./constants";
 import { SupplierCard } from "./components/supplierCard";
 
 class SupplierService {
@@ -28,10 +36,26 @@ class SupplierService {
 
         suppliers.forEach((supplier) => {
             const newCard = document.createElement("div");
+            newCard.classList.add("w-full", "h-fit");
+
+            let borderColor = STROKE_COLOR;
+
+            switch (supplier.material_type) {
+                case "Carvão Vegetal":
+                    borderColor = GREEN_COLOR;
+                    break;
+
+                case "Minério de Ferro":
+                    borderColor = ORANGE_COLOR;
+                    break;
+            }
+
+            newCard.style.borderColor = borderColor;
+
             newCard.innerHTML = SupplierCard(
                 supplier,
-                BAD_RATING_COLOR,
-                supplier.rating > 80 ? GOOD_RATING_COLOR : BAD_RATING_COLOR
+                borderColor,
+                supplier.rating > 80 ? GREEN_COLOR : ORANGE_COLOR
             );
             container.appendChild(newCard);
         });
@@ -39,6 +63,7 @@ class SupplierService {
 
     openDetails(cityKey: string, currentType: string | null): void {
         let suppliers = this.citySuppliers[cityKey];
+        if (!suppliers) return;
 
         const detailsTitle = document.querySelector("#details-title");
         const detailsElement = document.getElementById("details");
@@ -47,11 +72,6 @@ class SupplierService {
             detailsTitle.textContent = suppliers[0].city.name;
         }
 
-        if (currentType != null) {
-            suppliers = suppliers.filter((s) => s.material_type === currentType);
-        }
-
-        if (suppliers.length === 0) return;
         this.generateSupplierCards(suppliers);
 
         if (detailsElement) {

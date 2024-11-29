@@ -6,9 +6,11 @@
     }
 
     .material-filter {
-        padding: 5px;
         border-radius: 10px;
         background-color: var(--bg-dark);
+        max-height: fit-content;
+        transition: all 1s ease;
+        overflow: hidden;
     }
 
     .material-filter-option {
@@ -28,4 +30,21 @@
         color: var(--primary-color) !important;
     }
 </style>
-<div class="material-filter" id="material-filter"></div>
+<div class="px-2 pb-2 h-12 material-filter" id="material-filter">
+    <button class="w-40 h-12 font-semibold text-[var(--primary-color)] text-center"
+            id="material-filter-toggle">MOSTRAR FILTRO</button>
+</div>
+<script>
+    const toggleBtn = document.getElementById("material-filter-toggle");
+    const materialFilter = document.getElementById("material-filter");
+
+    toggleBtn.addEventListener("click", (e) => {
+        const closed = materialFilter.classList.toggle("h-12");
+        if (closed) {
+            toggleBtn.textContent = "MOSTRAR FILTRO";
+        } else {
+            toggleBtn.textContent = "OCULTAR FILTRO";
+        }
+    })
+
+</script>

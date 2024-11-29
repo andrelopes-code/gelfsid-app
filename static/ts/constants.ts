@@ -19,16 +19,19 @@ export const CONFIG: {
     staticFilesBaseUrl: (window as any)?.staticFilesBaseUrl,
 };
 
+export const DEFAULT_MATERIAL_TYPE = "Todos";
 export const BRAZIL_COORDINATES: [number, number] = [-14.235, -51.925];
 export const HOST_CITY_KEY = "31-Sete Lagoas";
-export const FILL_COLOR = "#151b2500";
-export const STROKE_COLOR = "#4b5260";
-export const WEAK_STROKE_COLOR = "#4b526033";
 
-export const DEFAULT_MATERIAL_TYPE = "Carvão Vegetal";
+export const FILL_COLOR = "var(--fill-color)";
+export const STROKE_COLOR = "var(--stroke-color)";
+export const WEAK_STROKE_COLOR = "var(--weak-stroke-color)";
+export const ORANGE_COLOR = "var(--primary-color)";
+export const GREEN_COLOR = "var(--secondary-color)";
+export const DEFAULT_COLOR = "var(--off)";
 
-export const GOOD_RATING_COLOR = "var(--secondary-color)";
-export const BAD_RATING_COLOR = "var(--primary-color)";
+export const GOOD_RATING_COLOR = GREEN_COLOR;
+export const BAD_RATING_COLOR = ORANGE_COLOR;
 
 export const STATE_CODE_MAP: StateCodeMapping = {
     RO: 11,

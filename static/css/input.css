@@ -4,13 +4,11 @@
 
 :root {
     --primary-color: #d68367;
-    --secondary-color: #98e089;
+    --secondary-color: #8bc480;
+    --stroke-color: #3e4752;
+    --weak-stroke-color: rgb(31, 36, 43);
+    --fill-color: #151b2500;
     --off: #00000075;
-}
-
-svg path:hover {
-    fill: var(--primary-color);
-    transition: none;
 }
 
 svg path:focus {

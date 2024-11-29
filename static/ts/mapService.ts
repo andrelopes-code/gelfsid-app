@@ -7,6 +7,9 @@ import {
     HOST_CITY_KEY,
     STATE_CODE_MAP,
     WEAK_STROKE_COLOR,
+    DEFAULT_MATERIAL_TYPE,
+    GREEN_COLOR,
+    ORANGE_COLOR,
 } from "./constants";
 import type { Cache, CitySuppliers } from "./types";
 import { supplierService } from "./supplierService";
@@ -69,8 +72,21 @@ class MapService {
             weight: 1,
         };
 
-        if (suppliers && suppliers.some((s) => s.material_type === this.currentType)) {
-            base.fillColor = "var(--primary-color)";
+        const filterDisabled = this.currentType === DEFAULT_MATERIAL_TYPE;
+
+        if (suppliers && (filterDisabled || suppliers.some((s) => s.material_type === this.currentType))) {
+            base.fillColor = STROKE_COLOR;
+            switch (this.currentType) {
+                case "Carvão Vegetal":
+                    base.fillColor = GREEN_COLOR;
+                    break;
+                case "Minério de Ferro":
+                    base.fillColor = ORANGE_COLOR;
+                    break;
+                case "Todos":
+                    base.fillColor = ORANGE_COLOR;
+                    break;
+            }
         }
 
         if (suppliers && base.fillColor === FILL_COLOR) {
@@ -89,7 +105,7 @@ class MapService {
                     color: STROKE_COLOR,
                     fillColor: FILL_COLOR,
                     fillOpacity: 1,
-                    weight: 1,
+                    weight: 1.5,
                 },
                 onEachFeature: (feature, layer) => {
                     layer.on({
@@ -128,26 +144,23 @@ class MapService {
                             layer.bindTooltip(this.HOST_CITY_TOOLTIP_TEXT, {
                                 permanent: true,
                                 direction: "top",
-                                className: "city-tooltip custom-tooltip-gelf",
+                                className: "custom-tooltip-gelf",
                             });
                         } else {
-                            layer.bindTooltip(feature.properties.name, {
-                                permanent: false,
-                                direction: "center",
-                                className: "city-tooltip custom-tooltip",
-                                interactive: false,
-                            });
+                            // layer.bindTooltip(feature.properties.name, {
+                            //     permanent: false,
+                            //     direction: "top",
+                            //     className: "custom-tooltip",
+                            // });
                         }
 
                         layer.on({
                             mouseover: (e) => {
-                                const layer = e.target;
-                                layer.openTooltip();
+                                e.target.openTooltip();
                             },
                             mouseout: (e) => {
-                                const layer = e.target;
                                 if (!isHostCity) {
-                                    layer.closeTooltip();
+                                    e.target.closeTooltip();
                                 }
                             },
                             click: () => {
