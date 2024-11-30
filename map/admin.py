@@ -23,7 +23,14 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
 
 @admin.register(CharcoalEntry)
 class CharcoalEntryAdmin(ModelAdmin):
-    list_display = ('supplier', 'entry_volume', 'entry_date')
+    list_display = (
+        'supplier',
+        'entry_volume',
+        'moisture',
+        'density',
+        'fines',
+        'entry_date',
+    )
     search_fields = ('supplier__corporate_name',)
 
 

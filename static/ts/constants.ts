@@ -1,12 +1,24 @@
 import type { StateCodeMapping } from "./types";
 
-export const html = String.raw;
+// Interface para configuração
+interface GeoJsonConfig {
+    states: string;
+    cities: string;
+}
 
-export const CONFIG: {
-    geojson: { states: string; cities: string };
-    api: { suppliers: string; materials: string };
+interface ApiConfig {
+    suppliers: string;
+    materials: string;
+}
+
+interface AppConfig {
+    geojson: GeoJsonConfig;
+    api: ApiConfig;
     staticFilesBaseUrl: string;
-} = {
+}
+
+// Configuração da aplicação
+export const APP_CONFIG: AppConfig = {
     geojson: {
         states: "static/data/geojson/br_states.json",
         cities: "static/data/geojson/geojs-{uf}-mun.json",
@@ -15,14 +27,18 @@ export const CONFIG: {
         suppliers: "/api/suppliers/",
         materials: "/api/materials/",
     },
-
     staticFilesBaseUrl: (window as any)?.staticFilesBaseUrl,
 };
 
+// Constantes gerais
 export const DEFAULT_MATERIAL_TYPE = "Todos";
 export const BRAZIL_COORDINATES: [number, number] = [-14.235, -51.925];
+export const HOST_CITY_COORDINATES = [-19.4457253885, -44.2600188074];
+export const HOST_CITY_TOOLTIP_TEXT = "GELF Sete Lagoas";
 export const HOST_CITY_KEY = "31-Sete Lagoas";
+export const html = String.raw;
 
+// Constantes de estilo
 export const FILL_COLOR = "var(--fill-color)";
 export const STROKE_COLOR = "var(--stroke-color)";
 export const WEAK_STROKE_COLOR = "var(--weak-stroke-color)";
@@ -33,6 +49,7 @@ export const DEFAULT_COLOR = "var(--off)";
 export const GOOD_RATING_COLOR = GREEN_COLOR;
 export const BAD_RATING_COLOR = ORANGE_COLOR;
 
+// Mapeamento de códigos dos estados
 export const STATE_CODE_MAP: StateCodeMapping = {
     RO: 11,
     AC: 12,

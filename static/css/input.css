@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,17 +8,26 @@
     --primary-color: #d68367;
     --secondary-color: #8bc480;
     --stroke-color: #3e4752;
-    --weak-stroke-color: rgb(31, 36, 43);
+    --weak-stroke-color: #1f242b;
     --fill-color: #151b2500;
     --off: #00000075;
+}
+
+* {
+    font-family: "JetBrains Mono", sans-serif;
 }
 
 svg path:focus {
     outline: none !important;
 }
 
+.state-layer,
 .city-layer {
     transition: filter 0.3s ease;
+}
+
+.state-layer:hover {
+    fill: #1f242b !important;
 }
 
 .city-layer:hover {

@@ -8,9 +8,31 @@
     .material-filter {
         border-radius: 10px;
         background-color: var(--bg-dark);
-        max-height: fit-content;
-        transition: all 1s ease;
+        max-height: 60px;
+        transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.5s ease;
         overflow: hidden;
+        opacity: 1;
+    }
+
+    .material-filter.collapsed {
+        max-height: 40px;
+    }
+
+    .material-filter.expanded {
+        max-height: 500px;
+        opacity: 1;
+    }
+
+    .material-filter-content {
+        opacity: 0;
+        transform: scale(0.98);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .material-filter.expanded .material-filter-content {
+        opacity: 1;
+        transform: scale(1);
     }
 
     .material-filter-option {
@@ -29,25 +51,43 @@
         border-radius: 10px;
         color: var(--primary-color) !important;
     }
+
+    #material-filter-toggle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
 </style>
-<div class="px-2 pb-2 h-10 text-sm material-filter" id="material-filter">
-    <button class="hover:brightness-125 flex justify-center items-center gap-1 w-36 h-10 font-semibold text-[var(--primary-color)] transition-[filter] duration-300"
+<!-- HTML Structure -->
+<div class="px-2 pb-2 text-center collapsed material-filter"
+     id="material-filter">
+    <button class="hover:brightness-125 flex justify-center items-center gap-1 w-full h-10 font-semibold text-[var(--primary-color)] text-sm transition-[filter] duration-300"
             id="material-filter-toggle">
         <i class="ph-sliders ph"></i>
         MOSTRAR FILTRO
     </button>
+    <!-- Add your filter content here -->
+    <div class="px-4 py-2 text-xs material-filter-content"></div>
 </div>
 <script>
     const toggleBtn = document.getElementById("material-filter-toggle");
     const materialFilter = document.getElementById("material-filter");
 
     toggleBtn.addEventListener("click", (e) => {
-        const closed = materialFilter.classList.toggle("h-10");
-        if (closed) {
-            toggleBtn.innerHTML = "<i class='ph-sliders ph'></i>MOSTRAR FILTRO";
-        } else {
-            toggleBtn.innerHTML = "<i class='ph-sliders ph'></i>OCULTAR FILTRO";
-        }
-    })
+        const isCurrentlyClosed = materialFilter.classList.contains('collapsed');
 
+        if (isCurrentlyClosed) {
+            // Expand
+            materialFilter.classList.remove('collapsed');
+            materialFilter.classList.add('expanded');
+            toggleBtn.innerHTML = "<i class='ph-sliders ph'></i>OCULTAR FILTRO";
+        } else {
+            // Collapse
+            materialFilter.classList.remove('expanded');
+            materialFilter.classList.add('collapsed');
+            toggleBtn.innerHTML = "<i class='ph-sliders ph'></i>MOSTRAR FILTRO";
+        }
+    });
 </script>

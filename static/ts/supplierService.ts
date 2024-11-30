@@ -1,26 +1,19 @@
 import type { Supplier, CitySuppliers } from "./types";
-import {
-    STATE_CODE_MAP,
-    CONFIG,
-    GOOD_RATING_COLOR,
-    BAD_RATING_COLOR,
-    GREEN_COLOR,
-    ORANGE_COLOR,
-    STROKE_COLOR,
-} from "./constants";
+import { STATE_CODE_MAP, APP_CONFIG, GREEN_COLOR, ORANGE_COLOR, STROKE_COLOR } from "./constants";
 import { SupplierCard } from "./components/supplierCard";
+import { getCityKey } from "./utils";
 
 class SupplierService {
     private citySuppliers: CitySuppliers = {};
     public supplierData: Supplier[] = [];
 
-    async loadSuppliers(): Promise<CitySuppliers> {
-        const response = await fetch(CONFIG.api.suppliers);
+    async loadCitySuppliers(): Promise<CitySuppliers> {
+        const response = await fetch(APP_CONFIG.api.suppliers);
         this.supplierData = await response.json();
 
         const suppliers: CitySuppliers = {};
         for (const supplier of this.supplierData) {
-            const cityKey = this.getCityKey(STATE_CODE_MAP[supplier.state.abbr], supplier.city.name);
+            const cityKey = getCityKey(STATE_CODE_MAP[supplier.state.abbr], supplier.city.name);
             if (!suppliers[cityKey]) {
                 suppliers[cityKey] = [];
             }
@@ -87,10 +80,6 @@ class SupplierService {
             detailsElement.classList.remove("translate-x-0");
             detailsElement.classList.add("translate-x-full");
         }
-    }
-
-    private getCityKey(stateCode: number, cityName: string): string {
-        return `${stateCode}-${cityName}`;
     }
 
     setCitySuppliers(suppliers: CitySuppliers): void {

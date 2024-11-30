@@ -1,7 +1,7 @@
 import L from "leaflet";
 import {
     BRAZIL_COORDINATES,
-    CONFIG,
+    APP_CONFIG,
     FILL_COLOR,
     STROKE_COLOR,
     HOST_CITY_KEY,
@@ -10,25 +10,27 @@ import {
     DEFAULT_MATERIAL_TYPE,
     GREEN_COLOR,
     ORANGE_COLOR,
+    HOST_CITY_TOOLTIP_TEXT,
 } from "./constants";
 import type { Cache, CitySuppliers } from "./types";
 import { supplierService } from "./supplierService";
+import { getCityKey } from "./utils";
 
 class MapService {
     private map: L.Map;
+
     private cache: Cache = {
         geojson: new Map(),
         suppliers: null,
         currentLayer: null,
     };
-    private geojsonLayer: L.GeoJSON | null = null;
+    private styleCache: Map<string, L.PathOptions> = new Map();
+
+    private citiesGeojsonLayer: L.GeoJSON | null = null;
     private currentStateCode: number | null = null;
     private currentType: string | null = null;
     private citySuppliers: CitySuppliers = {};
-    private activeLayers: Set<L.Layer> = new Set();
-    private styleCache: Map<string, L.PathOptions> = new Map();
-
-    private HOST_CITY_TOOLTIP_TEXT: string = "GELF Sete Lagoas";
+    private activeCityLayers: Set<L.Layer> = new Set();
     private MAX_ZOOM = 18;
 
     constructor() {
@@ -36,24 +38,26 @@ class MapService {
             zoomControl: false,
             attributionControl: false,
             maxZoom: this.MAX_ZOOM,
-        }).setView(BRAZIL_COORDINATES, 4);
+        });
+
+        this.map.setView(BRAZIL_COORDINATES, 4);
     }
 
-    async loadGeoJSON(type: "states" | "cities", uf: string | null = null): Promise<any> {
+    async loadGeoJSON(type: "states" | "cities", uf: string | null = null) {
         const key = uf ? `cities-${uf}` : "states";
 
         if (!this.cache.geojson.has(key)) {
             try {
                 const url =
                     type === "states"
-                        ? CONFIG.geojson.states
-                        : CONFIG.geojson.cities.replace("{uf}", uf as string);
+                        ? APP_CONFIG.geojson.states
+                        : APP_CONFIG.geojson.cities.replace("{uf}", uf as string);
 
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`failed to load ${key}`);
 
-                const data = await response.json();
-                this.cache.geojson.set(key, data);
+                const geojsonData = await response.json();
+                this.cache.geojson.set(key, geojsonData);
             } catch (error) {
                 console.error(`error loading ${key}:`, error);
                 throw error;
@@ -63,7 +67,7 @@ class MapService {
         return this.cache.geojson.get(key);
     }
 
-    private calculateCityStyle(cityKey: string, currentType: string | null): L.PathOptions {
+    private calculateCityStyle(cityKey: string, currentType: string | null) {
         const cacheKey = `${cityKey}-${currentType}`;
         if (this.styleCache.has(cacheKey)) {
             return this.styleCache.get(cacheKey)!;
@@ -105,12 +109,12 @@ class MapService {
         return base;
     }
 
-    private cityStyleFunction(feature: any): L.PathOptions {
-        const cityKey = this.getCityKey(this.currentStateCode!, feature.properties.name);
+    private cityStyleFunction(feature: any) {
+        const cityKey = getCityKey(this.currentStateCode!, feature.properties.name);
         return this.calculateCityStyle(cityKey, this.currentType);
     }
 
-    async loadStates(): Promise<void> {
+    async loadStates() {
         try {
             const data = await this.loadGeoJSON("states");
 
@@ -118,7 +122,6 @@ class MapService {
                 style: {
                     color: WEAK_STROKE_COLOR,
                     fillColor: FILL_COLOR,
-                    fillOpacity: 1,
                     weight: 2,
                     className: "state-layer",
                 },
@@ -135,92 +138,99 @@ class MapService {
         }
     }
 
-    async loadCities(stateCode: number): Promise<void> {
+    async loadCities(stateCode: number) {
         try {
+            // Caso tenha uma camada de cidades carregada,
+            // remove os event listeners e a camada do mapa
+            if (this.citiesGeojsonLayer) {
+                this.citiesGeojsonLayer.off("mouseover mouseout click");
+                this.map.removeLayer(this.citiesGeojsonLayer);
+            }
+
+            // Remove os event listeners das camadas anteriores
+            // e limpa o Set que armazena essas camadas
+            this.activeCityLayers.forEach((layer) => {
+                layer.off();
+            });
+            this.activeCityLayers.clear();
+
+            // Carrega o novo geoJSON para o estado
+            //  selecionado e o adiciona ao mapa
             const data = await this.loadGeoJSON("cities", stateCode.toString());
             this.currentStateCode = stateCode;
 
-            this.activeLayers.forEach((layer) => {
-                this.map.removeLayer(layer);
-                this.activeLayers.delete(layer);
-            });
-
-            this.geojsonLayer = L.geoJSON(data, {
+            this.citiesGeojsonLayer = L.geoJSON(data, {
                 style: this.cityStyleFunction.bind(this),
                 onEachFeature: (feature, layer) => {
-                    this.activeLayers.add(layer);
+                    this.activeCityLayers.add(layer);
 
-                    const cityKey = this.getCityKey(stateCode, feature.properties.name);
-                    const isHostCity = cityKey === HOST_CITY_KEY;
+                    const isHostCity = getCityKey(stateCode, feature.properties.name) === HOST_CITY_KEY;
 
-                    if (feature.properties?.name) {
-                        if (isHostCity) {
-                            layer.bindTooltip(this.HOST_CITY_TOOLTIP_TEXT, {
-                                permanent: true,
-                                direction: "top",
-                                className: "custom-tooltip-gelf",
-                            });
-                        }
+                    if (isHostCity) {
+                        layer.bindTooltip(HOST_CITY_TOOLTIP_TEXT, {
+                            permanent: true,
+                            direction: "top",
+                            className: "custom-tooltip-gelf",
+                        });
                     }
                 },
             }).addTo(this.map);
 
-            this.geojsonLayer
-                .on("mouseover", (e) => {
-                    const feature = e.propagatedFrom.feature;
-                    if (feature.properties) {
-                        const cityKey = this.getCityKey(stateCode, feature.properties.name);
-                        if (cityKey === HOST_CITY_KEY) return;
+            const handleMouseInteraction = (e: L.LeafletMouseEvent) => {
+                const layer = e.propagatedFrom;
+                const feature = layer.feature;
+                const cityKey = getCityKey(stateCode, feature.properties.name);
 
-                        const tooltip = L.tooltip({
-                            permanent: false,
-                            direction: "top",
-                            className: "custom-tooltip",
-                        })
-                            .setLatLng(e.latlng)
-                            .setContent(feature.properties.name);
+                if (e.type === "mouseover" && feature.properties) {
+                    if (cityKey === HOST_CITY_KEY) return;
 
-                        this.map.addLayer(tooltip);
-                        (e.propagatedFrom as any)._currentTooltip = tooltip;
+                    const tooltip = L.tooltip({
+                        permanent: false,
+                        direction: "top",
+                        className: "custom-tooltip",
+                    })
+                        .setLatLng(e.latlng)
+                        .setContent(feature.properties.name);
 
-                        // Adiciona um listener para mover o tooltip junto com o mouse
-                        e.propagatedFrom.on("mousemove", (moveEvent: any) => {
-                            const tooltipToUpdate = (e.propagatedFrom as any)._currentTooltip;
-                            if (tooltipToUpdate) {
-                                tooltipToUpdate.setLatLng(moveEvent.latlng);
-                            }
-                        });
+                    this.map.addLayer(tooltip);
+
+                    layer._managedTooltip = {
+                        tooltip: tooltip,
+                        moveHandler: (moveEvent: L.LeafletMouseEvent) => {
+                            tooltip.setLatLng(moveEvent.latlng);
+                        },
+                    };
+
+                    layer.on("mousemove", layer._managedTooltip.moveHandler);
+                } else if (e.type === "mouseout") {
+                    if (layer._managedTooltip) {
+                        this.map.removeLayer(layer._managedTooltip.tooltip);
+                        layer.off("mousemove", layer._managedTooltip.moveHandler);
+                        delete layer._managedTooltip;
                     }
-                })
-                .on("mouseout", (e) => {
-                    const tooltip = (e.propagatedFrom as any)._currentTooltip;
-                    if (tooltip) {
-                        this.map.removeLayer(tooltip);
-                        delete (e.propagatedFrom as any)._currentTooltip;
-                    }
-
-                    // Remove o listener de movimento do mouse
-                    e.propagatedFrom.off("mousemove");
-                })
-                .on("click", (e) => {
-                    const feature = e.propagatedFrom.feature;
+                } else if (e.type === "click") {
                     if (feature.properties) {
-                        const cityKey = this.getCityKey(stateCode, feature.properties.name);
                         supplierService.openDetails(cityKey, this.currentType);
                     }
-                });
+                }
+            };
+
+            this.citiesGeojsonLayer
+                .on("mouseover", handleMouseInteraction)
+                .on("mouseout", handleMouseInteraction)
+                .on("click", handleMouseInteraction);
         } catch (error) {
             console.error("error loading cities:", error);
         }
     }
 
-    updateGeoJSONStyle(): void {
-        if (this.geojsonLayer) {
-            this.geojsonLayer.setStyle(this.cityStyleFunction.bind(this));
+    updateGeoJSONStyle() {
+        if (this.citiesGeojsonLayer) {
+            this.citiesGeojsonLayer.setStyle(this.cityStyleFunction.bind(this));
         }
     }
 
-    async preloadCities(): Promise<void> {
+    async preloadCities() {
         const states = Object.keys(STATE_CODE_MAP);
         const maxConcurrent = 5;
         const pool = [];
@@ -236,17 +246,13 @@ class MapService {
         }
     }
 
-    setCurrentType(type: string): void {
+    setCurrentType(type: string) {
         this.currentType = type;
         this.updateGeoJSONStyle();
     }
 
-    setCitySuppliers(suppliers: CitySuppliers): void {
+    setCitySuppliers(suppliers: CitySuppliers) {
         this.citySuppliers = suppliers;
-    }
-
-    private getCityKey(stateCode: number, cityName: string): string {
-        return `${stateCode}-${cityName}`;
     }
 }
 

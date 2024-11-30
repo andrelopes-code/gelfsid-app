@@ -12,12 +12,14 @@ def get_suppliers(request):
             recent_entries = list(CharcoalEntry.objects.filter(supplier=supplier).order_by('-entry_date')[:30])
 
             if recent_entries:
+                last_date = recent_entries[0].entry_date.strftime('%d/%m/%Y')
+                first_date = recent_entries[-1].entry_date.strftime('%d/%m/%Y')
+
                 charcoal_recent_stats = {
                     'average_moisture': sum(entry.moisture for entry in recent_entries) / len(recent_entries),
                     'average_fines': sum(entry.fines for entry in recent_entries) / len(recent_entries),
                     'average_density': sum(entry.density for entry in recent_entries) / len(recent_entries),
-                    'period': f'{recent_entries[-1].entry_date:%d/%m/%Y} - {recent_entries[0].entry_date:%d/%m/%Y}',
-                    'entries_evaluated': len(recent_entries)
+                    'period': f'{first_date} ({len(recent_entries)}) {last_date}',
                 }
             else:
                 charcoal_recent_stats = None

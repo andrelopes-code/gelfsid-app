@@ -13,3 +13,7 @@ export function roundNumber(number: number, digits: number = 2): string {
     var roundedNum = Math.round(number * multiple) / multiple;
     return roundedNum.toFixed(digits);
 }
+
+export function getCityKey(stateCode: number, cityName: string): string {
+    return `${stateCode}-${cityName}`;
+}

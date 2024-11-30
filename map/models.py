@@ -53,7 +53,7 @@ class CharcoalEntry(models.Model):
     vehicle_plate = models.CharField(max_length=50, verbose_name='Placa do Veículo')
 
     entry_volume = models.FloatField(verbose_name='Volume de Entrada')
-    moisture = models.FloatField(verbose_name='Umidade de Origem')
+    moisture = models.FloatField(verbose_name='Umidade')
     fines = models.FloatField(verbose_name='Finos')
     density = models.FloatField(verbose_name='Densidade')
 
