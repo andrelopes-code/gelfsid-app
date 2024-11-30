@@ -15,6 +15,14 @@ svg path:focus {
     outline: none !important;
 }
 
+.city-layer {
+    transition: filter 0.3s ease;
+}
+
+.city-layer:hover {
+    filter: brightness(1.5);
+}
+
 .noscrollbar::-webkit-scrollbar {
     display: none !important;
 }
@@ -33,7 +41,7 @@ svg path:focus {
 .custom-tooltip {
     background-color: #272b31 !important;
     border-color: #272b31 !important;
-    color: #ebebeb !important;
+    color: #a1a1a1 !important;
 }
 
 .custom-tooltip::before {

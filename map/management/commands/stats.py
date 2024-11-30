@@ -1,4 +1,5 @@
 import pandas as pd
+import rich
 from django.core.management.base import BaseCommand
 
 from map.models import CharcoalEntry
@@ -10,4 +11,4 @@ class Command(BaseCommand):
         df = pd.DataFrame(entries)
         df = df.groupby('supplier__corporate_name')
 
-        self.stdout.write(self.style.SUCCESS('database reset successfully!'))
+        rich.print(df['entry_volume'].sum())

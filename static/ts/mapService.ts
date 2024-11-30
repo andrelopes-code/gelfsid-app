@@ -74,6 +74,7 @@ class MapService {
             fillColor: FILL_COLOR,
             fillOpacity: 1,
             weight: 1,
+            className: "city-layer",
         };
 
         const suppliers = this.citySuppliers[cityKey];
@@ -118,11 +119,11 @@ class MapService {
                     color: WEAK_STROKE_COLOR,
                     fillColor: FILL_COLOR,
                     fillOpacity: 1,
-                    weight: 1.5,
+                    weight: 2,
+                    className: "state-layer",
                 },
                 onEachFeature: (feature, layer) => {
                     layer.on({
-                        mouseover: () => {},
                         click: async () => {
                             await this.loadCities(STATE_CODE_MAP[feature.id as string]);
                         },

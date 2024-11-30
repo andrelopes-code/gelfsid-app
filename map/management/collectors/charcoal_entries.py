@@ -12,6 +12,15 @@ from .utils import get_best_matches
 MINIMUM_SIMILARITY = 95
 
 
+def datetime_convert(dates):
+    date = dates[0]
+
+    if isinstance(date, (int, float)):
+        return pd.to_datetime(dates, origin='1899-12-30', unit='D').dt.date
+    else:
+        return pd.to_datetime(dates).dt.date
+
+
 def get_entries():
     try:
         df = pd.read_excel(CHARCOAL_ENTRIES_PATH, sheet_name=CHARCOAL_ENTRIES_SHEET_NAME)
@@ -19,8 +28,7 @@ def get_entries():
         # Remove as linhas em que o nome do fornecedor está vazio
         df.dropna(subset=['NOME_FORNECEDOR'], inplace=True)
 
-        # Transforma a data de chegada em datetime
-        df['DATA_ENTRADA'] = pd.to_datetime(df['DATA_ENTRADA']).dt.date
+        df['DATA_ENTRADA'] = datetime_convert(df['DATA_ENTRADA'])
 
         # Cria uma coluna que contenha o nome do fornecedor junto com a fazenda
         df.insert(
@@ -28,6 +36,7 @@ def get_entries():
             'FORNECEDOR_E_FAZENDA',
             df['NOME_FORNECEDOR'] + ' ' + df['UNIDADE_CARBONIZACAO'].str.split('-').str[0].str.strip(),
         )
+
         return df
 
     except Exception as e:
@@ -97,7 +106,7 @@ def collect():
 
         # Itera sobre as melhores correspondências
         # mostrando-as como opções de escolha para o usuário
-        rich.print(f'[red]NÃO ENCONTRADO: {entry_supplier_name}[/red]')
+        rich.print(f'[red]FORNECEDOR NÃO ENCONTRADO: {entry_supplier_name}[/red]')
         for i in range(len(best_matches)):
             rich.print(f'  {i + 1} => {best_matches[i][1]} [{best_matches[i][0]:.2f}]')
 

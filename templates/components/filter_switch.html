@@ -1,7 +1,7 @@
 <style>
     :root {
-        --bg-dark: #181e29;
-        --slider-bg: #232830;
+        --bg-dark: #151b25;
+        --slider-bg: #1e242e;
         --text-inactive: #ffffff3b;
     }
 
@@ -31,8 +31,11 @@
     }
 </style>
 <div class="px-2 pb-2 h-10 text-sm material-filter" id="material-filter">
-    <button class="w-36 h-10 font-semibold text-[var(--primary-color)] text-center"
-            id="material-filter-toggle">MOSTRAR FILTRO</button>
+    <button class="hover:brightness-125 flex justify-center items-center gap-1 w-36 h-10 font-semibold text-[var(--primary-color)] transition-[filter] duration-300"
+            id="material-filter-toggle">
+        <i class="ph-sliders ph"></i>
+        MOSTRAR FILTRO
+    </button>
 </div>
 <script>
     const toggleBtn = document.getElementById("material-filter-toggle");
@@ -41,9 +44,9 @@
     toggleBtn.addEventListener("click", (e) => {
         const closed = materialFilter.classList.toggle("h-10");
         if (closed) {
-            toggleBtn.textContent = "MOSTRAR FILTRO";
+            toggleBtn.innerHTML = "<i class='ph-sliders ph'></i>MOSTRAR FILTRO";
         } else {
-            toggleBtn.textContent = "OCULTAR FILTRO";
+            toggleBtn.innerHTML = "<i class='ph-sliders ph'></i>OCULTAR FILTRO";
         }
     })
 
