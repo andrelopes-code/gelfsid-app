@@ -41,6 +41,13 @@ export interface Supplier {
     distance_in_meters: number | null;
     rating: number;
     documents: Document[];
+    charcoal_recent_stats: {
+        period: string;
+        average_moisture: number;
+        average_fines: number;
+        average_density: number;
+        entries_evaluated: number;
+    } | null;
 }
 
 export interface CitySuppliers {

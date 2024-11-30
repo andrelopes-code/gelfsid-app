@@ -7,3 +7,9 @@ export function formatCPFAndCNPJ(v: string) {
 
     return "";
 }
+
+export function roundNumber(number: number, digits: number = 2): string {
+    var multiple = Math.pow(10, digits);
+    var roundedNum = Math.round(number * multiple) / multiple;
+    return roundedNum.toFixed(digits);
+}

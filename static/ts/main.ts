@@ -67,12 +67,10 @@ class App {
             const suppliers = await supplierService.loadSuppliers();
             this.mapService.setCitySuppliers(suppliers);
             supplierService.setCitySuppliers(suppliers);
-
             await this.mapService.loadStates();
+            await this.mapService.preloadCities();
 
             this.hideLoader();
-
-            await this.mapService.preloadCities();
         } catch (error) {
             console.error("error:", error);
         }

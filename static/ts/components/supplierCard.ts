@@ -1,6 +1,6 @@
 import { CONFIG, html } from "../constants";
 import type { Supplier, Document } from "../types";
-import { formatCPFAndCNPJ } from "../utils";
+import { formatCPFAndCNPJ, roundNumber } from "../utils";
 
 function statusColor(status?: string): string {
     if (!status) {
@@ -52,19 +52,53 @@ function documentTableRow(label: string, document: Document) {
     `;
 }
 
+function charcoalStats(supplier: Supplier) {
+    if (!supplier.charcoal_recent_stats || supplier.material_type !== "Carvão Vegetal") {
+        return "";
+    }
+
+    return html`
+        <div class="mt-5 w-full bg-black bg-opacity-20 shadow-sm rounded-lg overflow-hidden">
+            <div
+                class="px-4 w-full font-semibold text-xs text-slate-400 flex justify-between items-center py-2"
+            >
+                <p>QUALIDADE MÉDIA RECENTE DO CARVÃO</p>
+                <p>${supplier.charcoal_recent_stats.period}</p>
+            </div>
+            <div class=" w-full grid grid-cols-3 grid-rows-1 text-sm">
+                <div
+                    class="px-4 border-slate-800 font-medium border-r flex justify-between  items-center py-3"
+                >
+                    <span class="text-slate-400">DENSIDADE</span>
+                    <span>${roundNumber(supplier.charcoal_recent_stats.average_density)}</span>
+                </div>
+                <div
+                    class="px-4 border-slate-800 font-medium border-r flex justify-between  items-center py-3"
+                >
+                    <span class="text-slate-400">UMIDADE</span>
+                    <span>${roundNumber(supplier.charcoal_recent_stats.average_moisture)}</span>
+                </div>
+                <div class="px-4 flex justify-between font-medium items-center py-3">
+                    <span class="text-slate-400">FINOS</span>
+                    <span>${roundNumber(supplier.charcoal_recent_stats.average_fines)}</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 export function SupplierCard(supplier: Supplier, borderColor: string, ratingColor: string): string {
+    const avaliacaoFmt = supplier.rating || "N/A";
+
     const distanciaFmt =
         supplier.distance_in_meters !== null
             ? `${Math.round((supplier.distance_in_meters / 1000) * 10) / 10} km`
             : "N/A";
 
-    const avaliacaoFmt = supplier.rating || "N/A";
-
-    const documents = supplier.documents
-        .map((document) => {
-            return documentTableRow(document.type.toUpperCase(), document);
-        })
-        .join("");
+    const documentRows = supplier.documents.reduce(
+        (rows, document) => rows + documentTableRow(document.type.toUpperCase(), document),
+        ""
+    );
 
     return html`
         <div class="p-3 w-full text-slate-200" id="supplier-card-template">
@@ -110,13 +144,12 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                         </div>
                     </div>
                 </div>
+                ${charcoalStats(supplier)}
                 <div class="mt-5 w-full">
                     <div class="bg-black bg-opacity-20 shadow-sm rounded-lg overflow-hidden">
                         <table class="w-full">
                             <tbody>
-                                <tr class="border-slate-800 border-b">
-                                    ${documents}
-                                </tr>
+                                ${documentRows}
                             </tbody>
                         </table>
                     </div>
