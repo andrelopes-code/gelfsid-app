@@ -682,16 +682,6 @@ video {
   z-index: 50;
 }
 
-.my-10{
-  margin-top: 2.5rem;
-  margin-bottom: 2.5rem;
-}
-
-.my-5{
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
-}
-
 .mb-3{
   margin-bottom: 0.75rem;
 }
@@ -797,12 +787,20 @@ video {
   resize: both;
 }
 
+.grid-cols-2{
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .grid-cols-3{
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .grid-rows-1{
   grid-template-rows: repeat(1, minmax(0, 1fr));
+}
+
+.grid-rows-2{
+  grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
 .flex-col{
@@ -879,6 +877,10 @@ video {
 
 .rounded-md{
   border-radius: 0.375rem;
+}
+
+.rounded-xl{
+  border-radius: 0.75rem;
 }
 
 .border{
@@ -986,16 +988,18 @@ video {
   padding-bottom: 1rem;
 }
 
+.px-5{
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.px-10{
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
 .pb-2{
   padding-bottom: 0.5rem;
-}
-
-.pb-5{
-  padding-bottom: 1.25rem;
-}
-
-.pt-5{
-  padding-top: 1.25rem;
 }
 
 .pb-4{
@@ -1196,8 +1200,33 @@ video {
   font-family: "JetBrains Mono", sans-serif;
 }
 
-svg path:focus {
-  outline: none !important;
+/* Define o background dos controles
+do plotly como transparente */
+
+.modebar-group {
+  background-color: transparent !important;
+}
+
+.plotly-chart {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Ajuste para que os graficos dentro de um container com a classe
+plotly-chart se adaptem a largura e altura desse container */
+
+.plotly-chart > div {
+  position: relative !important;
+  width: 100%;
+  height: 100%;
+}
+
+/* Ajuste para deixar os controles do plotly
+alinhados horizontalmente no topo */
+
+.modebar-group,
+.modebar-container {
+  display: none !important;
 }
 
 .state-layer,

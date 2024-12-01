@@ -5,7 +5,7 @@ IQF_PATH = r'/home/dreco/code/gelfsid-app/.sample-data/iqf2024.xlsx'
 
 CHARCOAL_ENTRIES_SHEET_NAME = 'Entrada de Carvão'
 CHARCOAL_ENTRIES_PATH = (
-    r'/home/dreco/code/gelfsid-app/.sample-data/relatorios/10 - Outubro/Entrada de carvão vegetal_Outubro_24.xlsx'
+    r'/home/dreco/code/gelfsid-app/.sample-data/relatorios/06 - Junho/Entrada de carvão vegetal_Junho_24.xlsx'
 )
 
 ENVIRONMENTAL_PERMIT_TYPE = 'LIC. AMBIENTAL'

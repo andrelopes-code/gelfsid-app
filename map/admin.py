@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group, User
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 
-from .models import CharcoalEntry, City, Document, State, Supplier
+from map.models import CharcoalEntry, City, Document, State, Supplier
 
 admin.site.unregister(User)
 admin.site.unregister(Group)

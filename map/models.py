@@ -68,6 +68,7 @@ class CharcoalEntry(models.Model):
     )
 
     class Meta:
+        ordering = ['-entry_date']
         indexes = [models.Index(fields=['entry_date'])]
         verbose_name = 'Entrada de Carvão'
         verbose_name_plural = 'Entradas de Carvão'

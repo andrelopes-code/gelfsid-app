@@ -68,7 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'map.context_processors.global_context',
+                'map.context.global_context',
             ],
         },
     },
@@ -110,7 +110,6 @@ UNFOLD = {
     'SITE_TITLE': 'GELFSID ADMIN PANEL',
     'SITE_HEADER': 'GELFSID ADMIN',
     'SITE_URL': '/',
-    'SHOW_HISTORY': True,
     'THEME': 'dark',
     'COLORS': {
         'font': {
