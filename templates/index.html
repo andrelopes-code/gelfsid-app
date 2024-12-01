@@ -1,14 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    <!-- Screen size warning -->
-    <div class="top-0 left-0 z-50 fixed flex justify-center items-center lg:hidden bg-dark w-full h-full">
-        <h1 class="font-semibold text-center text-slate-200">Desculpe, esta pagina só funciona em telas maiores.</h1>
-    </div>
     <!-- Filter -->
     <div class="top-0 z-30 absolute flex justify-start items-start gap-2 p-5 w-full pointer-events-none">
         <div class="pointer-events-auto">{% include "components/filter_switch.html" %}</div>
-        <div class="pointer-events-auto">{% include "components/stats_button.html" %}</div>
+        <div class="pointer-events-auto">{% include "components/dashboard_button.html" %}</div>
         <div class="pointer-events-auto">{% include "components/search.html" %}</div>
     </div>
     <div class="relative w-screen h-screen">

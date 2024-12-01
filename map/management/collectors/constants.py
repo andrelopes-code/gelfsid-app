@@ -1,12 +1,10 @@
-SUPPLIERS_DOCS_PATH = r'.sample-data/docs.xlsx'
+SUPPLIERS_DOCS_PATH = r'.sample-data/suppliers_docs.xlsx'
 
 IQF_SHEET_NAME = 'Base de Dados'
-IQF_PATH = r'/home/dreco/code/gelfsid-app/.sample-data/iqf2024.xlsx'
+IQF_PATH = r'.sample-data/iqf_2024.xlsx'
 
 CHARCOAL_ENTRIES_SHEET_NAME = 'Entrada de Carvão'
-CHARCOAL_ENTRIES_PATH = (
-    r'/home/dreco/code/gelfsid-app/.sample-data/relatorios/06 - Junho/Entrada de carvão vegetal_Junho_24.xlsx'
-)
+CHARCOAL_ENTRIES_PATH = r'.sample-data/entries'
 
 ENVIRONMENTAL_PERMIT_TYPE = 'LIC. AMBIENTAL'
 CTF_TYPE = 'CTF'

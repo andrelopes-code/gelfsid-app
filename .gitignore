@@ -169,4 +169,5 @@ tmp
 logs
 staticfiles
 certs
+.vscode
 .sample-data

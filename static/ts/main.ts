@@ -1,6 +1,15 @@
 import { APP_CONFIG, DEFAULT_MATERIAL_TYPE } from "./constants";
 import { MapService } from "./mapService";
 import { supplierService } from "./supplierService";
+import "leaflet/dist/leaflet.css";
+
+import "@phosphor-icons/web/bold/style.css";
+import "@phosphor-icons/web/fill/style.css";
+import "@phosphor-icons/web/regular/style.css";
+
+// Inicia alpinejs
+import Alpine from "alpinejs";
+Alpine.start();
 
 class App {
     private mapService: MapService;

@@ -1,6 +1,5 @@
-{% extends "base.html" %}
-{% load static %}
-{% block content %}
+{% extends "dashboard/base.html" %}
+{% block dashcontent %}
     <div class="gap-4 grid grid-rows-2 bg-dark p-5 w-full h-full">
         <div class="bg-dark-100 p-5 rounded-xl w-full">
             <div class="plotly-chart">{{ daily_entries_chart|safe }}</div>
@@ -14,4 +13,4 @@
             </div>
         </div>
     </div>
-{% endblock content %}
+{% endblock dashcontent %}

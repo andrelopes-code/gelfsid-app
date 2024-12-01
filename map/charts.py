@@ -8,11 +8,11 @@ from django.db.models import Avg, Sum
 from django.db.models.functions import TruncDay, TruncMonth, TruncWeek
 from django.utils import timezone
 
-from map import chart_theme
+from map import plotlytheme
 from map.models import CharcoalEntry
 
 # Define o tema personalizado como o padrão para os gráficos
-pio.templates.default = go.layout.Template(layout=chart_theme.custom_layout)
+pio.templates.default = go.layout.Template(layout=plotlytheme.custom_layout)
 
 
 def charcoal_entries(group_by='day'):

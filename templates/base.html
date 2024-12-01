@@ -1,36 +1,35 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8" />
-        <title>
-            {% block title %}
-                GELFSID Map
-            {% endblock title %}
-        </title>
-        <meta http-equiv="Content-Security-Policy"
-              content="upgrade-insecure-requests" />
-        <meta name="description"
-              content="GELFSID Map - Interactive map application." />
-        <meta name="keywords"
-              content="GELFSID, map, interactive, data visualization" />
-        <link rel="stylesheet" type="text/css" href='{% static "css/style.css" %}' />
-        <link rel="stylesheet"
-              type="text/css"
-              href="https://unpkg.com/leaflet/dist/leaflet.css" />
-        <link rel="shortcut icon"
-              href="{% static 'assets/icon.ico' %}"
-              type="image/x-icon" />
-        <!-- App Scripts -->
-        <script>window.staticFilesBaseUrl = "{{ STATIC_FILES_BASE_URL }}";</script>
-        <script src="https://unpkg.com/htmx.org@2.0.3"
-                integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
-                crossorigin="anonymous"></script>
-        <script src="https://unpkg.com/@phosphor-icons/web"></script>
-        <script defer type="module" src="{% static 'ts/dist/bundle.js' %}"></script>
-    </head>
-    <body class="w-screen h-screen">
-        {% block content %}
-        {% endblock content %}
-    </body>
+      <head>
+            <meta charset="UTF-8" />
+            <title>
+                  {% block title %}
+                        GELFSID Map
+                  {% endblock title %}
+            </title>
+            <meta http-equiv="Content-Security-Policy"
+                  content="upgrade-insecure-requests" />
+            <meta name="description"
+                  content="GELFSID Map - Interactive map application." />
+            <meta name="keywords"
+                  content="GELFSID, map, interactive, data visualization" />
+            <!-- App Links -->
+            <link rel="stylesheet" type="text/css" href='{% static "css/style.css" %}' />
+            <link rel="stylesheet" href="">
+            <link rel="shortcut icon"
+                  href="{% static 'assets/icon.ico' %}"
+                  type="image/x-icon" />
+            <!-- App Scripts -->
+            <script>window.staticFilesBaseUrl = "{{ STATIC_FILES_BASE_URL }}";</script>
+            <script defer type="module" src="{% static 'ts/dist/bundle.js' %}"></script>
+      </head>
+      <body class="w-screen h-screen">
+            <!-- Screen size warning -->
+            <div class="top-0 left-0 z-50 fixed flex justify-center items-center xl:hidden bg-dark w-full h-full">
+                  <h1 class="font-semibold text-center text-slate-200">Desculpe, esta pagina só funciona em telas maiores.</h1>
+            </div>
+            {% block content %}
+            {% endblock content %}
+      </body>
 </html>
