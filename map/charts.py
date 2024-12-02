@@ -18,14 +18,18 @@ pio.templates.default = go.layout.Template(layout=plotlytheme.custom_layout)
 
 
 def html_else_json(fig, html):
+    """Função que retorna a Figure em json ou html com base nos dados informados."""
+
     return fig.to_html(config={'showTips': False}, full_html=False) if html else fig.to_json()
+
+
+def no_data_error(title):
+    return render_to_string('components/errors/no_data.html', dict(title=title))
 
 
 @handle_chart_error
 def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
     months = int(months)
-    if supplier:
-        supplier = Supplier.objects.get(id=supplier)
 
     group_by_config = {
         'week': {
@@ -69,15 +73,18 @@ def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-
-    query = CharcoalEntry.objects.filter(entry_date__gte=timeutils.months_ago(months))
+    queryset = CharcoalEntry.objects.filter(entry_date__gte=timeutils.months_ago(months))
 
     if supplier:
-        config['title'] += f' - {supplier}'
-        query = query.filter(supplier=supplier)
+        supplier = Supplier.objects.filter(id=supplier).first()
+        if not supplier:
+            raise ValueError('Fornecedor não encontrado.')
 
-    query = (
-        query.annotate(entry_period=config['trunc_function']('entry_date'))
+        config['title'] += f' - {supplier}'
+        queryset = queryset.filter(supplier=supplier)
+
+    queryset = (
+        queryset.annotate(entry_period=config['trunc_function']('entry_date'))
         .values('entry_period')
         .annotate(
             total_volume=Sum('entry_volume'),
@@ -87,10 +94,10 @@ def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
         )
     )
 
-    df = pd.DataFrame(query)
-
+    df = pd.DataFrame(queryset)
+    print(df)
     if df.empty:
-        return render_to_string('components/errors/no_data.html', dict(title=config['title']))
+        return no_data_error(config['title'])
 
     fig = px.bar(
         data_frame=df,
@@ -125,20 +132,24 @@ def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
 
 @handle_chart_error
 def moisture_and_fines_by_day(html=False):
+    title = 'Média de Umidade e Finos por Dia (últimos 3 meses)'
     queryset = (
-        CharcoalEntry.objects.filter(entry_date__gte=timeutils.months_ago(2))
+        CharcoalEntry.objects.filter(entry_date__gte=timeutils.months_ago(3))
         .annotate(day=TruncDay('entry_date'))
         .values('day')
         .annotate(avg_fines=Avg('fines'), avg_moisture=Avg('moisture'))
         .order_by('day')
     )
+
     df = pd.DataFrame(queryset)
+    if df.empty:
+        return no_data_error(title)
 
     fig = px.line(
         df,
         x='day',
         y=['avg_fines', 'avg_moisture'],
-        title='Média de Umidade e Finos por Dia (últimos 3 meses)',
+        title=title,
         labels={
             'avg_fines': 'Finos (%)',
             'avg_moisture': 'Umidade (%)',
@@ -172,27 +183,28 @@ def moisture_and_fines_by_day(html=False):
 
 @handle_chart_error
 def density_by_day(html=False):
+    title = 'Média de Densidade por Dia (últimos 3 meses)'
     queryset = (
-        CharcoalEntry.objects.filter(entry_date__gte=timeutils.months_ago(2))
+        CharcoalEntry.objects.filter(entry_date__gte=timeutils.months_ago(3))
         .annotate(day=TruncDay('entry_date'))
         .values('day')
         .annotate(avg_density=Avg('density'))
         .order_by('day')
     )
     df = pd.DataFrame(queryset)
+    if df.empty:
+        return no_data_error(title)
 
     fig = px.line(
         df,
         x='day',
         y='avg_density',
-        title='Média de Densidade por Dia (últimos 3 meses)',
+        title=title,
         labels={'day': 'Data', 'avg_density': 'Densidade Média'},
         markers=True,
     )
 
-    fig.update_traces(
-        hovertemplate='<b>Data:</b> %{x|%d-%m-%Y}<br><b>Densidade:</b> %{y:,.2f}'
-    )
+    fig.update_traces(hovertemplate='<b>Data:</b> %{x|%d-%m-%Y}<br><b>Densidade:</b> %{y:,.2f}')
 
     fig.update_layout(
         xaxis_title='',

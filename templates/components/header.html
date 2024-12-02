@@ -20,13 +20,13 @@
                 x-data="{showChildren:false}"
                 @click.away="showChildren=false">
                 <a href="#"
-                   class="flex items-center bg-[var(--primary-color)] mx-1 px-4 rounded-lg h-10 font-bold text-dark-200 no-underline hover:no-underline leading-10 transition-colors duration-100 cursor-pointer"
+                   class="flex items-center bg-[var(--primary-color)] mx-1 px-4 rounded-md h-10 font-bold text-dark-200 no-underline hover:no-underline leading-10 transition-colors duration-100 cursor-pointer"
                    @click.prevent="showChildren=!showChildren">
                     <span class="mr-2 text-xl"> <i class="mdi-view-dashboard mdi"></i> </span>
                     <span>Dashboard</span>
                     <span class="ml-1"> <i class="mdi mdi-chevron-down"></i> </span>
                 </a>
-                <div class="top-auto left-0 z-30 absolute border-dark bg-dark shadow-md mt-1 border rounded-lg w-56 min-w-full text-sm"
+                <div class="top-auto left-0 z-30 absolute border-dark bg-dark shadow-md mt-1 border rounded-md w-56 min-w-full text-sm"
                      x-show="showChildren"
                      style="display: none"
                      x-transition:enter="transition ease duration-300 transform"
@@ -35,7 +35,7 @@
                      x-transition:leave="transition ease duration-300 transform"
                      x-transition:leave-start="opacity-100 translate-y-0"
                      x-transition:leave-end="opacity-0 translate-y-4">
-                    <div class="relative z-10 bg-dark-100 py-1 rounded-lg w-full">
+                    <div class="relative z-10 bg-dark-100 py-1 rounded-md w-full">
                         <ul class="list-reset">
                             <li class="relative"
                                 x-data="{showChildren:false}"
@@ -50,7 +50,7 @@
             </li>
             <li class="block relative">
                 <a href="{% url 'index' %}"
-                   class="flex items-center hover:bg-dark-200 mx-1 px-4 rounded-lg h-10 no-underline hover:no-underline leading-10 transition-colors duration-100 cursor-pointer">
+                   class="flex items-center hover:bg-dark-200 mx-1 px-4 rounded-md h-10 no-underline hover:no-underline leading-10 transition-colors duration-100 cursor-pointer">
                     <span class="mr-2 text-xl"> <i class="mdi mdi-map"></i> </span>
                     <span>Mapa</span>
                 </a>
@@ -59,21 +59,21 @@
     </div>
 </div>
 <!-- <li class="block relative" x-data="{showChildren:false}" @click.away="showChildren=false">
-<a href="#" class="flex items-center hover:bg-dark-200 mx-1 px-4 rounded-lg h-10 no-underline hover:no-underline leading-10 transition-colors duration-100 cursor-pointer" @click.prevent="showChildren=!showChildren">
+<a href="#" class="flex items-center hover:bg-dark-200 mx-1 px-4 rounded-md h-10 no-underline hover:no-underline leading-10 transition-colors duration-100 cursor-pointer" @click.prevent="showChildren=!showChildren">
     <span class="mr-2 text-xl"> <i class="mdi mdi-layers-outline"></i> </span>
     <span>UI Elements</span>
     <span class="ml-1"> <i class="mdi mdi-chevron-down"></i> </span>
 </a>
-<div class="top-auto left-0 z-30 absolute border-dark bg-dark-100 shadow-md mt-1 border rounded-lg w-56 min-w-full text-sm" x-show="showChildren" x-transition:enter="transition ease duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease duration-300 transform" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-4" style="display: none">
-    <div class="relative z-10 bg-dark-100 py-1 rounded-lg w-full">
+<div class="top-auto left-0 z-30 absolute border-dark bg-dark-100 shadow-md mt-1 border rounded-md w-56 min-w-full text-sm" x-show="showChildren" x-transition:enter="transition ease duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease duration-300 transform" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-4" style="display: none">
+    <div class="relative z-10 bg-dark-100 py-1 rounded-md w-full">
         <ul class="list-reset">
             <li class="relative" x-data="{showChildren:false}" @mouseleave="showChildren=false" @mouseenter="showChildren=true">
                 <a href="#" class="flex items-start hover:bg-dark-200 px-4 py-2 w-full no-underline hover:no-underline transition-colors duration-100 cursor-pointer">
                     <span class="flex-1">Basic Elements</span>
                     <span class="ml-1"> <i class="mdi-chevron-right mdi"></i> </span>
                 </a>
-                <div class="top-0 z-30 absolute inset-l-full border-dark bg-dark-100 shadow-md mt-1 border rounded-lg w-56 min-w-full text-sm" x-show="showChildren" x-transition:enter="transition ease duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease duration-300 transform" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-4" style="display: none">
-                    <div class="relative z-10 bg-dark-100 py-1 rounded-lg w-full">
+                <div class="top-0 z-30 absolute inset-l-full border-dark bg-dark-100 shadow-md mt-1 border rounded-md w-56 min-w-full text-sm" x-show="showChildren" x-transition:enter="transition ease duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease duration-300 transform" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-4" style="display: none">
+                    <div class="relative z-10 bg-dark-100 py-1 rounded-md w-full">
                         <ul class="list-reset">
                             <li>
                                 <a href="#" class="flex items-start hover:bg-dark-200 px-4 py-2 w-full no-underline hover:no-underline transition-colors duration-100 cursor-pointer"> <span class="flex-1">Accordion</span> </a>
@@ -102,8 +102,8 @@
                     <span class="flex-1">Advanced Elements</span>
                     <span class="ml-1"> <i class="mdi-chevron-right mdi"></i> </span>
                 </a>
-                <div class="top-0 z-30 absolute inset-l-full border-dark bg-dark-100 shadow-md mt-1 border rounded-lg w-56 min-w-full text-sm" x-show="showChildren" x-transition:enter="transition ease duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease duration-300 transform" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-4" style="display: none">
-                    <div class="relative z-10 bg-dark-100 py-1 rounded-lg w-full">
+                <div class="top-0 z-30 absolute inset-l-full border-dark bg-dark-100 shadow-md mt-1 border rounded-md w-56 min-w-full text-sm" x-show="showChildren" x-transition:enter="transition ease duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease duration-300 transform" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-4" style="display: none">
+                    <div class="relative z-10 bg-dark-100 py-1 rounded-md w-full">
                         <ul class="list-reset">
                             <li>
                                 <a href="#" class="flex items-start hover:bg-dark-200 px-4 py-2 w-full no-underline hover:no-underline transition-colors duration-100 cursor-pointer"> <span class="flex-1">Charts</span> </a>
@@ -132,8 +132,8 @@
                     <span class="flex-1">Forms &amp; Tables</span>
                     <span class="ml-1"> <i class="mdi-chevron-right mdi"></i> </span>
                 </a>
-                <div class="top-0 z-30 absolute inset-l-full border-dark bg-dark-100 shadow-md mt-1 border rounded-lg w-56 min-w-full text-sm" x-show="showChildren" x-transition:enter="transition ease duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease duration-300 transform" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-4" style="display: none">
-                    <div class="relative z-10 bg-dark-100 py-1 rounded-lg w-full">
+                <div class="top-0 z-30 absolute inset-l-full border-dark bg-dark-100 shadow-md mt-1 border rounded-md w-56 min-w-full text-sm" x-show="showChildren" x-transition:enter="transition ease duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease duration-300 transform" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-4" style="display: none">
+                    <div class="relative z-10 bg-dark-100 py-1 rounded-md w-full">
                         <ul class="list-reset">
                             <li>
                                 <a href="#" class="flex items-start hover:bg-dark-200 px-4 py-2 w-full no-underline hover:no-underline transition-colors duration-100 cursor-pointer"> <span class="flex-1">Form Elements</span> </a>

@@ -1,3 +1,10 @@
-<div class="flex justify-center items-center w-full h-full font-semibold text-slate-300">
-    <p>Não foi possivel renderizar o gráfico devido a dados ausentes ou inválidos.</p>
+<div class="flex flex-col justify-center items-center gap-1 w-full h-full font-semibold text-slate-300">
+    <p>Não foi possivel renderizar o gráfico.</p>
+    <p class="text-slate-500 text-xs">
+        {% if error %}
+            {{ error }}
+        {% else %}
+            ...
+        {% endif %}
+    </p>
 </div>

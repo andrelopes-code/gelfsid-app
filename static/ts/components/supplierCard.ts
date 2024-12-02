@@ -58,7 +58,7 @@ function charcoalStats(supplier: Supplier) {
     }
 
     return html`
-        <div class="mt-5 w-full bg-black bg-opacity-20 shadow-sm rounded-lg overflow-hidden">
+        <div class="mt-5 w-full bg-black bg-opacity-20 shadow-sm rounded-md overflow-hidden">
             <div
                 class="px-4 w-full font-semibold text-[0.6rem] text-slate-500 flex justify-between items-center py-2"
             >
@@ -108,7 +108,7 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
             <div
                 id="card"
                 style="border-color: ${borderColor};"
-                class="bg-dark-200 bg-opacity-60 shadow-lg hover:shadow-xl px-4 py-4 border-t-[3px] rounded-lg w-full max-w-full fixtransition transition-transform hover:translate-x-1 duration-300"
+                class="bg-dark-200 bg-opacity-60 shadow-lg hover:shadow-xl px-4 py-4 border-t-[3px] rounded-md w-full max-w-full fixtransition transition-transform hover:translate-x-1 duration-300"
             >
                 <div class="flex justify-between w-full text-md overflow-hidden">
                     <div class="flex flex-col gap-1 text-nowrap overflow-hidden">
@@ -149,7 +149,7 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                 </div>
                 ${charcoalStats(supplier)}
                 <div class="mt-5 w-full">
-                    <div class="bg-black bg-opacity-20 shadow-sm rounded-lg overflow-hidden">
+                    <div class="bg-black bg-opacity-20 shadow-sm rounded-md overflow-hidden">
                         <table class="w-full">
                             <tbody>
                                 ${documentRows}

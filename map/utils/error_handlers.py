@@ -13,7 +13,7 @@ def handle_chart_error(func):
 
         except (ValueError, KeyError) as e:
             logger.error(f'at: {func.__module__}.{func.__name__} | {e}')
-            return render_to_string('components/errors/chart_error.html')
+            return render_to_string('components/errors/chart_error.html', {'error': str(e)})
 
         except Exception as e:
             logger.error(f'at: {func.__module__}.{func.__name__} | {e}')
