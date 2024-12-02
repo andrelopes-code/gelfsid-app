@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 
-from map import charts
+from map.charts import charts
 
 CHARTS = {
     'charcoal_entries': charts.charcoal_entries,

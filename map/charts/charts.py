@@ -4,27 +4,15 @@ import plotly.graph_objects as go
 import plotly.io as pio
 from django.db.models import Avg, Sum
 from django.db.models.functions import TruncDay, TruncMonth, TruncWeek
-from django.template.loader import render_to_string
 
-from map import plotlytheme
+from map.charts import theme
+from map.charts.utils import WEEK_DTICK, html_else_json, no_data_error
 from map.models import CharcoalEntry, Supplier
 from map.utils import timeutils
 from map.utils.error_handlers import handle_chart_error
 
-WEEK_DTICK = 604800000
-
 # Define o tema personalizado como o padrão para os gráficos
-pio.templates.default = go.layout.Template(layout=plotlytheme.custom_layout)
-
-
-def html_else_json(fig, html):
-    """Função que retorna a Figure em json ou html com base nos dados informados."""
-
-    return fig.to_html(config={'showTips': False}, full_html=False) if html else fig.to_json()
-
-
-def no_data_error(title):
-    return render_to_string('components/errors/no_data.html', dict(title=title))
+pio.templates.default = go.layout.Template(layout=theme.custom_layout)
 
 
 @handle_chart_error
