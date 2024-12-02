@@ -24,6 +24,10 @@ def collect():
         if not row[0].value:
             break
 
+        # Verifica se a linha corresponde a um CLIENTE e a ignora
+        if row[4].value:
+            continue
+
         supplier = SupplierData(
             id=rmna(row[0].value),
             rm_code=rmna(row[1].value),
