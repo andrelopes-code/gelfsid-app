@@ -17,30 +17,16 @@
     font-family: "JetBrains Mono", sans-serif;
 }
 
-/* Define o background dos controles
-do plotly como transparente */
-.modebar-group {
-    background-color: transparent !important;
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-.plotly-chart {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* Ajuste para que os graficos dentro de um container com a classe
-plotly-chart se adaptem a largura e altura desse container */
-.plotly-chart > div {
-    position: relative !important;
-    width: 100%;
-    height: 100%;
-}
-
-/* Ajuste para deixar os controles do plotly
-alinhados horizontalmente no topo */
-.modebar-group,
-.modebar-container {
-    display: none !important;
+Firefox
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 .state-layer,

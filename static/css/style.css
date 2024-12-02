@@ -696,24 +696,25 @@ video {
   margin-right: 0.25rem;
 }
 
+.mx-4{
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
 .mb-3{
   margin-bottom: 0.75rem;
 }
 
-.ml-2{
-  margin-left: 0.5rem;
+.ml-1{
+  margin-left: 0.25rem;
 }
 
 .ml-5{
   margin-left: 1.25rem;
 }
 
-.mr-3{
-  margin-right: 0.75rem;
-}
-
-.mr-4{
-  margin-right: 1rem;
+.mr-2{
+  margin-right: 0.5rem;
 }
 
 .mt-1{
@@ -769,8 +770,20 @@ video {
   height: 100vh;
 }
 
+.max-h-full{
+  max-height: 100%;
+}
+
+.w-1\/6{
+  width: 16.666667%;
+}
+
 .w-10{
   width: 2.5rem;
+}
+
+.w-5\/6{
+  width: 83.333333%;
 }
 
 .w-56{
@@ -1036,6 +1049,10 @@ video {
   padding: 0.75rem;
 }
 
+.p-4{
+  padding: 1rem;
+}
+
 .p-5{
   padding: 1.25rem;
 }
@@ -1151,6 +1168,11 @@ video {
   color: var(--secondary-color);
 }
 
+.text-dark-200{
+  --tw-text-opacity: 1;
+  color: rgb(34 44 61 / var(--tw-text-opacity));
+}
+
 .text-green-300{
   --tw-text-opacity: 1;
   color: rgb(134 239 172 / var(--tw-text-opacity));
@@ -1253,6 +1275,11 @@ video {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
+.contrast-75{
+  --tw-contrast: contrast(.75);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
 .grayscale{
   --tw-grayscale: grayscale(100%);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
@@ -1332,33 +1359,17 @@ video {
   font-family: "JetBrains Mono", sans-serif;
 }
 
-/* Define o background dos controles
-do plotly como transparente */
+/* Chrome, Safari, Edge, Opera */
 
-.modebar-group {
-  background-color: transparent !important;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-.plotly-chart {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* Ajuste para que os graficos dentro de um container com a classe
-plotly-chart se adaptem a largura e altura desse container */
-
-.plotly-chart > div {
-  position: relative !important;
-  width: 100%;
-  height: 100%;
-}
-
-/* Ajuste para deixar os controles do plotly
-alinhados horizontalmente no topo */
-
-.modebar-group,
-.modebar-container {
-  display: none !important;
+Firefox
+input[type="number"] {
+  -moz-appearance: textfield;
 }
 
 .state-layer,

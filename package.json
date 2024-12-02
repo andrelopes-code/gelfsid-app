@@ -14,10 +14,11 @@
         "webpack-cli": "^5.1.4"
     },
     "scripts": {
-        "dev": "npm-run-all --parallel django tw watch",
+        "dev": "npm-run-all --parallel django tw webpack-watch",
+        "watch": "npm-run-all --parallel tw webpack-watch",
         "tw": "npx tailwindcss -i ./static/css/input.css -o ./static/css/style.css --watch",
         "build": "webpack --mode production",
-        "watch": "webpack --watch",
+        "webpack-watch": "webpack --watch",
         "django": "python manage.py runserver 0.0.0.0:8000",
         "makemigrations": "python manage.py makemigrations",
         "migrate": "python manage.py migrate",

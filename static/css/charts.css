@@ -1,0 +1,82 @@
+.chart-form {
+    padding: 1rem;
+    border: 1px solid var(--weak-stroke-color);
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    color: #e9e9e9;
+    overflow: auto;
+}
+
+.chart-form p {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.chart-form select,
+.chart-form input,
+.chart-form textarea {
+    width: 100%;
+    padding: 0.4rem 0.9rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.2rem;
+    outline: none;
+    background-color: #11151c;
+    color: #e9e9e9;
+}
+
+.chart-form select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 36px;
+
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 12px) center;
+    background-size: 16px;
+}
+
+.chart-form button {
+    background-color: var(--primary-color);
+    color: #151b25;
+    font-weight: 900;
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 0.4rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.chart-form button:hover {
+    background-color: rgb(224, 157, 128);
+}
+
+/* Define o background dos controles
+do plotly como transparente */
+.modebar-group {
+    background-color: transparent !important;
+}
+
+.plotly-chart,
+.plotly-chart.js-plotly-plot {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Ajuste para que os graficos dentro de um container com a classe
+plotly-chart se adaptem a largura e altura desse container */
+.plotly-chart > div {
+    position: relative !important;
+    width: 100%;
+    height: 100%;
+}
+
+/* Ajuste para deixar os controles do plotly
+alinhados horizontalmente no topo */
+.modebar-group,
+.modebar-container {
+    display: none !important;
+}
