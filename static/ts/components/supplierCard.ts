@@ -62,7 +62,10 @@ function charcoalStats(supplier: Supplier) {
             <div
                 class="px-4 w-full font-semibold text-[0.6rem] text-slate-500 flex justify-between items-center py-2"
             >
-                <p>QUALIDADE MÉDIA RECENTE DO CARVÃO</p>
+                <p>
+                    QUALIDADE RECENTE DO CARVÃO - MÉDIA DAS ULTIMAS ${supplier.charcoal_recent_stats.count}
+                    ENTREGAS
+                </p>
                 <p>${supplier.charcoal_recent_stats.period}</p>
             </div>
             <div class=" w-full grid grid-cols-3 grid-rows-1 text-sm">

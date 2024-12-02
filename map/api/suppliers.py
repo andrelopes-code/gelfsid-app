@@ -19,7 +19,8 @@ def get_suppliers(request):
                     'average_moisture': sum(entry.moisture for entry in recent_entries) / len(recent_entries),
                     'average_fines': sum(entry.fines for entry in recent_entries) / len(recent_entries),
                     'average_density': sum(entry.density for entry in recent_entries) / len(recent_entries),
-                    'period': f'{first_date} ({len(recent_entries)}) {last_date}',
+                    'period': f'{first_date} - {last_date}',
+                    'count': len(recent_entries),
                 }
             else:
                 charcoal_recent_stats = None

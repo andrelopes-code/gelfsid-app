@@ -46,6 +46,7 @@ export interface Supplier {
         average_moisture: number;
         average_fines: number;
         average_density: number;
+        count: number;
     } | null;
 }
 

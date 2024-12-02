@@ -156,6 +156,7 @@ def moisture_and_fines_by_day(html=False):
         name='Umidade (%)',
         selector=dict(name='avg_moisture'),
         hovertemplate='<b style="padding: 10px;">Umidade: %{y:.2f}%</b><br><extra></extra>',
+        line_color='#4797ed',
     )
 
     fig.update_layout(
@@ -187,6 +188,10 @@ def density_by_day(html=False):
         title='Média de Densidade por Dia (últimos 3 meses)',
         labels={'day': 'Data', 'avg_density': 'Densidade Média'},
         markers=True,
+    )
+
+    fig.update_traces(
+        hovertemplate='<b>Data:</b> %{x|%d-%m-%Y}<br><b>Densidade:</b> %{y:,.2f}'
     )
 
     fig.update_layout(
