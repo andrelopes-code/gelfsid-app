@@ -95,7 +95,6 @@ def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
     )
 
     df = pd.DataFrame(queryset)
-    print(df)
     if df.empty:
         return no_data_error(config['title'])
 
@@ -105,7 +104,11 @@ def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
         y='total_volume',
         text='total_volume',
         title=config['title'],
+        labels={
+            'total_volume': 'Volume Total',
+        },
         custom_data=['average_moisture', 'average_fines', 'average_density'],
+        color='total_volume',
     )
 
     fig.update_traces(
