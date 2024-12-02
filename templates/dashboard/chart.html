@@ -1,0 +1,15 @@
+<div class="flex bg-dark-100 p-4 rounded-xl w-full h-full">
+    <!-- Gráfico -->
+    <div class="{% if form %}w-5/6{% else %}w-full{% endif %} h-full">
+        <div id="{{ chart_id }}"
+             data-related-form="{{ form_id }}"
+             class="plotly-chart">{{ chart_data|safe }}</div>
+    </div>
+    {% if form %}
+        <!-- Formulário de Filtro -->
+        <form id="{{ form_id }}" class="w-1/6 max-h-full chart-form">
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+    {% endif %}
+</div>

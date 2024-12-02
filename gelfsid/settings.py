@@ -1,7 +1,12 @@
+import re
 from pathlib import Path
 
+from django.template import base as template_base
 from django.templatetags.static import static
 from environ import Env
+
+# ! Adicionar suporte para multilinha em tags de template (GAMBIARRA)
+template_base.tag_re = re.compile(template_base.tag_re.pattern, re.DOTALL)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = Env()

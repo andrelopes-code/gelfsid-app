@@ -1,0 +1,25 @@
+{% extends "dashboard/base.html" %}
+{% block dashcontent %}
+    <div class="gap-4 grid grid-rows-2 bg-dark p-4 w-full h-full">
+        <div class="flex bg-dark-100 p-4 rounded-xl w-full">
+            <!-- Gráfico de entrada de carvão -->
+            <div class="w-5/6 h-full">
+                <div id="charcoal_entries"
+                     data-related-form="charcoal_entries_form"
+                     class="plotly-chart">{{ charcoal_entries|safe }}</div>
+            </div>
+            <form id="charcoal_entries_form" class="w-1/6 max-h-full chart-form">
+                {{ charcoal_entries_form.as_p }}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="gap-4 grid grid-cols-2 w-full">
+            <div class="bg-dark-100 p-4 rounded-xl w-full">
+                <div class="plotly-chart">{{ moisture_and_fines_by_day|safe }}</div>
+            </div>
+            <div class="bg-dark-100 p-4 rounded-xl w-full">
+                <div class="plotly-chart">{{ density_by_day|safe }}</div>
+            </div>
+        </div>
+    </div>
+{% endblock dashcontent %}
