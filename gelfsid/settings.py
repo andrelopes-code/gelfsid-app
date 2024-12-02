@@ -9,20 +9,18 @@ from environ import Env
 template_base.tag_re = re.compile(template_base.tag_re.pattern, re.DOTALL)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 env = Env()
 env.read_env('.env')
-
 
 DEBUG = env.bool('DEBUG', False)
 SECRET_KEY = env.str('SECRET_KEY', 'secret')
 GRAPHHOPPER_API_KEY = env.str('GRAPHHOPPER_API_KEY', '')
-CITIES_STATES_PATH = 'static/data/states_cities.json'
 
-
+STATES_AND_CITIES_PATH = 'static/data/states_and_cities.json'
 CORS_ALLOW_ALL_ORIGINS = True
-ALLOWED_HOSTS = ['*']
 SECURE_SSL_REDIRECT = False
-
+ALLOWED_HOSTS = ['*']
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
@@ -31,7 +29,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_FILES_BASE_URL = env.str('STATIC_FILES_BASE_URL')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 INSTALLED_APPS = [
     'unfold',
@@ -44,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'corsheaders',
     'map',
 ]
@@ -58,7 +56,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 
 ROOT_URLCONF = 'gelfsid.urls'
 
@@ -81,14 +78,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gelfsid.wsgi.application'
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -104,7 +99,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'

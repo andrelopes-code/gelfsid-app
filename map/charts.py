@@ -165,12 +165,15 @@ def moisture_and_fines_by_day(html=False):
         name='Finos (%)',
         cliponaxis=False,
         hovertemplate='<b style="padding: 10px;">Finos: %{y:.2f}%</b><br><extra></extra>',
+        line_shape='spline',
     )
+
     fig.update_traces(
         name='Umidade (%)',
         selector=dict(name='avg_moisture'),
         hovertemplate='<b style="padding: 10px;">Umidade: %{y:.2f}%</b><br><extra></extra>',
         line_color='#4797ed',
+        line_shape='spline',
     )
 
     fig.update_layout(
@@ -194,6 +197,7 @@ def density_by_day(html=False):
         .annotate(avg_density=Avg('density'))
         .order_by('day')
     )
+
     df = pd.DataFrame(queryset)
     if df.empty:
         return no_data_error(title)
@@ -207,7 +211,10 @@ def density_by_day(html=False):
         markers=True,
     )
 
-    fig.update_traces(hovertemplate='<b>Data:</b> %{x|%d-%m-%Y}<br><b>Densidade:</b> %{y:,.2f}')
+    fig.update_traces(
+        hovertemplate='<b>Data:</b> %{x|%d-%m-%Y}<br><b>Densidade:</b> %{y:,.2f}',
+        line_shape='spline',
+    )
 
     fig.update_layout(
         xaxis_title='',
