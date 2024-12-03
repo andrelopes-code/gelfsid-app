@@ -770,10 +770,6 @@ video {
   height: 100vh;
 }
 
-.max-h-full{
-  max-height: 100%;
-}
-
 .w-1\/6{
   width: 16.666667%;
 }

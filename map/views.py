@@ -12,8 +12,8 @@ def dashboard(request: HttpRequest):
     context = {
         'charcoal_entries': charts.charcoal_entries(html=True),
         'charcoal_entries_form': forms.CharcoalEntriesChartForm(),
-        'density_by_day': charts.density_by_day(html=True),
-        'moisture_and_fines_by_day': charts.moisture_and_fines_by_day(html=True),
+        'density': charts.density(html=True),
+        'moisture_and_fines': charts.moisture_and_fines(html=True),
     }
 
     return render(request, 'dashboard/index.html', context=context)

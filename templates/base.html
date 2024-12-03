@@ -17,15 +17,15 @@
                   content="GELFSID, map, interactive, data visualization" />
             <!-- Links -->
             <link rel="stylesheet" type="text/css" href='{% static "css/style.css" %}' />
-            <link rel="stylesheet"
-                  type="text/css"
-                  href='{% static "css/charts.css" %}'>
+            <link rel="stylesheet" type="text/css" href='{% static "css/charts.css" %}'>
             <link rel="shortcut icon"
                   href="{% static 'assets/icon.ico' %}"
                   type="image/x-icon" />
             <!-- Scripts -->
-            <script>window.staticFilesBaseUrl = "{{ STATIC_FILES_BASE_URL }}";</script>
-            <script defer type="module" src="{% static 'ts/dist/bundle.js' %}"></script>
+            {% block scripts %}
+                  <script>window.staticFilesBaseUrl = "{{ STATIC_FILES_BASE_URL }}";</script>
+                  <script defer type="module" src="{% static 'ts/dist/bundle.js' %}"></script>
+            {% endblock scripts %}
       </head>
       <body class="w-screen h-screen">
             <!-- Alerta de Tamanho de Tela -->

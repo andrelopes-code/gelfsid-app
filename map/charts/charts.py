@@ -96,7 +96,6 @@ def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
             'total_volume': 'Volume Total',
         },
         custom_data=['average_moisture', 'average_fines', 'average_density'],
-        color='total_volume',
     )
 
     fig.update_traces(
@@ -122,44 +121,69 @@ def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
 
 
 @handle_chart_error
-def moisture_and_fines_by_day(html=False):
-    title = 'Média de Umidade e Finos por Dia (últimos 3 meses)'
+def moisture_and_fines(group_by='day', months=3, supplier=None, html=False):
+    months = int(months)
+
+    group_by_config = {
+        'week': {
+            'trunc_function': TruncWeek,
+            'title': f'Média de Umidade e Finos por Semana (últimos {months} meses)',
+            'dtick': WEEK_DTICK,
+        },
+        'month': {
+            'trunc_function': TruncMonth,
+            'title': f'Média de Umidade e Finos por Mês (últimos {months} meses)',
+            'dtick': 'M1',
+        },
+        'day': {
+            'trunc_function': TruncDay,
+            'title': f'Média de Umidade e Finos por Dia (últimos {months} meses)',
+            'dtick': '',
+        },
+    }
+
+    config = group_by_config.get(group_by, group_by_config['day'])
+    queryset = CharcoalEntry.objects.filter(entry_date__gte=timetools.months_ago(months))
+
+    if supplier:
+        supplier = Supplier.objects.filter(id=supplier).first()
+        if not supplier:
+            raise ValueError('Fornecedor não encontrado.')
+
+        config['title'] += f' - Fornecedor #{supplier.id}'
+        queryset = queryset.filter(supplier=supplier)
+
     queryset = (
-        CharcoalEntry.objects.filter(entry_date__gte=timetools.months_ago(3))
-        .annotate(day=TruncDay('entry_date'))
-        .values('day')
+        queryset.annotate(entry_period=config['trunc_function']('entry_date'))
+        .values('entry_period')
         .annotate(avg_fines=Avg('fines'), avg_moisture=Avg('moisture'))
-        .order_by('day')
+        .order_by('entry_period')
     )
 
     df = pd.DataFrame(queryset)
     if df.empty:
-        return no_data_error(title)
+        return no_data_error(config['title'])
 
     fig = px.line(
         df,
-        x='day',
+        x='entry_period',
         y=['avg_fines', 'avg_moisture'],
-        title=title,
-        labels={
-            'avg_fines': 'Finos (%)',
-            'avg_moisture': 'Umidade (%)',
-        },
+        title=config['title'],
+        labels={'entry_period': 'Período', 'avg_fines': 'Finos (%)', 'avg_moisture': 'Umidade (%)'},
         markers=True,
     )
 
     fig.update_traces(
         selector=dict(name='avg_fines'),
         name='Finos (%)',
-        cliponaxis=False,
-        hovertemplate='<b style="padding: 10px;">Finos: %{y:.2f}%</b><br><extra></extra>',
+        hovertemplate='<b>Finos:</b> %{y:.2f}%<br><extra></extra>',
         line_shape='spline',
     )
 
     fig.update_traces(
-        name='Umidade (%)',
         selector=dict(name='avg_moisture'),
-        hovertemplate='<b style="padding: 10px;">Umidade: %{y:.2f}%</b><br><extra></extra>',
+        name='Umidade (%)',
+        hovertemplate='<b>Umidade:</b> %{y:.2f}%<br><extra></extra>',
         line_color='#4797ed',
         line_shape='spline',
     )
@@ -169,38 +193,66 @@ def moisture_and_fines_by_day(html=False):
         yaxis_title='Valores Médios (%)',
         title_x=0.5,
         margin=dict(l=30, r=15, t=40, b=20),
-        legend_title='Variaveis',
+        legend_title='Variáveis',
     )
 
     return html_else_json(fig, html)
 
 
 @handle_chart_error
-def density_by_day(html=False):
-    title = 'Média de Densidade por Dia (últimos 3 meses)'
+def density(group_by='day', months=3, supplier=None, html=False):
+    months = int(months)
+
+    group_by_config = {
+        'week': {
+            'trunc_function': TruncWeek,
+            'title': f'Média de Densidade por Semana (últimos {months} meses)',
+            'dtick': WEEK_DTICK,
+        },
+        'month': {
+            'trunc_function': TruncMonth,
+            'title': f'Média de Densidade por Mês (últimos {months} meses)',
+            'dtick': 'M1',
+        },
+        'day': {
+            'trunc_function': TruncDay,
+            'title': f'Média de Densidade por Dia (últimos {months} meses)',
+            'dtick': '',
+        },
+    }
+
+    config = group_by_config.get(group_by, group_by_config['day'])
+    queryset = CharcoalEntry.objects.filter(entry_date__gte=timetools.months_ago(months))
+
+    if supplier:
+        supplier = Supplier.objects.filter(id=supplier).first()
+        if not supplier:
+            raise ValueError('Fornecedor não encontrado.')
+
+        queryset = queryset.filter(supplier=supplier)
+
     queryset = (
-        CharcoalEntry.objects.filter(entry_date__gte=timetools.months_ago(3))
-        .annotate(day=TruncDay('entry_date'))
-        .values('day')
+        queryset.annotate(entry_period=config['trunc_function']('entry_date'))
+        .values('entry_period')
         .annotate(avg_density=Avg('density'))
-        .order_by('day')
+        .order_by('entry_period')
     )
 
     df = pd.DataFrame(queryset)
     if df.empty:
-        return no_data_error(title)
+        return no_data_error(config['title'])
 
     fig = px.line(
         df,
-        x='day',
+        x='entry_period',
         y='avg_density',
-        title=title,
-        labels={'day': 'Data', 'avg_density': 'Densidade Média'},
+        title=config['title'],
+        labels={'entry_period': 'Período', 'avg_density': 'Densidade Média'},
         markers=True,
     )
 
     fig.update_traces(
-        hovertemplate='<b>Data:</b> %{x|%d-%m-%Y}<br><b>Densidade:</b> %{y:,.2f}',
+        hovertemplate='<b>Período:</b> %{x}<br><b>Densidade:</b> %{y:.2f}<br><extra></extra>',
         line_shape='spline',
     )
 

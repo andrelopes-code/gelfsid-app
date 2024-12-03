@@ -16,5 +16,5 @@ class CharcoalEntriesChartForm(forms.Form):
         queryset=Supplier.objects.filter(material_type='Carvão Vegetal').all(),
         label='Fornecedor',
         required=False,
-        empty_label='Selecione',
+        empty_label='Todos',
     )

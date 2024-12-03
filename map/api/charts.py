@@ -1,11 +1,18 @@
+from inspect import signature
+
 from django.http import JsonResponse
 
 from map.charts import charts
 
 CHARTS = {
     'charcoal_entries': charts.charcoal_entries,
-    'moisture_and_fines_by_day': charts.moisture_and_fines_by_day,
-    'density_by_day': charts.density_by_day,
+    'moisture_and_fines': charts.moisture_and_fines,
+    'density': charts.density,
+}
+
+CHARTS_ARGS = {
+    chart_id: set(signature(func).parameters.keys())
+    for chart_id, func in CHARTS.items()
 }
 
 
@@ -15,10 +22,13 @@ def update_chart(request):
         if not chart_id or chart_id not in CHARTS:
             return JsonResponse({'error': 'Missing or invalid chart_id'}, status=400)
 
-        filters = {key: value for key, value in request.GET.items() if key != 'chart_id'}
-        updated_chart_json = CHARTS[chart_id](**filters)
+        chart_function = CHARTS[chart_id]
+        accepted_args = CHARTS_ARGS[chart_id]
 
-        return JsonResponse({'updated_chart': updated_chart_json}, safe=False)
+        args = {key: value for key, value in request.GET.items() if key in accepted_args}
+        updated_chart_json = chart_function(**args)
+
+        return JsonResponse({'chart_data': updated_chart_json}, safe=False)
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)

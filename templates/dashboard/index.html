@@ -10,12 +10,14 @@
         <div class="gap-4 grid grid-cols-2 w-full h-full">
             <!-- Gráfico de finos e umidade média por dia -->
             {% include "dashboard/chart.html" with
-            chart_id="moisture_and_fines_by_day"
-            chart_data=moisture_and_fines_by_day %}
+            chart_id="moisture_and_fines"
+            form_id="charcoal_entries_form"
+            chart_data=moisture_and_fines %}
             <!-- Gráfico de densidade média por dia -->
             {% include "dashboard/chart.html" with
-            chart_id="density_by_day"
-            chart_data=density_by_day %}
+            chart_id="density"
+            form_id="charcoal_entries_form"
+            chart_data=density %}
         </div>
     </div>
 {% endblock dashcontent %}

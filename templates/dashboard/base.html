@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block content %}
+{% block scripts %}
     <script>
     /*
         Script para ajustar o tamanho dos
@@ -26,8 +26,8 @@
         de submit para os forms de filtro
     */
     async function updateChart(chartId, formData) {
+        // Transforma os dados do form em parâmetros de URL
         const urlParams = new URLSearchParams();
-
         formData.forEach((value, key) => {
             urlParams.append(key, value);
         });
@@ -40,20 +40,25 @@
                 const data = await response.json();
                 const chartContainer = document.getElementById(chartId);
 
-                if (data.updated_chart) {
+                if (data.chart_data) {
                     // Garante que qualquer html existente
                     // seja removido antes do novo gráfico
                     // ser adicionado ao container
                     chartContainer.innerHTML = '';
 
                     try {
-                        const updatedChart = JSON.parse(data.updated_chart);
+                        const updatedChart = JSON.parse(data.chart_data);
 
                         const plotlyConfig = {
                             displayModeBar: false,
                             showTips: false
                         };
+
+                        // IMPORTANTE: Plotly.purge para limpar o container antes
+                        // de adicionar o novo gráfico, para limpar qualquer resto
+                        // de html anterior (os que não foram adicionados pelo plotly)
                         Plotly.purge(chartContainer);
+
                         Plotly.react(chartContainer, updatedChart.data, updatedChart.layout, plotlyConfig);
                         Plotly.relayout(chartContainer, {
                             autosize: true
@@ -61,7 +66,7 @@
 
                         Plotly.Plots.resize(chartContainer);
                     } catch {
-                        chartContainer.innerHTML = data.updated_chart
+                        chartContainer.innerHTML = data.chart_data
                     }
                 }
             }
@@ -74,15 +79,19 @@
         e.preventDefault();
 
         const form = e.target;
-        const filterId = form.getAttribute('id');
-        const chartElement = document.querySelector(`.plotly-chart[data-related-form="${filterId}"]`);
-        const chartId = chartElement?.id
+        const filterID = form.getAttribute('id');
+        const chartElements = document.querySelectorAll(`.plotly-chart[data-related-form="${filterID}"]`);
 
-        if (chartId) {
-            await updateChart(chartId, new FormData(form));
+        for (const ce of chartElements) {
+            const chartID = ce?.id
+            if (chartID) {
+                updateChart(chartID, new FormData(form))
+            }
         }
     });
     </script>
+{% endblock scripts %}
+{% block content %}
     <div class="relative flex bg-white w-screen h-screen overflow-hidden">
         <div class="flex flex-col w-full h-full">
             {% include "components/header.html" %}
