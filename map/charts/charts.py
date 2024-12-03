@@ -176,14 +176,14 @@ def moisture_and_fines(group_by='day', months=3, supplier=None, html=False):
     fig.update_traces(
         selector=dict(name='avg_fines'),
         name='Finos (%)',
-        hovertemplate='<b>Finos:</b> %{y:.2f}%<br><extra></extra>',
+        hovertemplate='<b>Data:</b> %{x|%d-%m-%Y}<br><b>Finos:</b> %{y:.2f}%<br><extra></extra>',
         line_shape='spline',
     )
 
     fig.update_traces(
         selector=dict(name='avg_moisture'),
         name='Umidade (%)',
-        hovertemplate='<b>Umidade:</b> %{y:.2f}%<br><extra></extra>',
+        hovertemplate='<b>Data:</b> %{x|%d-%m-%Y}<br><b>Umidade:</b> %{y:.2f}%<br><extra></extra>',
         line_color='#4797ed',
         line_shape='spline',
     )
@@ -252,7 +252,7 @@ def density(group_by='day', months=3, supplier=None, html=False):
     )
 
     fig.update_traces(
-        hovertemplate='<b>Período:</b> %{x}<br><b>Densidade:</b> %{y:.2f}<br><extra></extra>',
+        hovertemplate='<b>Data:</b> %{x|%d-%m-%Y}<br><b>Densidade:</b> %{y:.2f}<br><extra></extra>',
         line_shape='spline',
     )
 
