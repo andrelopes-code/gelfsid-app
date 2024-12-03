@@ -1,8 +1,7 @@
 from django.http import HttpRequest
 from django.shortcuts import render
 
-from map import forms
-from map.charts import charts
+from map.charts import charts, forms
 
 
 def index(request: HttpRequest):

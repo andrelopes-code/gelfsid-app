@@ -3,11 +3,14 @@ from functools import partial
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from threading import Thread
 
+from gelfsid.logger import logger
+
 STATIC_SERVER_ADDRESS = '127.0.0.1'
-DOCUMENTS_BASE_PATH = r'H:\DEMAT\Público\10 - DOCUMENTAÇÃO - CLIENTES E FORNECEDORES'
 
 
 class LocalStaticServer:
+    """Classe que cria um servidor estático para servir o `directory` informado"""
+
     def __init__(self, directory, port=0):
         self.port = port
         self.directory = directory
@@ -26,7 +29,7 @@ class LocalStaticServer:
         if self.is_port_in_use():
             return
 
-        print(f'Initializing static server on port {self.port}')
+        logger.info(f'Initializing static server on port {self.port}')
         handler = partial(SimpleHTTPRequestHandler, directory=self.directory)
         self.server = HTTPServer((STATIC_SERVER_ADDRESS, self.port), handler)
         self.port = self.server.server_port
@@ -40,4 +43,4 @@ class LocalStaticServer:
             self.server.server_close()
 
 
-docs_server = LocalStaticServer(DOCUMENTS_BASE_PATH, 9000)
+docs_server = LocalStaticServer(r'H:\DEMAT\Público\10 - DOCUMENTAÇÃO - CLIENTES E FORNECEDORES', 9000)

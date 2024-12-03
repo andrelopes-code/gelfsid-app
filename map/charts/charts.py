@@ -8,8 +8,8 @@ from django.db.models.functions import TruncDay, TruncMonth, TruncWeek
 from map.charts import theme
 from map.charts.utils import WEEK_DTICK, html_else_json, no_data_error
 from map.models import CharcoalEntry, Supplier
-from map.utils import timeutils
-from map.utils.error_handlers import handle_chart_error
+from map.tools import timetools
+from map.tools.error_handlers import handle_chart_error
 
 # Define o tema personalizado como o padrão para os gráficos
 pio.templates.default = go.layout.Template(layout=theme.custom_layout)
@@ -61,7 +61,7 @@ def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    queryset = CharcoalEntry.objects.filter(entry_date__gte=timeutils.months_ago(months))
+    queryset = CharcoalEntry.objects.filter(entry_date__gte=timetools.months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
@@ -125,7 +125,7 @@ def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
 def moisture_and_fines_by_day(html=False):
     title = 'Média de Umidade e Finos por Dia (últimos 3 meses)'
     queryset = (
-        CharcoalEntry.objects.filter(entry_date__gte=timeutils.months_ago(3))
+        CharcoalEntry.objects.filter(entry_date__gte=timetools.months_ago(3))
         .annotate(day=TruncDay('entry_date'))
         .values('day')
         .annotate(avg_fines=Avg('fines'), avg_moisture=Avg('moisture'))
@@ -179,7 +179,7 @@ def moisture_and_fines_by_day(html=False):
 def density_by_day(html=False):
     title = 'Média de Densidade por Dia (últimos 3 meses)'
     queryset = (
-        CharcoalEntry.objects.filter(entry_date__gte=timeutils.months_ago(3))
+        CharcoalEntry.objects.filter(entry_date__gte=timetools.months_ago(3))
         .annotate(day=TruncDay('entry_date'))
         .values('day')
         .annotate(avg_density=Avg('density'))

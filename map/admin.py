@@ -7,6 +7,8 @@ from unfold.admin import ModelAdmin
 
 from map.models import CharcoalEntry, City, Document, State, Supplier
 
+# Removendo os modelos padrão do django
+# para adicionar os modelos do unfold
 admin.site.unregister(User)
 admin.site.unregister(Group)
 
@@ -21,19 +23,6 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     pass
 
 
-@admin.register(CharcoalEntry)
-class CharcoalEntryAdmin(ModelAdmin):
-    list_display = (
-        'supplier',
-        'entry_volume',
-        'moisture',
-        'density',
-        'fines',
-        'entry_date',
-    )
-    search_fields = ('supplier__corporate_name',)
-
-
 @admin.register(State)
 class StateAdmin(ModelAdmin):
     list_display = ('abbr', 'name')
@@ -45,12 +34,6 @@ class CityAdmin(ModelAdmin):
     list_display = ('name', 'state')
     list_filter = ('state',)
     search_fields = ('name',)
-
-
-@admin.register(Document)
-class DocumentAdmin(ModelAdmin):
-    list_display = ('name', 'type', 'validity', 'status', 'supplier')
-    list_filter = ('status', 'type', 'supplier')
 
 
 @admin.register(Supplier)
@@ -99,8 +82,7 @@ class SupplierAdmin(ModelAdmin):
         ),
     )
 
-    @staticmethod
-    def colorful_rating(supplier, good_rating=80):
+    def colorful_rating(self, supplier, good_rating=80):
         if supplier.rating is None:
             return 'N/A'
 
@@ -125,3 +107,22 @@ class SupplierAdmin(ModelAdmin):
 
     class Media:
         js = ('admin/js/city_state_dependency.js',)
+
+
+@admin.register(Document)
+class DocumentAdmin(ModelAdmin):
+    list_display = ('name', 'type', 'validity', 'status', 'supplier')
+    list_filter = ('status', 'type', 'supplier')
+
+
+@admin.register(CharcoalEntry)
+class CharcoalEntryAdmin(ModelAdmin):
+    list_display = (
+        'supplier',
+        'entry_volume',
+        'moisture',
+        'density',
+        'fines',
+        'entry_date',
+    )
+    search_fields = ('supplier__corporate_name',)

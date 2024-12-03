@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from map.models import Supplier
-from map.utils.distance_calculator import DistanceCalculator
+from map.tools.distance_calculator import DistanceCalculator
 
 
 class Command(BaseCommand):

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-    <!-- Filter -->
+    <!-- Filtro -->
     <div class="top-0 z-30 absolute flex justify-start items-start gap-2 p-5 w-full pointer-events-none">
         <div class="pointer-events-auto">{% include "components/filter_switch.html" %}</div>
         <div class="pointer-events-auto">{% include "components/admin_button.html" %}</div>
@@ -9,12 +9,12 @@
         <div class="pointer-events-auto">{% include "components/search_button.html" %}</div>
     </div>
     <div class="relative w-screen h-screen">
-        <!-- Loading -->
+        <!-- Loader -->
         <div id="main-loader"
              class="z-30 absolute flex justify-center items-center w-full h-full pointer-events-none tex">
             {% include "components/loader.html" %}
         </div>
-        <!-- Details -->
+        <!-- Div Lateral de Detalhes -->
         <div id="details"
              class="right-0 z-20 fixed flex flex-col gap-5 bg-clip-padding bg-dark-100 bg-opacity-75 shadow-[0_0_10px_#11151c] backdrop-blur-sm backdrop-filter p-3 rounded-md w-[48rem] h-full transition-transform translate-x-full duration-500">
             <div class="flex justify-between items-center px-3">
@@ -25,7 +25,7 @@
             <div id="supplier-cards-container"
                  class="flex flex-col gap-1 w-full overflow-auto noscrollbar"></div>
         </div>
-        <!-- Map -->
+        <!-- Container do Mapa -->
         <div id="map" class="z-10 !bg-dark w-full h-full"></div>
     </div>
 {% endblock content %}

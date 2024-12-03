@@ -12,4 +12,4 @@ def html_else_json(fig, html):
 def no_data_error(title):
     """Retorna um html indicando erro por falta de dados ao tentar formar o gráfico."""
 
-    return render_to_string('components/errors/no_data.html', dict(title=title))
+    return render_to_string('components/errors/chart_no_data.html', dict(title=title))

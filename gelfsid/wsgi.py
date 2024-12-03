@@ -3,7 +3,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-from map.utils.static_server import docs_server
+from map.tools.static_server import docs_server
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gelfsid.settings')
 
