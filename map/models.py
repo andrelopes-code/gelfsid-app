@@ -168,7 +168,7 @@ class Supplier(BaseModel):
         max_length=200,
         verbose_name='Razão Social',
         unique=True,
-        help_text='Insira nomes padronizados, como o próprio nome que consta no CNPJ para evitar inconsistência.',
+        help_text='Insira nomes padronizados para evitar inconsistência, como o próprio nome que consta no CNPJ.',
     )
 
     material_type = models.CharField(max_length=100, choices=MaterialType.choices, verbose_name='Tipo de Material')
@@ -180,7 +180,7 @@ class Supplier(BaseModel):
     cep = models.CharField(
         max_length=8,
         validators=[cv.validate_cep],
-        help_text='Informe apenas os números',
+        help_text='Insira apenas os números.',
         verbose_name='CEP',
     )
     latitude = models.DecimalField(

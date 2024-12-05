@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.forms import Textarea
 
 from map import models
 
@@ -91,12 +92,18 @@ class SupplierAdmin(BaseModelAdmin):
 
     inlines = [DocumentInline, ContactInline]
 
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        # Remove a checagem ortográfica do campo de observações
+        if db_field.name == 'observations':
+            kwargs['widget'] = Textarea(attrs={'spellcheck': 'false'})
+
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
+
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'city':
-            if request.POST.get('state'):
-                kwargs['queryset'] = models.City.objects.filter(state_id=request.POST.get('state'))
-            elif request.GET.get('state'):
-                kwargs['queryset'] = models.City.objects.filter(state_id=request.GET.get('state'))
+            state = request.POST.get('state') or request.GET.get('state')
+            if state:
+                kwargs['queryset'] = models.City.objects.filter(state_id=state)
             else:
                 kwargs['queryset'] = models.City.objects.none()
 
