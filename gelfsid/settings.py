@@ -2,7 +2,6 @@ import re
 from pathlib import Path
 
 from django.template import base as template_base
-from django.templatetags.static import static
 from environ import Env
 
 # ! Adicionar suporte para multilinha em tags de template (GAMBIARRA)
@@ -18,6 +17,7 @@ SECRET_KEY = env.str('SECRET_KEY', 'secret')
 GRAPHHOPPER_API_KEY = env.str('GRAPHHOPPER_API_KEY', '')
 
 STATES_AND_CITIES_PATH = 'static/data/states_and_cities.json'
+
 CORS_ALLOW_ALL_ORIGINS = True
 SECURE_SSL_REDIRECT = False
 ALLOWED_HOSTS = ['*']
@@ -28,13 +28,13 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATIC_FILES_BASE_URL = env.str('STATIC_FILES_BASE_URL')
 
+GRAPPELLI_ADMIN_TITLE = 'GELFSID Admin'
+GRAPPELLI_SWITCH_USER = True
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 INSTALLED_APPS = [
-    'unfold',
-    'unfold.contrib.filters',
-    'unfold.contrib.forms',
-    'unfold.contrib.inlines',
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -104,36 +104,3 @@ LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 USE_TZ = True
-
-UNFOLD = {
-    'SITE_TITLE': 'GELFSID ADMIN PANEL',
-    'SITE_HEADER': 'GELFSID ADMIN',
-    'SITE_URL': '/',
-    'THEME': 'dark',
-    'COLORS': {
-        'font': {
-            'subtle-light': '107 114 128',
-            'subtle-dark': '156 163 175',
-            'default-light': '75 85 99',
-            'default-dark': '209 213 219',
-            'important-light': '17 24 39',
-            'important-dark': '243 244 246',
-        },
-        'primary': {
-            '50': '214 131 103',
-            '100': '214 131 103',
-            '200': '214 131 103',
-            '300': '214 131 103',
-            '400': '214 131 103',
-            '500': '214 131 103',
-            '600': '214 131 103',
-            '700': '214 131 103',
-            '800': '214 131 103',
-            '900': '214 131 103',
-            '950': '214 131 103',
-        },
-    },
-    'STYLES': [
-        lambda request: static('css/unfold_style.css'),
-    ],
-}

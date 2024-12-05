@@ -1,5 +1,58 @@
-from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.db import models
+
+from map.validators import custom_validators as cv
+
+# ------------------ #
+#  BASE MODEL CLASS  #
+# ------------------ #
+
+
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Atualizado em')
+
+    class Meta:
+        abstract = True
+
+
+# ---------------------- #
+#  TEXT CHOICES CLASSES  #
+# ---------------------- #
+
+
+class ContactType(models.TextChoices):
+    WITNESS = 'witness', 'Testemunha'
+    LEGAL_REPRESENTATIVE = 'legal_representative', 'Representante Legal'
+    NEGOTIATION_RESP = 'accounting_responsible', 'Responsável do Setor Contábil'
+    ACCOUNTING_RESP = 'negotiation_responsible', 'Responsável pela Negociação'
+    NF_RESP = 'nf_resp', 'Responsável pela Emissão de Notas Fiscais'
+
+
+class MaterialType(models.TextChoices):
+    IRON_ORE = 'iron_ore', 'Minério de Ferro'
+    BYPRODUCTS = 'byproducts', 'Subprodutos'
+    CHARCOAL = 'charcoal', 'Carvão Vegetal'
+    BAUXITE = 'bauxite', 'Bauxita'
+    CLAY = 'clay', 'Argila'
+    SAND = 'sand', 'Areia'
+    LIMESTONE = 'limestone', 'Calcário'
+    FESIMG = 'fesi_mg', 'FeSiMg'
+    FERROALLOYS = 'ferroalloys', 'Ferroligas'
+    MIXTURE = 'mixture', 'Mistura'
+    FLUORITE = 'fluorite', 'Fluorita'
+    DOLOMITE = 'dolomite', 'Dolomita'
+    GRAPHITE = 'graphite', 'Grafite'
+
+
+class StatusType(models.TextChoices):
+    VALID = 'valid', 'Válida'
+    EXPIRED = 'expired', 'Vencida'
+    RENEWAL_VALID = 'renewal_valid', 'Renovação/Válida'
+
+
+# ----------- #
+#  DB MODELS  #
+# ----------- #
 
 
 class State(models.Model):
@@ -28,12 +81,47 @@ class City(models.Model):
         verbose_name_plural = 'Cidades'
 
 
-class Document(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Nome')
-    type = models.CharField(max_length=50, verbose_name='Tipo de Documento')
-    filepath = models.CharField(max_length=255, blank=True, null=True, verbose_name='Link do Arquivo')
+class Contact(BaseModel):
+    contact_type = models.CharField(max_length=50, choices=ContactType.choices, verbose_name='Função')
+    name = models.CharField(max_length=200, verbose_name='Nome')
+    email = models.EmailField(verbose_name='Email')
+    primary_phone = models.CharField(max_length=20, verbose_name='Telefone Principal', null=True, blank=True)
+    secondary_phone = models.CharField(max_length=20, verbose_name='Telefone Secundário', null=True, blank=True)
+
+    supplier = models.ForeignKey(
+        'Supplier',
+        on_delete=models.CASCADE,
+        related_name='contacts',
+        verbose_name='Fornecedor',
+    )
+
+    class Meta:
+        verbose_name = 'Contato'
+        verbose_name_plural = 'Contatos'
+
+
+class BankDetails(models.Model):
+    bank_code = models.CharField(max_length=4, verbose_name='Número do Banco')
+    bank_name = models.CharField(max_length=255, verbose_name='Banco')
+    agency = models.CharField(max_length=10, verbose_name='Agência')
+    account_number = models.CharField(max_length=20, verbose_name='Número da Conta')
+
+    def __str__(self):
+        return f'{self.bank_name} - {self.account_number} ({self.agency})'
+
+    class Meta:
+        verbose_name = 'Detalhes Bancários'
+        verbose_name_plural = 'Detalhes Bancários'
+        ordering = ['bank_name']
+
+
+class Document(BaseModel):
+    name = models.CharField(max_length=80, verbose_name='Nome')
+    type = models.CharField(max_length=80, verbose_name='Tipo de Documento')
+    filepath = models.CharField(max_length=355, blank=True, null=True, verbose_name='Link do Arquivo')
     validity = models.DateField(blank=True, null=True, verbose_name='Validade')
-    status = models.CharField(max_length=50, verbose_name='Status')
+
+    status = models.CharField(max_length=50, choices=StatusType.choices, verbose_name='Status')
 
     supplier = models.ForeignKey(
         'Supplier',
@@ -47,14 +135,14 @@ class Document(models.Model):
         verbose_name_plural = 'Documentos'
 
 
-class CharcoalEntry(models.Model):
+class CharcoalEntry(BaseModel):
     entry_date = models.DateField(verbose_name='Data de Entrada')
     origin_ticket = models.CharField(max_length=50, unique=True, verbose_name='Ticket de Origem')
     vehicle_plate = models.CharField(max_length=50, verbose_name='Placa do Veículo')
 
-    entry_volume = models.FloatField(verbose_name='Volume de Entrada')
-    moisture = models.FloatField(verbose_name='Umidade')
-    fines = models.FloatField(verbose_name='Finos')
+    entry_volume = models.FloatField(verbose_name='Volume de Entrada (m³)')
+    moisture = models.FloatField(verbose_name='Umidade (%)')
+    fines = models.FloatField(verbose_name='Finos (%)')
     density = models.FloatField(verbose_name='Densidade')
 
     dcf = models.CharField(max_length=50, verbose_name='DCF')
@@ -74,27 +162,67 @@ class CharcoalEntry(models.Model):
         verbose_name_plural = 'Entradas de Carvão'
 
 
-class Supplier(models.Model):
-    corporate_name = models.CharField(max_length=200, verbose_name='Razão Social', unique=True)
-    material_type = models.CharField(max_length=30, verbose_name='Tipo de Material')
-    distance_in_meters = models.IntegerField(blank=True, null=True, verbose_name='Distância em Metros')
-    state = models.ForeignKey(State, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Estado')
-    city = models.ForeignKey(City, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Cidade')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
-
-    cpf_cnpj = models.CharField(
-        max_length=14,
+class Supplier(BaseModel):
+    rm_code = models.CharField(max_length=30, null=True, blank=True, unique=True, verbose_name='Código RM')
+    corporate_name = models.CharField(
+        max_length=200,
+        verbose_name='Razão Social',
         unique=True,
-        validators=[RegexValidator(r'^(\w{14}|\d{11})$')],
-        verbose_name='CPF ou CNPJ',
+        help_text='Insira nomes padronizados, como o próprio nome que consta no CNPJ para evitar inconsistência.',
     )
 
-    rating = models.DecimalField(
-        max_digits=3,
-        decimal_places=1,
-        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    material_type = models.CharField(max_length=100, choices=MaterialType.choices, verbose_name='Tipo de Material')
+
+    distance_in_meters = models.IntegerField(blank=True, null=True, verbose_name='Distância em Metros')
+    address = models.CharField(max_length=255, blank=True, null=True, verbose_name='Endereço')
+    state = models.ForeignKey(State, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Estado')
+    city = models.ForeignKey(City, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Cidade')
+    cep = models.CharField(
+        max_length=8,
+        validators=[cv.validate_cep],
+        help_text='Informe apenas os números',
+        verbose_name='CEP',
+    )
+    latitude = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        validators=[cv.validate_latitude],
         null=True,
-        verbose_name='Avaliação',
+        blank=True,
+    )
+    longitude = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        validators=[cv.validate_longitude],
+        null=True,
+        blank=True,
+    )
+
+    state_registration = models.CharField(max_length=50, verbose_name='Inscrição Estadual', null=True, blank=True)
+    municipal_registration = models.CharField(max_length=50, verbose_name='Inscrição Municipal', null=True, blank=True)
+    xml_email = models.EmailField(verbose_name='Email XML', null=True, blank=True)
+
+    cpf_cnpj = models.CharField(
+        unique=True,
+        max_length=14,
+        validators=[cv.validate_cpf_cnpj],
+        verbose_name='CPF ou CNPJ',
+        help_text='Insira apenas os números.',
+    )
+
+    observations = models.TextField(
+        max_length=2000,
+        blank=True,
+        null=True,
+        verbose_name='Observações',
+        help_text='Adicione informações adicionais ou observações relevantes.',
+    )
+
+    bank_details = models.OneToOneField(
+        BankDetails,
+        on_delete=models.SET_NULL,
+        verbose_name='Detalhes Bancários',
+        null=True,
     )
 
     def get_documents(self) -> list[Document]:
@@ -102,12 +230,14 @@ class Supplier(models.Model):
 
     class Meta:
         ordering = ['corporate_name']
+
         indexes = [
             models.Index(fields=['material_type']),
             models.Index(fields=['state']),
         ]
+
         verbose_name = 'Fornecedor'
         verbose_name_plural = 'Fornecedores'
 
     def __str__(self):
-        return f'{self.corporate_name}'
+        return self.corporate_name

@@ -1,7 +1,7 @@
 import openpyxl
 from django.db import transaction
 
-from map.models import City, Document, State, Supplier
+from map.models import City, Document, MaterialType, State, Supplier
 
 from .constants import CTF_TYPE, ENVIRONMENTAL_PERMIT_TYPE, REGIEF_TYPE, SUPPLIERS_DOCS_PATH
 from .types import DocumentData, SupplierData
@@ -69,6 +69,13 @@ def collect():
 
         supplier.city = city
         supplier.state = state
+
+        for name, value in MaterialType.choices:
+            if supplier.material_type == value:
+                supplier.material_type = name
+                break
+        else:
+            raise ValueError(f'MaterialType ({supplier.material_type}) not found in choices: {MaterialType.choices}')
 
         suppliers.append(supplier)
     save_suppliers(suppliers)

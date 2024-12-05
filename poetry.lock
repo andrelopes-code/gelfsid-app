@@ -162,18 +162,15 @@ files = [
 Django = ">=3.2"
 
 [[package]]
-name = "django-unfold"
-version = "0.41.0"
-description = "Modern Django admin theme for seamless interface development"
+name = "django-grappelli"
+version = "4.0.1"
+description = "A jazzy skin for the Django Admin-Interface."
 optional = false
-python-versions = ">=3.8"
+python-versions = "*"
 files = [
-    {file = "django_unfold-0.41.0-py3-none-any.whl", hash = "sha256:e8b37484efa86a86be10c9c843252ceb01e5d5609114cfc2ed2d39bd9dfbb575"},
-    {file = "django_unfold-0.41.0.tar.gz", hash = "sha256:34f005bd5d95c25a62129d61099ebac8974e1e3b1910e6344eb869259f01b94c"},
+    {file = "django-grappelli-4.0.1.tar.gz", hash = "sha256:5095c8b6cef3f471a7876e30e8ac5b8cfbee30f999a4fba9e5ee26bf6addc5e4"},
+    {file = "django_grappelli-4.0.1-py2.py3-none-any.whl", hash = "sha256:35cdf82d509ac4c3a19ca7252a78be8b3b60686d4f2976c488c6d5f1dd3bdc85"},
 ]
-
-[package.dependencies]
-django = ">=3.2"
 
 [[package]]
 name = "djlint"
@@ -1330,4 +1327,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "e62f45c34c5b8d7e7011104332e2e6d74f1ac4ad99ffcb2268da2709ddea3926"
+content-hash = "c2fbe0b9fcb79bc8ae3cb2ca10f056273d5b31c93d9ee50808bf90cc97e026fe"

@@ -30,7 +30,7 @@ def get_suppliers(request):
                 'corporate_name': supplier.corporate_name,
                 'cpf_cnpj': supplier.cpf_cnpj,
                 'material_type': supplier.material_type,
-                'rating': supplier.rating,
+                'rating': None,  # ? Adicionar avaliação posteriormente
                 'state': {
                     'abbr': supplier.state.abbr,
                     'name': supplier.state.name,

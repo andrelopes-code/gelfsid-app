@@ -1,4 +1,4 @@
-const DEFAULT_OPTION = '<option value="">Select</option>';
+const DEFAULT_OPTION = '<option value="">Selecione</option>';
 
 async function checkUpdate(citySelect) {
     const url = window.location.href;
