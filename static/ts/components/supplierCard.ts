@@ -2,7 +2,7 @@ import { APP_CONFIG, html } from "../constants";
 import type { Supplier, Document } from "../types";
 import { formatCPFAndCNPJ, roundNumber } from "../utils";
 
-function statusColor(status?: string): string {
+function statusColor(status?: string) {
     if (!status) {
         return "text-white";
     }
@@ -90,7 +90,7 @@ function charcoalStats(supplier: Supplier) {
     `;
 }
 
-export function SupplierCard(supplier: Supplier, borderColor: string, ratingColor: string): string {
+export function SupplierCard(supplier: Supplier, borderColor: string, ratingColor: string) {
     const avaliacaoFmt = supplier.rating || " - ";
 
     const distanciaFmt =

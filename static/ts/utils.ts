@@ -8,12 +8,12 @@ export function formatCPFAndCNPJ(v: string) {
     return "";
 }
 
-export function roundNumber(number: number, digits: number = 2): string {
+export function roundNumber(number: number, digits: number = 2) {
     var multiple = Math.pow(10, digits);
     var roundedNum = Math.round(number * multiple) / multiple;
     return roundedNum.toFixed(digits);
 }
 
-export function getCityKey(stateCode: number, cityName: string): string {
+export function getCityKey(stateCode: number, cityName: string) {
     return `${stateCode}-${cityName}`;
 }

@@ -24,13 +24,15 @@ class MapService {
         suppliers: null,
         currentLayer: null,
     };
+
     private styleCache: Map<string, L.PathOptions> = new Map();
 
+    private citySuppliers: CitySuppliers = {};
     private citiesGeojsonLayer: L.GeoJSON | null = null;
     private currentStateCode: number | null = null;
     private currentType: string | null = null;
-    private citySuppliers: CitySuppliers = {};
     private activeCityLayers: Set<L.Layer> = new Set();
+
     private MAX_ZOOM = 18;
 
     constructor() {

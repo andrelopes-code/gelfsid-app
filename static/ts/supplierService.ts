@@ -8,7 +8,7 @@ class SupplierService {
     public supplierData: Supplier[] = [];
     public materialTypes: Set<string> = new Set();
 
-    async loadCitySuppliers(): Promise<CitySuppliers> {
+    async loadCitySuppliers() {
         const response = await fetch(APP_CONFIG.api.suppliers);
         this.supplierData = await response.json();
 
