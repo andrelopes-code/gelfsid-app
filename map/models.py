@@ -164,6 +164,7 @@ class CharcoalEntry(BaseModel):
 
 class Supplier(BaseModel):
     rm_code = models.CharField(max_length=30, null=True, blank=True, unique=True, verbose_name='Código RM')
+    active = models.BooleanField(default=True, verbose_name='Fornecedor Ativo')
     corporate_name = models.CharField(
         max_length=200,
         verbose_name='Razão Social',

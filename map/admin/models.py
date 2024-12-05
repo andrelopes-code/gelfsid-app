@@ -38,6 +38,7 @@ class SupplierAdmin(BaseModelAdmin):
         'material_type',
         'cpf_cnpj',
         'city',
+        'active',
     )
 
     list_filter = ('material_type', 'state')
@@ -53,6 +54,7 @@ class SupplierAdmin(BaseModelAdmin):
                     'material_type',
                     ('state_registration', 'municipal_registration'),
                     'xml_email',
+                    'active'
                 ]
             },
         ),
