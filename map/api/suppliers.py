@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 
-from map.models import CharcoalEntry, MaterialType, Supplier
+from map.models import CharcoalEntry, Supplier
 
 
 def get_suppliers(request):
@@ -57,13 +57,5 @@ def get_suppliers(request):
             data.append(supplier_data)
 
         return JsonResponse(data, safe=False)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
-
-
-def get_materials(request):
-    try:
-        materials = MaterialType.values
-        return JsonResponse(materials, safe=False)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)

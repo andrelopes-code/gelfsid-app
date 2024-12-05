@@ -8,7 +8,6 @@ interface GeoJsonConfig {
 
 interface ApiConfig {
     suppliers: string;
-    materials: string;
 }
 
 interface AppConfig {
@@ -25,7 +24,6 @@ export const APP_CONFIG: AppConfig = {
     },
     api: {
         suppliers: "/api/suppliers/",
-        materials: "/api/materials/",
     },
     staticFilesBaseUrl: (window as any)?.staticFilesBaseUrl,
 };

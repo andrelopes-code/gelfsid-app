@@ -6,13 +6,20 @@ import { getCityKey } from "./utils";
 class SupplierService {
     private citySuppliers: CitySuppliers = {};
     public supplierData: Supplier[] = [];
+    public materialTypes: Set<string> = new Set();
 
     async loadCitySuppliers(): Promise<CitySuppliers> {
         const response = await fetch(APP_CONFIG.api.suppliers);
         this.supplierData = await response.json();
 
         const suppliers: CitySuppliers = {};
+
+        // Percorre todos os fornecedores para formar
+        // a lista de fornecedores por município
         for (const supplier of this.supplierData) {
+            // Adiciona o tipo de material no Set() de materiais
+            this.materialTypes.add(supplier.material_type);
+
             const cityKey = getCityKey(STATE_CODE_MAP[supplier.state.abbr], supplier.city.name);
             if (!suppliers[cityKey]) {
                 suppliers[cityKey] = [];
@@ -23,7 +30,7 @@ class SupplierService {
         return suppliers;
     }
 
-    generateSupplierCards(suppliers: Supplier[]): void {
+    generateSupplierCards(suppliers: Supplier[]) {
         const container = document.getElementById("supplier-cards-container");
         if (!container) return;
         container.innerHTML = "";
@@ -55,7 +62,7 @@ class SupplierService {
         });
     }
 
-    openDetails(cityKey: string, currentType: string | null): void {
+    openDetails(cityKey: string, currentType: string | null) {
         let suppliers = this.citySuppliers[cityKey];
         if (!suppliers) return;
 
@@ -74,7 +81,7 @@ class SupplierService {
         }
     }
 
-    closeDetails(): void {
+    closeDetails() {
         const detailsElement = document.getElementById("details");
         if (detailsElement) {
             detailsElement.classList.remove("translate-x-0");
@@ -82,7 +89,7 @@ class SupplierService {
         }
     }
 
-    setCitySuppliers(suppliers: CitySuppliers): void {
+    setCitySuppliers(suppliers: CitySuppliers) {
         this.citySuppliers = suppliers;
     }
 }

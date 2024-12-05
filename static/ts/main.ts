@@ -19,13 +19,10 @@ class App {
         this.mapService.setCurrentType(DEFAULT_MATERIAL_TYPE);
     }
 
-    async initializeFilter() {
+    private async initializeFilter(materialTypes: Set<string>) {
         const filter = document.getElementById("material-filter") as HTMLElement;
-        const contentDiv = filter.querySelector(".material-filter-content") as HTMLDivElement;
-
-        // Busca os tipos de materiais existentes na API
-        const response = await fetch(APP_CONFIG.api.materials);
-        const materials = await response.json();
+        const filterContentElem = filter.querySelector(".material-filter-content") as HTMLElement;
+        const materials = Array.from(materialTypes);
 
         // Adiciona o material padrão ao inicio da lista
         materials.unshift(DEFAULT_MATERIAL_TYPE);
@@ -56,13 +53,11 @@ class App {
                 }
             });
 
-            contentDiv.appendChild(option);
+            filterContentElem.appendChild(option);
         }
     }
 
-    private async initializeEventListeners(): Promise<void> {
-        this.initializeFilter();
-
+    private async initializeEventListeners() {
         // Adiciona um event listener para quando o botão de
         // fechar os detalhes de fornecedores for clicado
         const closeDetailsBtn = document.getElementById("close-details") as HTMLElement;
@@ -71,21 +66,23 @@ class App {
         });
     }
 
-    private hideScreenLoader(): void {
+    private hideScreenLoader() {
         (document.getElementById("main-loader") as HTMLElement).style.display = "none";
     }
 
-    async init(): Promise<void> {
+    async init() {
         try {
             await this.initializeEventListeners();
 
             const citySuppliers = await supplierService.loadCitySuppliers();
+
             this.mapService.setCitySuppliers(citySuppliers);
             supplierService.setCitySuppliers(citySuppliers);
 
-            await this.mapService.loadStates();
-            await this.mapService.preloadCities();
+            this.initializeFilter(supplierService.materialTypes);
 
+            this.mapService.preloadCities();
+            this.mapService.loadStates();
             this.hideScreenLoader();
         } catch (error) {
             console.error("error:", error);
