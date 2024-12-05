@@ -25,7 +25,7 @@ class DocumentInline(BaseTabularInline):
     extra = 1
     classes = ('grp-collapse grp-closed',)
 
-    fields = ('name', 'type', 'validity', 'filepath', 'status')
+    fields = ('name', 'type', 'validity', 'filepath')
 
     verbose_name = 'Documento'
     verbose_name_plural = 'Documentos'

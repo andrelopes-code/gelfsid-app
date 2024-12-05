@@ -44,12 +44,6 @@ class MaterialType(models.TextChoices):
     GRAPHITE = 'Grafite', 'Grafite'
 
 
-class StatusType(models.TextChoices):
-    VALID = 'valid', 'Válida'
-    EXPIRED = 'expired', 'Vencida'
-    RENEWAL_VALID = 'renewal_valid', 'Renovação/Válida'
-
-
 # ----------- #
 #  DB MODELS  #
 # ----------- #
@@ -120,8 +114,6 @@ class Document(BaseModel):
     type = models.CharField(max_length=80, verbose_name='Tipo de Documento')
     filepath = models.CharField(max_length=355, blank=True, null=True, verbose_name='Link do Arquivo')
     validity = models.DateField(blank=True, null=True, verbose_name='Validade')
-
-    status = models.CharField(max_length=50, choices=StatusType.choices, verbose_name='Status')
 
     supplier = models.ForeignKey(
         'Supplier',

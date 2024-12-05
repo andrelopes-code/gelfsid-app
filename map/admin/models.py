@@ -21,8 +21,8 @@ class BankDetailsAdmin(BaseModelAdmin):
 
 @admin.register(models.Document)
 class DocumentAdmin(BaseModelAdmin):
-    list_display = ('name', 'type', 'validity', 'status', 'supplier')
-    list_filter = ('status', 'type', 'supplier')
+    list_display = ('name', 'type', 'validity', 'supplier')
+    list_filter = ('type', 'supplier')
 
 
 @admin.register(models.CharcoalEntry)

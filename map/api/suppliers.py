@@ -30,7 +30,7 @@ def get_suppliers(request):
                 'corporate_name': supplier.corporate_name,
                 'cpf_cnpj': supplier.cpf_cnpj,
                 'material_type': supplier.material_type,
-                'rating': None,  # ? Adicionar avaliação posteriormente
+                'rating': None,  # ! Adicionar avaliação posteriormente
                 'state': {
                     'abbr': supplier.state.abbr,
                     'name': supplier.state.name,
@@ -47,7 +47,7 @@ def get_suppliers(request):
                         'type': document.type,
                         'filepath': document.filepath,
                         'validity': document.validity,
-                        'status': document.status,
+                        'status': None,  # ! Remover status
                     }
                     for document in supplier.get_documents()
                 ],

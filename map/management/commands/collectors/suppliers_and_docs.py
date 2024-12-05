@@ -130,7 +130,6 @@ def create_or_update_document(supplier, document_data: DocumentData, doc_type: s
         defaults={
             'name': document_data.name,
             'validity': document_data.validity,
-            'status': document_data.status,
             'filepath': document_data.filepath,
         },
     )
