@@ -28,7 +28,6 @@ export interface Document {
     name: string;
     filepath?: string;
     validity?: string;
-    status: string;
     type: string;
 }
 

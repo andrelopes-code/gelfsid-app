@@ -2,20 +2,27 @@ import { APP_CONFIG, html } from "../constants";
 import type { Supplier, Document } from "../types";
 import { formatCPFAndCNPJ, roundNumber } from "../utils";
 
-function statusColor(status?: string) {
-    if (!status) {
-        return "text-white";
+function getValidityStatusAndColor(document: Document): [string, string] {
+    if (!document.validity) {
+        return ["AUSENTE", "text-white"];
     }
 
-    switch (status.toLowerCase()) {
-        case "válida":
-            return "text-[var(--secondary-color)]";
-        case "renovação/válida":
-            return "text-[var(--secondary-color)]";
-        case "vencida":
-            return "text-[var(--primary-color)]";
-        default:
-            return "text-white";
+    const now = new Date();
+    const validityDate = new Date(document.validity);
+
+    const nowUTC = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+    const validityUTC = new Date(
+        Date.UTC(validityDate.getFullYear(), validityDate.getMonth(), validityDate.getDate())
+    );
+
+    const diffInDays = Math.floor((validityUTC.getTime() - nowUTC.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffInDays < 0) {
+        return ["VENCIDO", "text-[var(--primary-color)]"];
+    } else if (diffInDays <= 30) {
+        return [`VENCE EM ${diffInDays} DIAS`, "text-[var(--primary-color)]"];
+    } else {
+        return ["VÁLIDO", "text-[var(--secondary-color)]"];
     }
 }
 
@@ -32,6 +39,8 @@ function linkfy(value: string, link?: string) {
 }
 
 function documentTableRow(label: string, document: Document) {
+    const [validityStatus, validityColor] = getValidityStatusAndColor(document);
+
     return html`
         <tr class="border-slate-800 border-b">
             <td class="px-4 py-3">
@@ -44,9 +53,7 @@ function documentTableRow(label: string, document: Document) {
                 <span class="font-medium text-sm">${linkfy(document.name, document?.filepath)}</span>
             </td>
             <td class="text-right px-4 py-3 w-fit">
-                <span class="font-medium ${statusColor(document?.status)} text-sm"
-                    >${(document?.status || "AUSENTE").toUpperCase()}</span
-                >
+                <span class="font-medium ${validityColor} text-sm">${validityStatus}</span>
             </td>
         </tr>
     `;
