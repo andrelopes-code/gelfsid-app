@@ -29,19 +29,19 @@ class ContactType(models.TextChoices):
 
 
 class MaterialType(models.TextChoices):
-    IRON_ORE = 'iron_ore', 'Minério de Ferro'
-    BYPRODUCTS = 'byproducts', 'Subprodutos'
-    CHARCOAL = 'charcoal', 'Carvão Vegetal'
-    BAUXITE = 'bauxite', 'Bauxita'
-    CLAY = 'clay', 'Argila'
-    SAND = 'sand', 'Areia'
-    LIMESTONE = 'limestone', 'Calcário'
-    FESIMG = 'fesi_mg', 'FeSiMg'
-    FERROALLOYS = 'ferroalloys', 'Ferroligas'
-    MIXTURE = 'mixture', 'Mistura'
-    FLUORITE = 'fluorite', 'Fluorita'
-    DOLOMITE = 'dolomite', 'Dolomita'
-    GRAPHITE = 'graphite', 'Grafite'
+    IRON_ORE = 'Minério de Ferro', 'Minério de Ferro'
+    BYPRODUCTS = 'Subprodutos', 'Subprodutos'
+    CHARCOAL = 'Carvão Vegetal', 'Carvão Vegetal'
+    BAUXITE = 'Bauxita', 'Bauxita'
+    CLAY = 'Argila', 'Argila'
+    SAND = 'Areia', 'Areia'
+    LIMESTONE = 'Calcario', 'Calcario'
+    FESIMG = 'FeSiMg', 'FeSiMg'
+    FERROALLOYS = 'Ferroligas', 'Ferroligas'
+    MIXTURE = 'Mistura', 'Mistura'
+    FLUORITE = 'Fluorita', 'Fluorita'
+    DOLOMITE = 'Dolomita', 'Dolomita'
+    GRAPHITE = 'Grafite', 'Grafite'
 
 
 class StatusType(models.TextChoices):
