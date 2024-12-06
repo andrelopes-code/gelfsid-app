@@ -1,7 +1,15 @@
-{% extends "components/header/base.html" %}
-{% block links %}
-    {% url 'index' as index_url %}
-    {% include "components/header/button.html" with href=index_url text="MAPA" %}
-    {% url 'dashboard' as dashboard_url %}
-    {% include "components/header/button.html" with href=dashboard_url text="CARVÃO" %}
-{% endblock links %}
+{# djlint:off H021, H006 #}
+{% load static %}
+<div class="bg-dark w-full h-fit pointer-events-auto">
+    <nav class="z-30 flex bg-transparent w-full h-fit pointer-events-none">
+        <div class="flex flex-wrap justify-start items-start gap-2 px-4 py-4 w-screen h-full">
+            <img src="{% static 'assets/logo.png' %}"
+                 class="w-auto h-10"
+                 alt="Gelf logo" />
+            {% url 'index' as index_url %}
+            {% include "components/header/button.html" with href=index_url text="MAPA" %}
+            {% url 'dashboard' as dashboard_url %}
+            {% include "components/header/button.html" with href=dashboard_url text="CARVÃO" %}
+        </div>
+    </nav>
+</div>

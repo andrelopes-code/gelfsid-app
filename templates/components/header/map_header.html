@@ -1,9 +1,19 @@
-{% extends "components/header/base.html" %}
-{% block links %}
-    <div class="pointer-events-auto">{% include "components/filter_switch.html" %}</div>
-    {% url 'admin:index' as admin_url %}
-    <div class="pointer-events-auto">{% include "components/header/button.html" with href=admin_url text="ADMIN" %}</div>
-    {% url 'dashboard' as dashboard_url %}
-    <div class="pointer-events-auto">{% include "components/header/button.html" with href=dashboard_url text="DASHBOARD" %}</div>
-    <div class="pointer-events-auto">{% include "components/search_button.html" %}</div>
-{% endblock links %}
+{# djlint:off H021, H006 #}
+{% load static %}
+<div class="z-30 absolute w-full h-fit pointer-events-none">
+    <nav class="flex bg-transparent w-full h-fit pointer-events-none">
+        <div class="flex flex-wrap justify-start items-start gap-2 px-4 py-4 w-screen h-full">
+            <img src="{% static 'assets/logo.png' %}"
+                 class="w-auto h-10"
+                 alt="Gelf logo" />
+            <div class="pointer-events-auto">{% include "components/filter_switch.html" %}</div>
+            {% url 'admin:index' as admin_url %}
+            <div class="pointer-events-auto">{% include "components/header/button.html" with href=admin_url text="ADMIN" %}</div>
+            {% url 'dashboard' as dashboard_url %}
+            <div class="pointer-events-auto">
+                {% include "components/header/button.html" with href=dashboard_url text="DASHBOARD" %}
+            </div>
+            <div class="pointer-events-auto">{% include "components/search.html" %}</div>
+        </div>
+    </nav>
+</div>
