@@ -5,9 +5,9 @@ from datetime import date, datetime
 
 import Levenshtein
 import pandas as pd
-from gelfcore.logger import logger
 from rapidfuzz import fuzz
 
+from gelfcore.logger import log
 from gelfmp.models import City, State
 
 
@@ -68,7 +68,7 @@ def get_db_city(city, state, tolerance_ratio=0.7):
         raise Exception(f'database city not found for: {city} - {state}')
 
     except Exception as e:
-        logger.error(f'error getting city: {e}')
+        log.error(f'error getting city: {e}')
 
 
 def normalize_text(text):

@@ -5,10 +5,11 @@ from django.conf import settings
 from loguru import logger
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 logger.remove()
+log = logger
 
 if settings.DEBUG:
+    # Log no terminal
     logger.add(
         sys.stderr,
         level='INFO',
@@ -16,6 +17,7 @@ if settings.DEBUG:
         colorize=True,
     )
 
+# Log em arquivo /logs/error.log
 logger.add(
     f'{BASE_DIR}/logs/error.log',
     rotation='00:00',

@@ -3,7 +3,7 @@ from functools import partial
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from threading import Thread
 
-from gelfcore.logger import logger
+from gelfcore.logger import log
 
 STATIC_SERVER_ADDRESS = '127.0.0.1'
 
@@ -29,7 +29,7 @@ class LocalStaticServer:
         if self.is_port_in_use():
             return
 
-        logger.info(f'Initializing static server on port {self.port}')
+        log.info(f'Initializing static server on port {self.port}')
         handler = partial(SimpleHTTPRequestHandler, directory=self.directory)
         self.server = HTTPServer((STATIC_SERVER_ADDRESS, self.port), handler)
         self.port = self.server.server_port
