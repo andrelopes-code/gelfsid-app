@@ -85,7 +85,7 @@ def collect():
     if not suppliers_names:
         raise ValueError('Não existem fornecedores no banco de dados')
 
-    aliases = Aliases('charcoal_aliases.json')
+    aliases = Aliases('charcoal.alias.json')
     entries = get_entries()
 
     for entry_supplier_name, group in entries.groupby('FORNECEDOR_E_FAZENDA'):

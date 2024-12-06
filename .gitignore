@@ -171,3 +171,4 @@ staticfiles
 certs
 .vscode
 .sample-data
+*.alias.json
