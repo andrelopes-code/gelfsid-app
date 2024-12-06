@@ -1,13 +1,9 @@
 {% extends "base.html" %}
+{# djlint:off H021, H006 #}
 {% load static %}
 {% block content %}
-    <!-- Filtro -->
-    <div class="top-0 z-30 absolute flex justify-start items-start gap-2 p-5 w-full pointer-events-none">
-        <div class="pointer-events-auto">{% include "components/filter_switch.html" %}</div>
-        <div class="pointer-events-auto">{% include "components/admin_button.html" %}</div>
-        <div class="pointer-events-auto">{% include "components/dashboard_button.html" %}</div>
-        <div class="pointer-events-auto">{% include "components/search_button.html" %}</div>
-    </div>
+    <!-- Navegação -->
+    <div class="z-50 absolute w-full h-fit pointer-events-none">{% include "components/header/map_header.html" %}</div>
     <main class="relative w-screen h-screen">
         <!-- Loader -->
         <div id="main-loader"

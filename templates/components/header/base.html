@@ -1,0 +1,11 @@
+{# djlint:off H021, H006 #}
+{% load static %}
+<nav class="z-50 flex bg-transparent w-full h-fit pointer-events-none">
+    <div class="flex flex-wrap justify-start items-start gap-2 px-4 py-4 w-screen h-full">
+        <img src="{% static 'assets/logo.png' %}"
+             class="w-auto h-10"
+             alt="Gelf logo" />
+        {% block links %}
+        {% endblock links %}
+    </div>
+</nav>

@@ -7,10 +7,6 @@ import "@phosphor-icons/web/bold/style.css";
 import "@phosphor-icons/web/fill/style.css";
 import "@phosphor-icons/web/regular/style.css";
 
-// Inicia o alpinejs
-import Alpine from "alpinejs";
-Alpine.start();
-
 class App {
     private mapService: MapService;
 

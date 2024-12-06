@@ -1,0 +1,9 @@
+{% extends "components/header/base.html" %}
+{% block links %}
+    <div class="pointer-events-auto">{% include "components/filter_switch.html" %}</div>
+    {% url 'admin:index' as admin_url %}
+    <div class="pointer-events-auto">{% include "components/header/button.html" with href=admin_url text="ADMIN" %}</div>
+    {% url 'dashboard' as dashboard_url %}
+    <div class="pointer-events-auto">{% include "components/header/button.html" with href=dashboard_url text="DASHBOARD" %}</div>
+    <div class="pointer-events-auto">{% include "components/search_button.html" %}</div>
+{% endblock links %}

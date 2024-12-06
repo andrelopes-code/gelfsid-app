@@ -1,0 +1,7 @@
+{% extends "components/header/base.html" %}
+{% block links %}
+    {% url 'index' as index_url %}
+    {% include "components/header/button.html" with href=index_url text="MAPA" %}
+    {% url 'dashboard' as dashboard_url %}
+    {% include "components/header/button.html" with href=dashboard_url text="CARVÃO" %}
+{% endblock links %}
