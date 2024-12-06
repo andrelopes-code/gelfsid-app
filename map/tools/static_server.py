@@ -41,6 +41,3 @@ class LocalStaticServer:
         if self.server:
             self.server.shutdown()
             self.server.server_close()
-
-
-docs_server = LocalStaticServer(r'H:\DEMAT\Público\10 - DOCUMENTAÇÃO - CLIENTES E FORNECEDORES', 9000)
