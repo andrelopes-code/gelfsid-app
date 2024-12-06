@@ -1,4 +1,4 @@
-import { APP_CONFIG, DEFAULT_MATERIAL_TYPE } from "./constants";
+import { DEFAULT_MATERIAL_TYPE } from "./constants";
 import { MapService } from "./mapService";
 import { supplierService } from "./supplierService";
 import "leaflet/dist/leaflet.css";

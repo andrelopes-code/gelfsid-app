@@ -164,9 +164,8 @@ class MapService {
             this.citiesGeojsonLayer = L.geoJSON(data, {
                 style: this.cityStyleFunction.bind(this),
                 onEachFeature: (feature, layer) => {
-                    this.activeCityLayers.add(layer);
-
-                    const isHostCity = getCityKey(stateCode, feature.properties.name) === HOST_CITY_KEY;
+                    const cityKey = getCityKey(stateCode, feature.properties.name);
+                    const isHostCity = cityKey === HOST_CITY_KEY;
 
                     if (isHostCity) {
                         layer.bindTooltip(HOST_CITY_TOOLTIP_TEXT, {
@@ -175,6 +174,8 @@ class MapService {
                             className: "custom-tooltip-gelf",
                         });
                     }
+
+                    this.activeCityLayers.add(layer);
                 },
             }).addTo(this.map);
 

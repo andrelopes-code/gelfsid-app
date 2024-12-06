@@ -6,7 +6,7 @@
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "outDir": "static/ts/dist"
+        "outDir": "static/dist"
     },
     "include": ["static/ts/**/*.ts"]
 }

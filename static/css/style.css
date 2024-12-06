@@ -743,10 +743,6 @@ video {
   height: 100vh;
 }
 
-.h-20{
-  height: 5rem;
-}
-
 .w-1\/6{
   width: 16.666667%;
 }
@@ -878,12 +874,6 @@ video {
 
 .gap-5{
   gap: 1.25rem;
-}
-
-.space-x-3 > :not([hidden]) ~ :not([hidden]){
-  --tw-space-x-reverse: 0;
-  margin-right: calc(0.75rem * var(--tw-space-x-reverse));
-  margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .overflow-auto{
@@ -1028,12 +1018,12 @@ video {
   padding-bottom: 0.5rem;
 }
 
-.pt-4{
-  padding-top: 1rem;
-}
-
 .pb-4{
   padding-bottom: 1rem;
+}
+
+.pt-4{
+  padding-top: 1rem;
 }
 
 .text-center{
@@ -1082,6 +1072,10 @@ video {
 
 .uppercase{
   text-transform: uppercase;
+}
+
+.capitalize{
+  text-transform: capitalize;
 }
 
 .text-green-300{
