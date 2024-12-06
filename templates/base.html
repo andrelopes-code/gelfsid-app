@@ -22,7 +22,7 @@
                   href="{% static 'assets/favicon.ico' %}"
                   type="image/x-icon" />
             <!-- Scripts -->
-            <script>window.staticFilesBaseUrl = "{{ STATIC_FILES_BASE_URL }}";</script>
+            <script>window.staticFilesBaseUrl = "{{ DOCS_FILES_BASE_URL }}";</script>
             <script defer type="module" src="{% static 'dist/base.js' %}"></script>
             {% block scripts %}
                   <script defer type="module" src="{% static 'dist/main.js' %}"></script>

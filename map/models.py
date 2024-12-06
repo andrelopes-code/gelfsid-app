@@ -221,6 +221,9 @@ class Supplier(BaseModel):
     def get_documents(self) -> list[Document]:
         return self.documents.all()
 
+    def get_contacts(self) -> list[Contact]:
+        return self.contacts.all()
+
     class Meta:
         ordering = ['corporate_name']
 

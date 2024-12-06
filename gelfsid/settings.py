@@ -4,7 +4,7 @@ from pathlib import Path
 from django.template import base as template_base
 from environ import Env
 
-# ! Adicionar suporte para multilinha em tags de template (GAMBIARRA)
+# Adicionar suporte para multilinha em tags de template (GAMBIARRA)
 template_base.tag_re = re.compile(template_base.tag_re.pattern, re.DOTALL)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,8 +12,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = Env()
 env.read_env('.env')
 
-DEBUG = env.bool('DEBUG', False)
-SECRET_KEY = env.str('SECRET_KEY', 'secret')
+DEBUG = env.bool('DEBUG', True)
+SECRET_KEY = env.str('SECRET_KEY')
 GRAPHHOPPER_API_KEY = env.str('GRAPHHOPPER_API_KEY', '')
 
 STATES_AND_CITIES_PATH = 'static/data/states_and_cities.json'
@@ -26,7 +26,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATIC_FILES_BASE_URL = env.str('STATIC_FILES_BASE_URL')
+DOCS_FILES_BASE_URL = env.str('DOCS_FILES_BASE_URL')
 
 GRAPPELLI_ADMIN_TITLE = 'GELFSID ADMIN'
 GRAPPELLI_SWITCH_USER = True

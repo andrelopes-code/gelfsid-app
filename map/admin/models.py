@@ -3,7 +3,7 @@ from django.forms import Textarea
 
 from map import models
 
-from .bases import BaseModelAdmin
+from .base import BaseModelAdmin
 from .inlines import ContactInline, DocumentInline
 
 

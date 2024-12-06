@@ -1,9 +1,10 @@
+from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import include, path
 from django.views.generic.base import RedirectView
 
-from . import views
+from map import views
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -14,4 +15,7 @@ urlpatterns = [
 ]
 
 # Rota para servir os arquivos de documentação dos fornecedores
-urlpatterns += static('/media/docs/', document_root=r'H:\DEMAT\Público\10 - DOCUMENTAÇÃO - CLIENTES E FORNECEDORES')
+urlpatterns += static(
+    settings.DOCS_FILES_BASE_URL,
+    document_root=r'H:\DEMAT\Público\10 - DOCUMENTAÇÃO - CLIENTES E FORNECEDORES',
+)

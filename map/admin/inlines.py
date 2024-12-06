@@ -1,6 +1,6 @@
 from map import models
 
-from .bases import BaseTabularInline
+from .base import BaseTabularInline
 
 
 class ContactInline(BaseTabularInline):
