@@ -1,7 +1,8 @@
 from django.http import HttpRequest
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from map.charts import charts, forms
+from map.models import Supplier
 
 
 def index(request: HttpRequest):
@@ -17,3 +18,15 @@ def dashboard(request: HttpRequest):
     }
 
     return render(request, 'dashboard/index.html', context=context)
+
+
+def supplier_details(request: HttpRequest, id):
+    supplier = Supplier.objects.filter(id=id).first()
+    if not supplier:
+        return redirect('index')
+
+    context = {
+        'supplier': supplier,
+    }
+
+    return render(request, 'supplier_details.html', context=context)

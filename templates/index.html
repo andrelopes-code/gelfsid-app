@@ -8,7 +8,7 @@
         <div class="pointer-events-auto">{% include "components/dashboard_button.html" %}</div>
         <div class="pointer-events-auto">{% include "components/search_button.html" %}</div>
     </div>
-    <div class="relative w-screen h-screen">
+    <main class="relative w-screen h-screen">
         <!-- Loader -->
         <div id="main-loader"
              class="z-30 absolute flex justify-center items-center w-full h-full pointer-events-none tex">
@@ -27,5 +27,5 @@
         </div>
         <!-- Container do Mapa -->
         <div id="map" class="z-10 !bg-dark w-full h-full"></div>
-    </div>
+    </main>
 {% endblock content %}

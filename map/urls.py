@@ -8,5 +8,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('grappelli/', include('grappelli.urls')),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('assets/favicon.ico')))
+    path('details/supplier/<int:id>/', views.supplier_details, name='supplier_details'),
+    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('assets/favicon.ico'))),
 ]

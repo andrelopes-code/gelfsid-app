@@ -32,6 +32,7 @@ export interface Document {
 }
 
 export interface Supplier {
+    id: number;
     corporate_name: string;
     city: City;
     state: State;

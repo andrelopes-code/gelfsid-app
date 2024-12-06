@@ -18,11 +18,11 @@ function getValidityStatusAndColor(document: Document): [string, string] {
     const diffInDays = Math.floor((validityUTC.getTime() - nowUTC.getTime()) / (1000 * 60 * 60 * 24));
 
     if (diffInDays < 0) {
-        return ["VENCIDO", "text-[var(--primary-color)]"];
+        return ["VENCIDO", "text-primary"];
     } else if (diffInDays <= 30) {
-        return [`VENCE EM ${diffInDays} DIAS`, "text-[var(--primary-color)]"];
+        return [`VENCE EM ${diffInDays} DIAS`, "text-primary"];
     } else {
-        return ["VÁLIDO", "text-[var(--secondary-color)]"];
+        return ["VÁLIDO", "text-secondary"];
     }
 }
 
@@ -119,11 +119,11 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
             >
                 <div class="flex justify-between w-full text-md overflow-hidden">
                     <div class="flex flex-col gap-1 text-nowrap overflow-hidden">
-                        <p
+                        <div
                             class="mb-3 w-full font-medium text-ellipsis text-white hover:text-wrap overflow-hidden"
                         >
                             ${supplier.corporate_name}
-                        </p>
+                        </div>
                         <div class="flex items-center pt-4 text-sm gap-4 w-full">
                             <i class="ph-map-pin ph-fill"></i>
                             <span class="font-medium">${supplier.city.name} - ${supplier.state.abbr}</span>
@@ -132,10 +132,19 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                             <i class="ph-fill ph-identification-card"></i>
                             <span class="font-medium">${formatCPFAndCNPJ(supplier.cpf_cnpj)}</span>
                         </div>
-
-                        <div class="flex items-center pb-4 text-sm gap-4">
+                        <div class="flex items-center text-sm gap-4">
                             <i class="ph-fill ph-package"></i>
                             <span class="font-medium">${supplier.material_type}</span>
+                        </div>
+                        <div class="flex items-center text-slate-400 group mb-4 text-sm gap-4">
+                            <i
+                                class="ph-bold ph-link transition-colors duration-150 group-hover:text-primary"
+                            ></i>
+                            <a
+                                href="details/supplier/${supplier.id}"
+                                class="font-medium cursor-pointer transition-colors duration-150 group-hover:text-primary"
+                                >Ver detalhes</a
+                            >
                         </div>
                     </div>
                     <div class="flex justify-end gap-2 ml-5 w-fit max-w-fit">

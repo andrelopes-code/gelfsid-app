@@ -47,7 +47,6 @@ def get_suppliers(request):
                         'type': document.type,
                         'filepath': document.filepath,
                         'validity': document.validity,
-                        'status': None,  # ! Remover status
                     }
                     for document in supplier.get_documents()
                 ],

@@ -4,10 +4,12 @@ module.exports = {
     theme: {
         extend: {
             colors: {
+                primary: "var(--primary-color)",
+                secondary: "var(--secondary-color)",
                 dark: {
-                    DEFAULT: "#11151c",
-                    100: "#151b25",
-                    200: "#222c3d",
+                    DEFAULT: "var(--dark)",
+                    100: "var(--dark-100)",
+                    200: "var(--dark-200)",
                 },
             },
         },
