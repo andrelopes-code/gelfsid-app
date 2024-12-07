@@ -1,0 +1,26 @@
+<div class="bg-dark-100 shadow-md rounded-md min-h-fit overflow-x-auto">
+    <!-- Título -->
+    <h2 class="bg-dark-200 mb-2 p-2 font-medium text-center text-md text-slate-300 uppercase">Informações Bancárias</h2>
+    <!-- Tabela de informações bancárias -->
+    <table class="border-collapse mb-4 px-4 w-full h-fit text-center text-slate-300 text-sm">
+        <thead class="border-dark-200 border-b">
+            <tr>
+                <th class="px-4 py-2 font-medium text-slate-500">Nome do Banco</th>
+                <th class="px-4 py-2 font-medium text-slate-500">Código do Banco</th>
+                <th class="px-4 py-2 font-medium text-slate-500">Conta Corrente</th>
+                <th class="px-4 py-2 font-medium text-slate-500">Agência</th>
+            </tr>
+        </thead>
+        <tbody class="w-full h-fit">
+            <!-- Dados bancários do fornecedor -->
+            <tr class="border-dark-200">
+                <td class="px-4 py-2">{% include "components/copyable_text.html" with value=supplier.bank_details.bank_name %}</td>
+                <td class="px-4 py-2">{% include "components/copyable_text.html" with value=supplier.bank_details.bank_code %}</td>
+                <td class="px-4 py-2">
+                    {% include "components/copyable_text.html" with value=supplier.bank_details.account_number %}
+                </td>
+                <td class="px-4 py-2">{% include "components/copyable_text.html" with value=supplier.bank_details.agency %}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

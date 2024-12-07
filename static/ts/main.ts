@@ -3,10 +3,6 @@ import { MapService } from "./mapService";
 import { supplierService } from "./supplierService";
 import "leaflet/dist/leaflet.css";
 
-import "@phosphor-icons/web/bold/style.css";
-import "@phosphor-icons/web/fill/style.css";
-import "@phosphor-icons/web/regular/style.css";
-
 class App {
     private mapService: MapService;
 

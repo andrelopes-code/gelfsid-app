@@ -55,6 +55,7 @@ class SupplierAdmin(BaseModelAdmin):
                     'material_type',
                     ('state_registration', 'municipal_registration'),
                     'xml_email',
+                    'rm_code',
                     'active',
                 ]
             },

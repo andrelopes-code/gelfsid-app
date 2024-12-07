@@ -16,7 +16,6 @@
     font-family: "JetBrains Mono", sans-serif !important;
     box-sizing: border-box;
 }
-
 .theme-toggle {
     display: none !important;
 }
@@ -28,7 +27,13 @@ a:active {
     text-decoration: none !important;
 }
 
-.deletelink {
+input#searchbar {
+    height: 100% !important;
+    margin: 0 !important;
+}
+
+.deletelink,
+.button.cancel-link {
     height: 100% !important;
 }
 
@@ -80,8 +85,13 @@ label {
     margin-bottom: 0.2rem;
 }
 
+.inline-group .tabular td.original p {
+    height: fit-content;
+}
+
 .form-row textarea {
     max-width: 100%;
+    height: fit-content;
     width: 100% !important;
 }
 

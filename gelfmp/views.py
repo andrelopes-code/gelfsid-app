@@ -29,4 +29,4 @@ def supplier_details(request: HttpRequest, id):
         'supplier': supplier,
     }
 
-    return render(request, 'supplier_details.html', context=context)
+    return render(request, 'details/index.html', context=context)

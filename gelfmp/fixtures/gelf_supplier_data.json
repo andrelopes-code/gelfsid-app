@@ -1,0 +1,90 @@
+[
+    {
+        "model": "gelfmp.supplier",
+        "pk": 1,
+        "fields": {
+            "created_at": "2024-12-07T13:08:05.265Z",
+            "updated_at": "2024-12-07T18:56:29.302Z",
+            "rm_code": "F00001",
+            "active": true,
+            "corporate_name": "GELF SIDERURGIA SA FAZENDA TAMANDUA_POCOES",
+            "material_type": "Carvão Vegetal",
+            "distance_in_meters": null,
+            "address": null,
+            "state": "MG",
+            "city": 3032,
+            "cep": "35701970",
+            "latitude": "-16.83917045",
+            "longitude": "-43.46835592",
+            "state_registration": "172160010",
+            "municipal_registration": "192168151",
+            "xml_email": "emailxmlexample@gelfsid.com.br",
+            "cpf_cnpj": "20388757000101",
+            "observations": "Alguma observação importante...",
+            "bank_details": 1
+        }
+    },
+    {
+        "model": "gelfmp.bankdetails",
+        "pk": 1,
+        "fields": {
+            "created_at": "2024-12-07T13:08:05.265Z",
+            "updated_at": "2024-12-07T18:56:29.302Z",
+            "bank_name": "BANCO DO BRASIL",
+            "bank_code": "001",
+            "account_number": "12345-6",
+            "agency": "1234"
+        }
+    },
+    {
+        "model": "gelfmp.document",
+        "pk": 1,
+        "fields": {
+            "created_at": "2024-12-07T13:08:05.265Z",
+            "updated_at": "2024-12-07T18:56:29.302Z",
+            "type": "LIC. AMBIENTAL",
+            "validity": "2024-12-19",
+            "name": "0798557",
+            "supplier": 1
+        }
+    },
+    {
+        "model": "gelfmp.contact",
+        "pk": 1,
+        "fields": {
+            "created_at": "2024-12-07T13:08:05.265Z",
+            "updated_at": "2024-12-07T18:56:29.302Z",
+            "contact_type": "witness",
+            "email": "andre.silva@gelfsid.com.br",
+            "primary_phone": "(31) 996990146",
+            "name": "André Vinicius Silva Lopes",
+            "supplier": 1
+        }
+    },
+    {
+        "model": "gelfmp.contact",
+        "pk": 2,
+        "fields": {
+            "created_at": "2024-12-07T13:08:05.265Z",
+            "updated_at": "2024-12-07T18:56:29.302Z",
+            "contact_type": "negotiation_responsible",
+            "email": "andre.silva@gelfsid.com.br",
+            "primary_phone": "(31) 996990146",
+            "name": "André Vinicius Silva Lopes",
+            "supplier": 1
+        }
+    },
+    {
+        "model": "gelfmp.contact",
+        "pk": 3,
+        "fields": {
+            "created_at": "2024-12-07T13:08:05.265Z",
+            "updated_at": "2024-12-07T18:56:29.302Z",
+            "contact_type": "legal_representative",
+            "email": "andre.silva@gelfsid.com.br",
+            "primary_phone": "(31) 996990146",
+            "name": "André Vinicius Silva Lopes",
+            "supplier": 1
+        }
+    }
+]

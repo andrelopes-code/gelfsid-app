@@ -1,0 +1,47 @@
+<div class="bg-dark-100 shadow-md rounded-md min-h-fit overflow-x-auto">
+    <!-- Título -->
+    <h2 class="bg-dark-200 mb-2 p-2 font-medium text-center text-md text-slate-300 uppercase">Contatos</h2>
+    <!-- Tabela de contatos -->
+    <table class="border-collapse mb-4 px-4 w-full h-fit text-center text-slate-300 text-sm">
+        <thead class="border-dark-200 border-b">
+            <tr>
+                <th class="px-4 py-2 font-medium text-slate-500">Tipo de Contato</th>
+                <th class="px-4 py-2 font-medium text-slate-500">Nome</th>
+                <th class="px-4 py-2 font-medium text-slate-500">Email</th>
+                <th class="px-4 py-2 font-medium text-slate-500">Telefone Principal</th>
+                <th class="px-4 py-2 font-medium text-slate-500">Telefone Secundário</th>
+            </tr>
+        </thead>
+        <tbody class="w-full h-fit">
+            <!-- Iteração pelos contatos do fornecedor -->
+            {% for contact in supplier.get_contacts %}
+                <tr class="border-dark-200 {% if not forloop.last %}border-b{% endif %}">
+                    <!-- Tipo de Contato -->
+                    <td class="px-4 py-2">
+                        <span>{{ contact.get_contact_type_display }}</span>
+                    </td>
+                    <!-- Nome -->
+                    <td class="px-4 py-2">{% include "components/copyable_text.html" with value=contact.name %}</td>
+                    <!-- Email -->
+                    <td class="px-4 py-2">{% include "components/copyable_text.html" with value=contact.email %}</td>
+                    <!-- Telefone Principal -->
+                    <td class="px-4 py-2">
+                        {% if contact.primary_phone %}
+                            {% include "components/copyable_text.html" with value=contact.primary_phone %}
+                        {% else %}
+                            <span>-</span>
+                        {% endif %}
+                    </td>
+                    <!-- Telefone Secundário -->
+                    <td class="px-4 py-2">
+                        {% if contact.secondary_phone %}
+                            {% include "components/copyable_text.html" with value=contact.secondary_phone %}
+                        {% else %}
+                            <span>-</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

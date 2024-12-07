@@ -26,7 +26,7 @@ class ContactType(models.TextChoices):
     LEGAL_REPRESENTATIVE = 'legal_representative', 'Representante Legal'
     NEGOTIATION_RESP = 'accounting_responsible', 'Responsável do Setor Contábil'
     ACCOUNTING_RESP = 'negotiation_responsible', 'Responsável pela Negociação'
-    NF_RESP = 'nf_resp', 'Responsável pela Emissão de Notas Fiscais'
+    NF_RESP = 'nf_responsible', 'Responsável pela Emissão de Notas Fiscais'
 
 
 class MaterialType(models.TextChoices):
@@ -98,7 +98,7 @@ class Contact(BaseModel):
         verbose_name_plural = 'Contatos'
 
 
-class BankDetails(models.Model):
+class BankDetails(BaseModel):
     bank_code = models.CharField(
         max_length=5,
         validators=[validators.validate_bank_code],
@@ -200,15 +200,15 @@ class Supplier(BaseModel):
         verbose_name='CEP',
     )
     latitude = models.DecimalField(
-        max_digits=9,
-        decimal_places=6,
+        max_digits=11,
+        decimal_places=8,
         validators=[validators.validate_latitude],
         null=True,
         blank=True,
     )
     longitude = models.DecimalField(
-        max_digits=9,
-        decimal_places=6,
+        max_digits=11,
+        decimal_places=8,
         validators=[validators.validate_longitude],
         null=True,
         blank=True,
@@ -236,7 +236,7 @@ class Supplier(BaseModel):
 
     bank_details = models.OneToOneField(
         BankDetails,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name='Detalhes Bancários',
         null=True,
         blank=True,

@@ -1,0 +1,43 @@
+<div class="copyable-text"
+     data-value="{{ value }}"
+     onclick="copyText(this)">
+    <span class="text">{{ value }}</span>
+    <span class="tooltip">Copiado</span>
+</div>
+<style>
+    .copyable-text {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .copyable-text .tooltip {
+        box-shadow: 1px 1px 10px #00000055;
+        display: none;
+        position: absolute;
+        bottom: 115%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--dark-200);
+        color: rgb(196, 206, 239);
+        padding: 0.5rem;
+        border-radius: 0.3rem;
+        font-size: 12px;
+    }
+
+    .copyable-text .tooltip::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid var(--dark-200);
+    }
+
+    .copyable-text.copied .tooltip {
+        display: block;
+    }
+</style>
