@@ -1,0 +1,132 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+
+:root {
+    --dark: #11151c;
+    --dark-100: #151b25;
+    --dark-200: #1f2735;
+    --primary-color: #d68367;
+    --secondary-color: #8bc480;
+    --stroke-color: #242b39;
+    --weak-stroke-color: #1f242b;
+    --fill-color: #151b2500;
+    --off: #00000075;
+}
+
+* {
+    font-family: "JetBrains Mono", sans-serif !important;
+    box-sizing: border-box;
+}
+
+.theme-toggle {
+    display: none !important;
+}
+
+a,
+a:hover,
+a:focus,
+a:active {
+    text-decoration: none !important;
+}
+
+.deletelink {
+    height: 100% !important;
+}
+
+.admin-interface .inline-related.tabular {
+    overflow-x: auto;
+}
+
+.form-row {
+    width: 100%;
+}
+.form-row input {
+    width: 100%;
+}
+
+.fieldBox {
+    margin-right: 0 !important;
+}
+
+.checkbox-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+}
+
+p.date {
+    display: flex;
+    flex-direction: row;
+    gap: 0.1rem;
+}
+
+.checkbox-row input[type="checkbox"] {
+    width: fit-content;
+    margin: 0;
+}
+
+.colM input,
+textarea,
+select {
+    margin-top: 0.2rem !important;
+    min-height: 2rem !important;
+}
+
+label {
+    width: fit-content !important;
+}
+
+.form-row {
+    margin-bottom: 0.2rem;
+}
+
+.form-row textarea {
+    max-width: 100%;
+    width: 100% !important;
+}
+
+fieldset.module table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+fieldset.module th,
+fieldset.module td {
+    word-wrap: break-word;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+fieldset.module .vTextField {
+    max-width: 100%;
+    width: 100%;
+}
+
+fieldset.module select {
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+html {
+    scrollbar-color: #343c51 transparent;
+}
+
+html::-webkit-scrollbar {
+    width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+    background: transparent;
+}

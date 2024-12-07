@@ -6,7 +6,6 @@ from .base import BaseTabularInline
 class ContactInline(BaseTabularInline):
     model = models.Contact
     extra = 1
-    classes = ('grp-collapse grp-closed',)
 
     fields = (
         'contact_type',
@@ -23,7 +22,6 @@ class ContactInline(BaseTabularInline):
 class DocumentInline(BaseTabularInline):
     model = models.Document
     extra = 1
-    classes = ('grp-collapse grp-closed',)
 
     fields = ('name', 'type', 'validity', 'filepath')
 

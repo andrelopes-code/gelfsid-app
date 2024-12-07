@@ -31,7 +31,7 @@ STATES_AND_CITIES_PATH = 'static/data/states_and_cities.json'
 CORS_ALLOW_ALL_ORIGINS = True
 SECURE_SSL_REDIRECT = False
 ALLOWED_HOSTS = ['*']
-
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
@@ -42,18 +42,14 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DOCS_FILES_BASE_URL = '/media/docs/'
 
 
-# Configurações da pagina admin Grappelli
-GRAPPELLI_ADMIN_TITLE = 'GELFSID ADMIN'
-GRAPPELLI_SWITCH_USER = True
-
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ROOT_URLCONF = 'gelfcore.urls'
 WSGI_APPLICATION = 'gelfcore.wsgi.application'
 
 
 INSTALLED_APPS = [
-    'grappelli',
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -4,7 +4,6 @@ from django.urls import include, path
 from django.views.generic.base import RedirectView
 
 urlpatterns = [
-    path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls),
     path('', include('gelfmp.urls')),
     path('api/', include('gelfmp.api.urls')),

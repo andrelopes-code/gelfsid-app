@@ -3,7 +3,10 @@
 {% block scripts %}
 {% endblock scripts %}
 {% block content %}
-    <main class="relative w-screen h-screen">
-        {{ supplier }}
+    <main class="flex flex-col w-screen h-screen">
+        {% include "components/header/map.html" %}
+        <div class="bg-dark w-full h-full">
+
+        </div>
     </main>
 {% endblock content %}

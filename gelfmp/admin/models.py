@@ -87,7 +87,6 @@ class SupplierAdmin(BaseModelAdmin):
         (
             'Extra',
             {
-                'classes': ('grp-collapse grp-closed',),
                 'fields': ['observations'],
             },
         ),
