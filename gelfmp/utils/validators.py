@@ -11,6 +11,16 @@ validate_cep = RegexValidator(
     message='Insira um CEP válido, digitando apenas os números.',
 )
 
+validate_dcf = RegexValidator(
+    regex=r'^\d{13}/\d{2}-\d{2}$',
+    message='Insira uma DCF válida, usando o formato 0000000000000/00-00.',
+)
+
+validate_bank_code = RegexValidator(
+    regex=r'^\d{3}',
+    message='Insira um número válido, usando o formato 000 (3 dígitos).',
+)
+
 
 def validate_latitude(value):
     if value < -90 or value > 90:

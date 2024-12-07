@@ -1,0 +1,191 @@
+[
+{
+  "model": "gelfmp.state",
+  "pk": "AC",
+  "fields": {
+    "name": "AC"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "AL",
+  "fields": {
+    "name": "AL"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "AM",
+  "fields": {
+    "name": "AM"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "AP",
+  "fields": {
+    "name": "AP"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "BA",
+  "fields": {
+    "name": "BA"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "CE",
+  "fields": {
+    "name": "CE"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "DF",
+  "fields": {
+    "name": "DF"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "ES",
+  "fields": {
+    "name": "ES"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "GO",
+  "fields": {
+    "name": "GO"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "MA",
+  "fields": {
+    "name": "MA"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "MG",
+  "fields": {
+    "name": "MG"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "MS",
+  "fields": {
+    "name": "MS"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "MT",
+  "fields": {
+    "name": "MT"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "PA",
+  "fields": {
+    "name": "PA"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "PB",
+  "fields": {
+    "name": "PB"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "PE",
+  "fields": {
+    "name": "PE"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "PI",
+  "fields": {
+    "name": "PI"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "PR",
+  "fields": {
+    "name": "PR"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "RJ",
+  "fields": {
+    "name": "RJ"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "RN",
+  "fields": {
+    "name": "RN"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "RO",
+  "fields": {
+    "name": "RO"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "RR",
+  "fields": {
+    "name": "RR"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "RS",
+  "fields": {
+    "name": "RS"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "SC",
+  "fields": {
+    "name": "SC"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "SE",
+  "fields": {
+    "name": "SE"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "SP",
+  "fields": {
+    "name": "SP"
+  }
+},
+{
+  "model": "gelfmp.state",
+  "pk": "TO",
+  "fields": {
+    "name": "TO"
+  }
+}
+]

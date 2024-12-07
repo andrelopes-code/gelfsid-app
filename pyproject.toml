@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "gelfsid"
+name = "gelfcore"
 version = "0.1.0"
 description = ""
 authors = ["André Lopes <andrelopes-code@gmail.com>"]

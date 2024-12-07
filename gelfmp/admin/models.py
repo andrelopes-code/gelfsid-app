@@ -1,9 +1,9 @@
 from django.contrib import admin
-from django.forms import Textarea
 
 from gelfmp import models
 
 from .base import BaseModelAdmin
+from .filters import SupplierWithEntriesFilter
 from .inlines import ContactInline, DocumentInline
 
 
@@ -16,7 +16,7 @@ class ContactAdmin(BaseModelAdmin):
 
 @admin.register(models.BankDetails)
 class BankDetailsAdmin(BaseModelAdmin):
-    list_display = ('bank_name', 'agency', 'account_number')
+    list_display = ('bank_name', 'account_number', 'agency')
 
 
 @admin.register(models.Document)
@@ -28,7 +28,8 @@ class DocumentAdmin(BaseModelAdmin):
 @admin.register(models.CharcoalEntry)
 class CharcoalEntryAdmin(BaseModelAdmin):
     list_display = ('supplier', 'entry_volume', 'moisture', 'density', 'fines', 'entry_date')
-    search_fields = ('supplier__corporate_name',)
+    list_filter = (SupplierWithEntriesFilter,)
+    search_fields = ('supplier__corporate_name', 'dcf')
 
 
 @admin.register(models.Supplier)
@@ -54,7 +55,7 @@ class SupplierAdmin(BaseModelAdmin):
                     'material_type',
                     ('state_registration', 'municipal_registration'),
                     'xml_email',
-                    'active'
+                    'active',
                 ]
             },
         ),
@@ -95,11 +96,15 @@ class SupplierAdmin(BaseModelAdmin):
     inlines = [DocumentInline, ContactInline]
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        # Remove a checagem ortográfica do campo de observações
-        if db_field.name == 'observations':
-            kwargs['widget'] = Textarea(attrs={'spellcheck': 'false'})
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
 
-        return super().formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == 'observations':
+            formfield.widget.attrs.update({'spellcheck': 'false'})
+
+        if db_field.name == 'corporate_name':
+            formfield.widget.attrs.update({'spellcheck': 'false', 'style': 'text-transform: uppercase;'})
+
+        return formfield
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'city':

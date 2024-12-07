@@ -7,31 +7,50 @@ from environ import Env
 # Adicionar suporte para multilinha em tags de template (GAMBIARRA)
 template_base.tag_re = re.compile(template_base.tag_re.pattern, re.DOTALL)
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 env = Env()
 env.read_env('.env')
 
-DEBUG = env.bool('DEBUG', True)
+
+DEBUG = env.bool('DEBUG')
 SECRET_KEY = env.str('SECRET_KEY')
+
+
+# Chave da API do Graphhopper para calcular distâncias
 GRAPHHOPPER_API_KEY = env.str('GRAPHHOPPER_API_KEY', '')
 
+
+# Caminho para o arquivo json que contem a lista
+# de estados e cidades para popular o banco de dados
 STATES_AND_CITIES_PATH = 'static/data/states_and_cities.json'
 
+
+# Configurações que desabilitam
+# proteções de segurança em dev
 CORS_ALLOW_ALL_ORIGINS = True
 SECURE_SSL_REDIRECT = False
 ALLOWED_HOSTS = ['*']
+
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-DOCS_FILES_BASE_URL = env.str('DOCS_FILES_BASE_URL')
 
+# URL Base para servir os arquivos de documentação
+DOCS_FILES_BASE_URL = '/media/docs/'
+
+
+# Configurações da pagina admin Grappelli
 GRAPPELLI_ADMIN_TITLE = 'GELFSID ADMIN'
 GRAPPELLI_SWITCH_USER = True
 
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+ROOT_URLCONF = 'gelfcore.urls'
+WSGI_APPLICATION = 'gelfcore.wsgi.application'
+
 
 INSTALLED_APPS = [
     'grappelli',
@@ -46,6 +65,7 @@ INSTALLED_APPS = [
     'gelfmp',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -57,7 +77,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'gelfcore.urls'
 
 TEMPLATES = [
     {
@@ -76,7 +95,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'gelfcore.wsgi.application'
 
 DATABASES = {
     'default': {
@@ -84,6 +102,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -99,6 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'

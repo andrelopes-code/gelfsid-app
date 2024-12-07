@@ -1,6 +1,7 @@
 from django.db import models
 
-from gelfmp.validators import custom_validators as cv
+from gelfmp.utils import validators
+from gelfmp.utils.normalization import normalize_text_upper
 
 # ------------------ #
 #  BASE MODEL CLASS  #
@@ -89,19 +90,30 @@ class Contact(BaseModel):
         verbose_name='Fornecedor',
     )
 
+    def __str__(self):
+        return f'{self.contact_type} - {self.name}'
+
     class Meta:
         verbose_name = 'Contato'
         verbose_name_plural = 'Contatos'
 
 
 class BankDetails(models.Model):
-    bank_code = models.CharField(max_length=4, verbose_name='Número do Banco')
+    bank_code = models.CharField(
+        max_length=5,
+        validators=[validators.validate_bank_code],
+        verbose_name='Número do Banco',
+    )
     bank_name = models.CharField(max_length=255, verbose_name='Banco')
     agency = models.CharField(max_length=10, verbose_name='Agência')
     account_number = models.CharField(max_length=20, verbose_name='Número da Conta')
 
     def __str__(self):
         return f'{self.bank_name} - {self.account_number} ({self.agency})'
+
+    def save(self, *args, **kwargs):
+        self.bank_name = normalize_text_upper(self.bank_name)
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Detalhes Bancários'
@@ -115,12 +127,20 @@ class Document(BaseModel):
     filepath = models.CharField(max_length=355, blank=True, null=True, verbose_name='Link do Arquivo')
     validity = models.DateField(blank=True, null=True, verbose_name='Validade')
 
+    def save(self, *args, **kwargs):
+        self.name = normalize_text_upper(self.name)
+        self.type = self.type.upper()
+        super().save(*args, **kwargs)
+
     supplier = models.ForeignKey(
         'Supplier',
         on_delete=models.CASCADE,
         related_name='documents',
         verbose_name='Fornecedor',
     )
+
+    def __str__(self):
+        return f'{self.type} - {self.validity}'
 
     class Meta:
         verbose_name = 'Documento'
@@ -131,13 +151,13 @@ class CharcoalEntry(BaseModel):
     entry_date = models.DateField(verbose_name='Data de Entrada')
     origin_ticket = models.CharField(max_length=50, unique=True, verbose_name='Ticket de Origem')
     vehicle_plate = models.CharField(max_length=50, verbose_name='Placa do Veículo')
-
+    origin_volume = models.FloatField(verbose_name='Volume de Origem (m³)')
     entry_volume = models.FloatField(verbose_name='Volume de Entrada (m³)')
     moisture = models.FloatField(verbose_name='Umidade (%)')
     fines = models.FloatField(verbose_name='Finos (%)')
     density = models.FloatField(verbose_name='Densidade')
 
-    dcf = models.CharField(max_length=50, verbose_name='DCF')
+    dcf = models.CharField(max_length=50, validators=[validators.validate_dcf], verbose_name='DCF')
     gcae = models.CharField(max_length=50, verbose_name='GCAE')
 
     supplier = models.ForeignKey(
@@ -146,6 +166,9 @@ class CharcoalEntry(BaseModel):
         related_name='charcoal_entries',
         verbose_name='Fornecedor',
     )
+
+    def __str__(self):
+        return f'{self.entry_volume} - {self.entry_date}'
 
     class Meta:
         ordering = ['-entry_date']
@@ -172,21 +195,21 @@ class Supplier(BaseModel):
     city = models.ForeignKey(City, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Cidade')
     cep = models.CharField(
         max_length=8,
-        validators=[cv.validate_cep],
+        validators=[validators.validate_cep],
         help_text='Insira apenas os números.',
         verbose_name='CEP',
     )
     latitude = models.DecimalField(
         max_digits=9,
         decimal_places=6,
-        validators=[cv.validate_latitude],
+        validators=[validators.validate_latitude],
         null=True,
         blank=True,
     )
     longitude = models.DecimalField(
         max_digits=9,
         decimal_places=6,
-        validators=[cv.validate_longitude],
+        validators=[validators.validate_longitude],
         null=True,
         blank=True,
     )
@@ -198,7 +221,7 @@ class Supplier(BaseModel):
     cpf_cnpj = models.CharField(
         unique=True,
         max_length=14,
-        validators=[cv.validate_cpf_cnpj],
+        validators=[validators.validate_cpf_cnpj],
         verbose_name='CPF ou CNPJ',
         help_text='Insira apenas os números.',
     )
@@ -213,9 +236,10 @@ class Supplier(BaseModel):
 
     bank_details = models.OneToOneField(
         BankDetails,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         verbose_name='Detalhes Bancários',
         null=True,
+        blank=True,
     )
 
     def get_documents(self) -> list[Document]:
@@ -223,6 +247,16 @@ class Supplier(BaseModel):
 
     def get_contacts(self) -> list[Contact]:
         return self.contacts.all()
+
+    def save(self, *args, **kwargs):
+        self.corporate_name = normalize_text_upper(self.corporate_name)
+        return super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        if self.bank_details:
+            self.bank_details.delete()
+
+        super().delete(*args, **kwargs)
 
     class Meta:
         ordering = ['corporate_name']

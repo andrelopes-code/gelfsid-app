@@ -8,8 +8,8 @@ from django.db.models.functions import TruncDay, TruncMonth, TruncWeek
 from gelfmp.charts import theme
 from gelfmp.charts.utils import WEEK_DTICK, html_else_json, no_data_error
 from gelfmp.models import CharcoalEntry, Supplier
-from gelfmp.tools import timetools
-from gelfmp.tools.error_handlers import handle_chart_error
+from gelfmp.utils import timeutils
+from gelfmp.utils.error_handlers import handle_chart_error
 
 # Define o tema personalizado como o padrão para os gráficos
 pio.templates.default = go.layout.Template(layout=theme.custom_layout)
@@ -61,7 +61,7 @@ def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    queryset = CharcoalEntry.objects.filter(entry_date__gte=timetools.months_ago(months))
+    queryset = CharcoalEntry.objects.filter(entry_date__gte=timeutils.months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
@@ -143,7 +143,7 @@ def moisture_and_fines(group_by='day', months=3, supplier=None, html=False):
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    queryset = CharcoalEntry.objects.filter(entry_date__gte=timetools.months_ago(months))
+    queryset = CharcoalEntry.objects.filter(entry_date__gte=timeutils.months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
@@ -222,7 +222,7 @@ def density(group_by='day', months=3, supplier=None, html=False):
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    queryset = CharcoalEntry.objects.filter(entry_date__gte=timetools.months_ago(months))
+    queryset = CharcoalEntry.objects.filter(entry_date__gte=timeutils.months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
