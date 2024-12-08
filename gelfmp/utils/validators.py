@@ -22,6 +22,11 @@ validate_bank_code = RegexValidator(
 )
 
 
+def validate_percentage(value):
+    if not (0 <= value <= 100):
+        raise ValidationError('O valor deve estar entre 0 e 100.')
+
+
 def validate_latitude(value):
     if value < -90 or value > 90:
         raise ValidationError('Latitude deve estar entre -90 e 90 graus.')
