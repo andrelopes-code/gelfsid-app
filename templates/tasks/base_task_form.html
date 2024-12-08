@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+    <script>
+        function showLoading() {
+            const button = document.getElementById('submit-button');
+            button.disabled = true;
+            button.textContent = "Processando, aguarde...";
+        }
+    </script>
+    <div class="flex flex-col justify-center items-center bg-dark shadow-md px-[20vw] py-[12vh] w-full h-full text-slate-300">
+        <form method="post"
+              class="bg-dark-100 custom-form w-fit min-w-[33vw] h-fit max-h-full"
+              onsubmit="showLoading()">
+            <h1 class="px-8 pt-2 font-medium text-center text-slate-400">
+                {% block formtitle %}
+                    TÍTULO
+                {% endblock formtitle %}
+            </h1>
+            {% csrf_token %}
+            <div class="form-container">
+                {% block form %}
+                {% endblock form %}
+                {% if errors %}
+                    <div class="text-center text-primary text-wrap">
+                        <ul>
+                            {% for error in errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                <div class="text-center text-slate-500 text-wrap">
+                    {% block success %}
+                    {% endblock success %}
+                </div>
+            </div>
+            <button type="submit"
+                    id="submit-button"
+                    class="flex justify-center items-center bg-primary mt-4 px-4 py-2 w-full text-white">
+                {% block buttontext %}
+                    Processar
+                {% endblock buttontext %}
+            </button>
+        </form>
+    </div>
+{% endblock content %}

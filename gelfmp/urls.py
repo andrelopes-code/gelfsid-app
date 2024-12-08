@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import include, path
 
 from gelfmp import views
 
@@ -11,6 +11,13 @@ urlpatterns = [
     path('supplier/<int:id>/stats', views.supplier_stats, name='supplier_stats'),
 ]
 
+urlpatterns += [
+    path('task/', include('gelfmp.tasks.urls')),
+]
+
+
+# Servir os arquivos de documentação
+# em modo de desenvolvimento
 if settings.DEBUG:
     urlpatterns += static(
         settings.DOCS_FILES_BASE_URL,

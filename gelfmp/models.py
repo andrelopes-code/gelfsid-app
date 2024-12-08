@@ -182,18 +182,12 @@ class CharcoalIQF(BaseModel):
     programmed_percentage = models.FloatField(
         validators=[validators.validate_percentage], verbose_name='Programação Realizada (%)'
     )
-    fines_percentage = models.FloatField(
-        validators=[validators.validate_percentage], verbose_name='Finos Dentro do Limite (%)'
-    )
-    moisture_percentage = models.FloatField(
-        validators=[validators.validate_percentage], verbose_name='Umidade Dentro do Limite (%)'
-    )
-    density_percentage = models.FloatField(
-        validators=[validators.validate_percentage], verbose_name='Densidade Dentro do Limite (%)'
-    )
+    fines_percentage = models.FloatField(validators=[validators.validate_percentage], verbose_name='Finos (%)')
+    moisture_percentage = models.FloatField(validators=[validators.validate_percentage], verbose_name='Umidade (%)')
+    density_percentage = models.FloatField(validators=[validators.validate_percentage], verbose_name='Densidade (%)')
 
-    month = models.IntegerField(choices=MonthType.choices, verbose_name='Mês de referência')
-    year = models.IntegerField(choices=year_choices(), verbose_name='Ano de referência')
+    month = models.IntegerField(choices=MonthType.choices, verbose_name='Mês')
+    year = models.IntegerField(choices=year_choices(), verbose_name='Ano')
 
     class Meta:
         constraints = [
@@ -213,8 +207,8 @@ class CharcoalMonthlyPlan(models.Model):
         related_name='monthly_plans',
         verbose_name='Fornecedor',
     )
-    month = models.IntegerField(choices=MonthType.choices, verbose_name='Mês de Referência')
-    year = models.IntegerField(choices=year_choices(), verbose_name='Ano de Referência')
+    month = models.IntegerField(choices=MonthType.choices, verbose_name='Mês')
+    year = models.IntegerField(choices=year_choices(), verbose_name='Ano')
     programmed_volume = models.FloatField(verbose_name='Volume Programado (m³)')
 
     class Meta:

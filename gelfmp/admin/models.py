@@ -12,17 +12,70 @@ class ContactAdmin(BaseModelAdmin):
     list_display = ('contact_type', 'name', 'email')
     search_fields = ('name', 'email')
     list_filter = ('contact_type',)
+    fieldsets = (
+        (
+            'Contato',
+            {
+                'fields': (
+                    'supplier',
+                    'contact_type',
+                    'name',
+                    'primary_phone',
+                    'secondary_phone',
+                )
+            },
+        ),
+        (
+            '',
+            {'fields': tuple()},
+        ),
+    )
 
 
 @admin.register(models.BankDetails)
 class BankDetailsAdmin(BaseModelAdmin):
     list_display = ('bank_name', 'account_number', 'agency')
+    fieldsets = (
+        (
+            'Detalhes Bancários',
+            {
+                'fields': (
+                    'bank_name',
+                    'bank_code',
+                    'account_number',
+                    'agency',
+                )
+            },
+        ),
+        (
+            '',
+            {'fields': tuple()},
+        ),
+    )
 
 
 @admin.register(models.Document)
 class DocumentAdmin(BaseModelAdmin):
     list_display = ('name', 'type', 'validity', 'supplier')
     list_filter = ('type', 'supplier')
+
+    fieldsets = (
+        (
+            'Documento',
+            {
+                'fields': (
+                    'supplier',
+                    'name',
+                    'type',
+                    'validity',
+                )
+            },
+        ),
+        (
+            '',
+            {'fields': tuple()},
+        ),
+    )
 
 
 @admin.register(models.CharcoalEntry)
@@ -31,7 +84,30 @@ class CharcoalEntryAdmin(BaseModelAdmin):
     list_filter = (SupplierWithEntriesFilter,)
     search_fields = ('supplier__corporate_name', 'dcf')
 
+    fieldsets = (
+        (
+            'Entrada de Carvão',
+            {
+                'fields': (
+                    'supplier',
+                    'entry_date',
+                    'entry_volume',
+                    'moisture',
+                    'density',
+                    'fines',
+                )
+            },
+        ),
+        (
+            '',
+            {'fields': tuple()},
+        ),
+    )
+
     def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
         return False
 
 
@@ -41,9 +117,35 @@ class CharcoalMonthlyPlanAdmin(BaseModelAdmin):
     list_filter = ('month', 'year')
     search_fields = ('supplier__corporate_name',)
 
+    fieldsets = (
+        (
+            'Programação de Carvão',
+            {
+                'fields': (
+                    'supplier',
+                    'programmed_volume',
+                    'month',
+                    'year',
+                )
+            },
+        ),
+        (
+            '',
+            {'fields': tuple()},
+        ),
+    )
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'supplier':
+            kwargs['queryset'] = models.Supplier.objects.filter(material_type=models.MaterialType.CHARCOAL)
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
 
 @admin.register(models.CharcoalIQF)
 class CharcoalIQFAdmin(BaseModelAdmin):
+    change_list_template = 'admin/charcoal_iqf_changelist.html'
+
     list_display = (
         'supplier',
         'iqf',
@@ -58,6 +160,9 @@ class CharcoalIQFAdmin(BaseModelAdmin):
     search_fields = ('supplier__corporate_name',)
 
     def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj=None):
         return False
 
 

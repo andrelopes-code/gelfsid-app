@@ -20,6 +20,10 @@
     display: none !important;
 }
 
+ul.errorlist {
+    margin: 0px !important;
+}
+
 a,
 a:hover,
 a:focus,
@@ -30,6 +34,20 @@ a:active {
 input#searchbar {
     height: 100% !important;
     margin: 0 !important;
+}
+
+.datetimeshortcuts {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}
+
+.module.aligned {
+    padding: 0 10vw;
+}
+
+.form-row .flex-container {
+    justify-content: space-between;
 }
 
 .deletelink,

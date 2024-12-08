@@ -1,0 +1,20 @@
+{% extends "tasks/base_task_form.html" %}
+{% block title %}
+    GELFSID | IQF de Carvão
+{% endblock title %}
+{% block formtitle %}
+    Calcular IQF Para Fornecedores
+{% endblock formtitle %}
+{% block form %}
+    {{ form.as_p }}
+{% endblock form %}
+{% block success %}
+    {% if processed_suppliers %}
+        <ul>
+            {% for s in processed_suppliers %}<li>{{ s }}</li>{% endfor %}
+        </ul>
+    {% endif %}
+{% endblock success %}
+{% block buttontext %}
+    CALCULAR
+{% endblock buttontext %}

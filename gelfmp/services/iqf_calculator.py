@@ -1,7 +1,7 @@
 import pandas as pd
 
 from gelfcore.logger import log
-from gelfmp.models import CharcoalEntry, CharcoalIQF, CharcoalMonthlyPlan, Supplier
+from gelfmp.models import CharcoalEntry, CharcoalIQF, CharcoalMonthlyPlan, MaterialType, Supplier
 
 MOISTURE_MAX = 7
 FINES_MAX = 10
@@ -71,23 +71,25 @@ def calculate_suppliers_iqf(month, year):
     entries = CharcoalEntry.objects.filter(
         entry_date__month=month,
         entry_date__year=year,
+        supplier__material_type=MaterialType.CHARCOAL,
     )
 
     if not entries.exists():
         raise ValueError(f'Não há entradas de carvão para o mês {month}/{year}.')
 
     entries_df = pd.DataFrame(entries.values())
+    processed_suppliers = []
 
     for _, supplier_entries in entries_df.groupby('supplier_id'):
         supplier_id = supplier_entries.iloc[0]['supplier_id']
 
         try:
             supplier = Supplier.objects.get(id=supplier_id)
-            plan = CharcoalMonthlyPlan.objects.get(supplier=supplier)
+            plan = CharcoalMonthlyPlan.objects.get(supplier=supplier, month=month, year=year)
 
         except CharcoalMonthlyPlan.DoesNotExist:
             log.warning(
-                f'Não existe uma programação de carvão para o fornecedor'
+                f'Não existe uma programação de carvão para o fornecedor '
                 f'{supplier} ({supplier_id}) no mês {month}/{year}.'
             )
             continue
@@ -116,6 +118,11 @@ def calculate_suppliers_iqf(month, year):
                 moisture_percentage=moisture_percentage,
                 density_percentage=density_percentage,
             )
+
+            processed_suppliers.append(f'IQF CALCULADO PARA {supplier}: {iqf}')
+
         except Exception as e:
             log.error(f'Erro ao salvar IQF para o fornecedor {supplier.name}: {e}')
             raise Exception(f'Erro ao salvar IQF para o fornecedor {supplier.name}')
+
+    return processed_suppliers

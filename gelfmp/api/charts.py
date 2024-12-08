@@ -10,10 +10,7 @@ CHARTS = {
     'density': charts.density,
 }
 
-CHARTS_ARGS = {
-    chart_id: set(signature(func).parameters.keys())
-    for chart_id, func in CHARTS.items()
-}
+CHARTS_ARGS = {chart_id: set(signature(func).parameters.keys()) for chart_id, func in CHARTS.items()}
 
 
 def update_chart(request):
