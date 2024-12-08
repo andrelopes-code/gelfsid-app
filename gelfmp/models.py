@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.query import QuerySet
 
 from gelfmp.utils import validators
 from gelfmp.utils.normalization import normalize_text_upper
@@ -242,10 +243,10 @@ class Supplier(BaseModel):
         blank=True,
     )
 
-    def get_documents(self) -> list[Document]:
+    def get_documents(self) -> QuerySet[Document]:
         return self.documents.all()
 
-    def get_contacts(self) -> list[Contact]:
+    def get_contacts(self) -> QuerySet[Contact]:
         return self.contacts.all()
 
     def save(self, *args, **kwargs):

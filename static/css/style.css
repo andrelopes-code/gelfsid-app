@@ -686,16 +686,16 @@ video {
   margin: 1rem;
 }
 
+.mb-2{
+  margin-bottom: 0.5rem;
+}
+
 .mb-3{
   margin-bottom: 0.75rem;
 }
 
 .mb-4{
   margin-bottom: 1rem;
-}
-
-.mb-5{
-  margin-bottom: 1.25rem;
 }
 
 .mb-6{
@@ -716,10 +716,6 @@ video {
 
 .mt-5{
   margin-top: 1.25rem;
-}
-
-.mb-2{
-  margin-bottom: 0.5rem;
 }
 
 .block{
@@ -761,6 +757,10 @@ video {
 
 .h-screen{
   height: 100vh;
+}
+
+.h-8{
+  height: 2rem;
 }
 
 .max-h-full{
@@ -851,10 +851,6 @@ video {
 
 .cursor-pointer{
   cursor: pointer;
-}
-
-.resize-none{
-  resize: none;
 }
 
 .resize{
@@ -1040,16 +1036,16 @@ video {
   background-clip: padding-box;
 }
 
+.p-2{
+  padding: 0.5rem;
+}
+
 .p-3{
   padding: 0.75rem;
 }
 
 .p-4{
   padding: 1rem;
-}
-
-.p-2{
-  padding: 0.5rem;
 }
 
 .px-2{
@@ -1085,26 +1081,6 @@ video {
 .py-4{
   padding-top: 1rem;
   padding-bottom: 1rem;
-}
-
-.px-8{
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-
-.px-10{
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
-}
-
-.px-\[100px\]{
-  padding-left: 100px;
-  padding-right: 100px;
-}
-
-.px-\[10rem\]{
-  padding-left: 10rem;
-  padding-right: 10rem;
 }
 
 .pb-2{
@@ -1217,6 +1193,11 @@ video {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.text-slate-600{
+  --tw-text-opacity: 1;
+  color: rgb(71 85 105 / var(--tw-text-opacity));
+}
+
 .underline{
   text-decoration-line: underline;
 }
@@ -1254,6 +1235,26 @@ video {
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.shadow-slate-800{
+  --tw-shadow-color: #1e293b;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+.shadow-slate-950{
+  --tw-shadow-color: #020617;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+.shadow-slate-950\/50{
+  --tw-shadow-color: rgb(2 6 23 / 0.5);
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+.shadow-slate-950\/30{
+  --tw-shadow-color: rgb(2 6 23 / 0.3);
+  --tw-shadow: var(--tw-shadow-colored);
 }
 
 .outline{

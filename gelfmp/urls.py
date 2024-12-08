@@ -7,7 +7,7 @@ from gelfmp import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('details/supplier/<int:id>/', views.supplier_details, name='supplier_details'),
+    path('supplier/<int:id>/', views.supplier_details, name='supplier_details'),
 ]
 
 if settings.DEBUG:

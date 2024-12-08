@@ -141,7 +141,7 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                                 class="ph-bold ph-link transition-colors duration-150 group-hover:text-primary"
                             ></i>
                             <a
-                                href="details/supplier/${supplier.id}"
+                                href="supplier/${supplier.id}"
                                 class="font-medium cursor-pointer transition-colors duration-150 group-hover:text-primary"
                                 >Ver detalhes</a
                             >

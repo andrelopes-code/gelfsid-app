@@ -27,17 +27,17 @@
         <main class="flex flex-1 gap-4 bg-dark px-4 pb-4 overflow-hidden">
             <!-- ASIDE -->
             <aside class="flex flex-col w-1/4 h-fit">
-                {% include "details/partials/supplier_aside_info.html" with supplier=supplier %}
+                {% include "supplier/partials/supplier_aside_info.html" with supplier=supplier %}
             </aside>
             <!-- CONTEÚDO PRINCIPAL -->
             <div class="flex flex-col gap-4 shadow-md w-3/4 h-full max-h-full overflow-y-auto">
                 <!-- CONTATOS -->
-                {% include "details/partials/supplier_contacts.html" with supplier=supplier %}
+                {% include "supplier/partials/supplier_contacts.html" with supplier=supplier %}
                 <!-- DOCUMENTOS -->
-                {% include "details/partials/supplier_documents.html" with supplier=supplier %}
+                {% include "supplier/partials/supplier_documents.html" with supplier=supplier %}
                 <!-- INFORMAÇÕES BANCÁRIAS -->
                 {% if supplier.bank_details %}
-                    {% include "details/partials/supplier_bank_details.html" with supplier=supplier %}
+                    {% include "supplier/partials/supplier_bank_details.html" with supplier=supplier %}
                 {% endif %}
             </div>
         </main>

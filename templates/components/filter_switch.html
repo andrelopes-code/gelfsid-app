@@ -64,7 +64,6 @@
      id="material-filter">
     <button class="hover:brightness-125 flex justify-center items-center gap-1 w-full h-10 font-semibold text-primary text-sm transition-[filter] duration-300"
             id="material-filter-toggle">
-        <i class="ph-sliders ph"></i>
         MOSTRAR FILTRO
     </button>
     <div class="text-xs material-filter-content"></div>
@@ -79,11 +78,11 @@
         if (isCurrentlyClosed) {
             materialFilter.classList.remove('collapsed');
             materialFilter.classList.add('expanded');
-            toggleBtn.innerHTML = "<i class='ph-sliders ph'></i>OCULTAR FILTRO";
+            toggleBtn.innerHTML = "OCULTAR FILTRO";
         } else {
             materialFilter.classList.remove('expanded');
             materialFilter.classList.add('collapsed');
-            toggleBtn.innerHTML = "<i class='ph-sliders ph'></i>MOSTRAR FILTRO";
+            toggleBtn.innerHTML = "MOSTRAR FILTRO";
         }
     });
 </script>
