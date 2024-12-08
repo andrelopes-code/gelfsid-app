@@ -33,7 +33,8 @@ input#searchbar {
 }
 
 .deletelink,
-.button.cancel-link {
+.button.cancel-link,
+.closelink {
     height: 100% !important;
 }
 

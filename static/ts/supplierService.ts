@@ -39,13 +39,12 @@ class SupplierService {
             const newCard = document.createElement("div");
             newCard.classList.add("w-full", "h-fit");
 
-            let borderColor = STROKE_COLOR;
+            let borderColor = "#4b5364";
 
             switch (supplier.material_type) {
                 case "Carvão Vegetal":
                     borderColor = GREEN_COLOR;
                     break;
-
                 case "Minério de Ferro":
                     borderColor = ORANGE_COLOR;
                     break;

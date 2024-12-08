@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from gelfmp.models import Supplier
-from gelfmp.utils.distance_calculator import DistanceCalculator
+from gelfmp.services.distance_calculator import DistanceCalculator
 
 
 class Command(BaseCommand):

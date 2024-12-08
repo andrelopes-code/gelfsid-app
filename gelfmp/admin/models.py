@@ -31,6 +31,35 @@ class CharcoalEntryAdmin(BaseModelAdmin):
     list_filter = (SupplierWithEntriesFilter,)
     search_fields = ('supplier__corporate_name', 'dcf')
 
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(models.CharcoalMonthlyPlan)
+class CharcoalMonthlyPlanAdmin(BaseModelAdmin):
+    list_display = ('supplier', 'programmed_volume', 'month', 'year')
+    list_filter = ('month', 'year')
+    search_fields = ('supplier__corporate_name',)
+
+
+@admin.register(models.CharcoalIQF)
+class CharcoalIQFAdmin(BaseModelAdmin):
+    list_display = (
+        'supplier',
+        'iqf',
+        'programmed_percentage',
+        'fines_percentage',
+        'moisture_percentage',
+        'density_percentage',
+        'month',
+        'year',
+    )
+    list_filter = ('month', 'year')
+    search_fields = ('supplier__corporate_name',)
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
 
 @admin.register(models.Supplier)
 class SupplierAdmin(BaseModelAdmin):

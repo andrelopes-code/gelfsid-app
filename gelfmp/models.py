@@ -148,6 +148,58 @@ class Document(BaseModel):
         verbose_name_plural = 'Documentos'
 
 
+class CharcoalIQF(BaseModel):
+    supplier = models.ForeignKey(
+        'Supplier',
+        on_delete=models.CASCADE,
+        related_name='iqfs',
+        verbose_name='Fornecedor',
+    )
+
+    iqf = models.FloatField(verbose_name='IQF')
+    programmed_percentage = models.FloatField(verbose_name='Programação Realizada (%)')
+    fines_percentage = models.FloatField(verbose_name='Finos Dentro do Limite (%)')
+    moisture_percentage = models.FloatField(verbose_name='Umidade Dentro do Limite (%)')
+    density_percentage = models.FloatField(verbose_name='Densidade Dentro do Limite (%)')
+    month = models.IntegerField(verbose_name='Mês de referência')
+    year = models.IntegerField(verbose_name='Ano de referência')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['supplier', 'month', 'year'],
+                name='charcoal_iqf_supplier_month_year_unique_constraint',
+            )
+        ]
+        verbose_name = 'IQF de Fornecedor de Carvão'
+        verbose_name_plural = 'IQFs de Fornecedores de Carvão'
+
+
+class CharcoalMonthlyPlan(models.Model):
+    supplier = models.ForeignKey(
+        'Supplier',
+        on_delete=models.CASCADE,
+        related_name='monthly_plans',
+        verbose_name='Fornecedor',
+    )
+    month = models.IntegerField(verbose_name='Mês de Referência')
+    year = models.IntegerField(verbose_name='Ano de Referência')
+    programmed_volume = models.FloatField(verbose_name='Volume Programado (m³)')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['supplier', 'month', 'year'],
+                name='charcoal_monthly_plan_supplier_month_year_unique_constraint',
+            )
+        ]
+        verbose_name = 'Programação de Carvão'
+        verbose_name_plural = 'Programações de Carvão'
+
+    def __str__(self):
+        return f'{self.supplier} - {self.month}-{self.year}'
+
+
 class CharcoalEntry(BaseModel):
     entry_date = models.DateField(verbose_name='Data de Entrada')
     origin_ticket = models.CharField(max_length=50, unique=True, verbose_name='Ticket de Origem')
