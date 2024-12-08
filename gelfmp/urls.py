@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('supplier/<int:id>/', views.supplier_details, name='supplier_details'),
+    path('supplier/<int:id>/stats', views.supplier_stats, name='supplier_stats'),
 ]
 
 if settings.DEBUG:

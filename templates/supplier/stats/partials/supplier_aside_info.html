@@ -1,0 +1,110 @@
+<div class="flex flex-col items-center bg-dark-100 shadow-md p-4 rounded-md w-full h-fit">
+    {% load custom_filters %}
+    <!-- Nome do fornecedor -->
+    <h2 class="mb-6 font-bold text-center text-white text-xl">{{ supplier.corporate_name }}</h2>
+    <table class="w-full text-left text-slate-300 text-sm">
+        <tbody class="w-full h-fit">
+            <!-- Município e Estado -->
+            <tr class="border-dark-200 border-b w-full">
+                <th class="px-4 py-2 font-medium text-slate-500">Município</th>
+                <td class="text-right px-4 py-2">
+                    <div class="flex justify-end items-center gap-2">
+                        {% include "components/copyable_text.html" with value=supplier.city.name|add:" - "|add:supplier.state.abbr %}
+                    </div>
+                </td>
+            </tr>
+            <!-- CEP -->
+            <tr class="border-dark-200 border-b">
+                <th class="px-4 py-2 font-medium text-slate-500">CEP</th>
+                <td class="text-right px-4 py-2">
+                    <div class="flex justify-end items-center gap-2">
+                        {% include "components/copyable_text.html" with value=supplier.cep %}
+                    </div>
+                </td>
+            </tr>
+            <!-- CPF/CNPJ -->
+            <tr class="border-dark-200 border-b">
+                <th class="px-4 py-2 font-medium text-slate-500">CPF/CNPJ</th>
+                <td class="text-right px-4 py-2">
+                    <div class="flex justify-end items-center gap-2">
+                        {% include "components/copyable_text.html" with value=supplier.cpf_cnpj|format_cpf_cnpj %}
+                    </div>
+                </td>
+            </tr>
+            <!-- Tipo de Material -->
+            <tr class="border-dark-200 border-b">
+                <th class="px-4 py-2 font-medium text-slate-500">Tipo de Material</th>
+                <td class="text-right px-4 py-2">
+                    <div class="flex justify-end items-center gap-2">
+                        <span>{{ supplier.material_type }}</span>
+                    </div>
+                </td>
+            </tr>
+            <!-- Código RM -->
+            {% if supplier.rm_code %}
+                <tr class="border-dark-200 border-b">
+                    <th class="px-4 py-2 font-medium text-slate-500">Código RM</th>
+                    <td class="text-right px-4 py-2">
+                        <div class="flex justify-end items-center gap-2">
+                            {% include "components/copyable_text.html" with value=supplier.rm_code %}
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+            <!-- Inscrição Estadual -->
+            {% if supplier.state_registration %}
+                <tr class="border-dark-200 border-b">
+                    <th class="px-4 py-2 font-medium text-slate-500">Inscrição Estadual</th>
+                    <td class="text-right px-4 py-2">
+                        <div class="flex justify-end items-center gap-2">
+                            {% include "components/copyable_text.html" with value=supplier.state_registration %}
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+            <!-- Inscrição Municipal -->
+            {% if supplier.municipal_registration %}
+                <tr class="border-dark-200 border-b">
+                    <th class="px-4 py-2 font-medium text-slate-500">Inscrição Municipal</th>
+                    <td class="text-right px-4 py-2">
+                        <div class="flex justify-end items-center gap-2">
+                            {% include "components/copyable_text.html" with value=supplier.municipal_registration %}
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+            <!-- Fornecedor Ativo -->
+            <tr class="border-dark-200 border-b">
+                <th class="px-4 py-2 font-medium text-slate-500">Fornecedor Ativo</th>
+                <td class="text-right px-4 py-2">
+                    <div class="flex justify-end items-center gap-2">
+                        <span>
+                            {% if supplier.active %}
+                                Sim
+                            {% else %}
+                                Não
+                            {% endif %}
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- Observações -->
+    {% if supplier.observations %}
+        <h2 class="m-4 text-slate-300">Observações</h2>
+        <pre class="w-full text-center text-pretty text-slate-500 text-xs">{{ supplier.observations }}</pre>
+    {% endif %}
+    <!-- Link para Google Earth -->
+    {% if supplier.latitude and supplier.longitude %}
+        <div class="pt-2">
+            <a href="https://earth.google.com/web/@{{ supplier.latitude|comma_to_dot }},{{ supplier.longitude|comma_to_dot }},50000d,35y,0h,0t,0r"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="flex items-center gap-2 mt-4 text-slate-500 hover:text-white transition-colors duration-200 group">
+                <i class="group-hover:text-primary ph-bold ph-compass transition-colors"></i>
+                <span class="group-hover:text-primary font-medium text-sm transition-colors">Ver no Google Earth</span>
+            </a>
+        </div>
+    {% endif %}
+</div>

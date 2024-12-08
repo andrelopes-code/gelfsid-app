@@ -30,3 +30,15 @@ def supplier_details(request: HttpRequest, id):
     }
 
     return render(request, 'supplier/index.html', context=context)
+
+
+def supplier_stats(request: HttpRequest, id):
+    supplier = Supplier.objects.filter(id=id).first()
+    if not supplier:
+        return redirect('index')
+
+    context = {
+        'supplier': supplier,
+    }
+
+    return render(request, 'supplier/stats/index.html', context=context)

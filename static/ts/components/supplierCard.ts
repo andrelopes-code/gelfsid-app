@@ -136,7 +136,7 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                             <i class="ph-fill ph-package"></i>
                             <span class="font-medium">${supplier.material_type}</span>
                         </div>
-                        <div class="flex items-center text-slate-400 group mb-4 text-sm gap-4">
+                        <div class="flex items-center text-slate-400 group mb-4 mt-2 text-sm gap-4">
                             <i
                                 class="ph-bold ph-link transition-colors duration-150 group-hover:text-primary"
                             ></i>
