@@ -112,7 +112,9 @@ class CharcoalEntryAdmin(BaseModelAdmin):
 
 
 @admin.register(models.CharcoalMonthlyPlan)
-class CharcoalMonthlyPlanAdmin(BaseModelAdmin):
+class charcoalmonthlyplan(BaseModelAdmin):
+    change_form_template = 'admin/charcoalmonthlyplan/change_form.html'
+
     list_display = ('supplier', 'programmed_volume', 'month', 'year')
     list_filter = ('month', 'year')
     search_fields = ('supplier__corporate_name',)
@@ -137,14 +139,27 @@ class CharcoalMonthlyPlanAdmin(BaseModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'supplier':
+            # Adciona apenas fornecedores de carvão ao seletor de fornecedores
             kwargs['queryset'] = models.Supplier.objects.filter(material_type=models.MaterialType.CHARCOAL)
 
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+    def get_changeform_initial_data(self, request):
+        return {
+            'month': request.session.get('charcoalmonthlyplan_last_month'),
+            'year': request.session.get('charcoalmonthlyplan_last_year'),
+        }
+
+    def response_add(self, request, obj, post_url_continue=None):
+        request.session['charcoalmonthlyplan_last_month'] = obj.month
+        request.session['charcoalmonthlyplan_last_year'] = obj.year
+
+        return super().response_add(request, obj, post_url_continue)
+
 
 @admin.register(models.CharcoalIQF)
 class CharcoalIQFAdmin(BaseModelAdmin):
-    change_list_template = 'admin/charcoal_iqf_changelist.html'
+    change_list_template = 'admin/charcoaliqf/change_form.html'
 
     list_display = (
         'supplier',

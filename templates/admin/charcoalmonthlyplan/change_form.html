@@ -1,0 +1,25 @@
+{% extends "admin/change_form.html" %}
+{% block extrahead %}
+    {{ block.super }}
+    <script>
+    /*
+        Altera o comportamento padrão do formulário ao pressionar
+        enter, alternando o comportamento de apenas salvar para
+        salvar e adicionar outro.
+    */
+    document.addEventListener('DOMContentLoaded', function () {
+        const adminForm = document.querySelector('#content-main form');
+
+        adminForm.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+
+                const saveAndAddAnotherButton = document.querySelector("input[name='_addanother']");
+                if (saveAndAddAnotherButton) {
+                    saveAndAddAnotherButton.click();
+                }
+            }
+        });
+    });
+    </script>
+{% endblock %}
