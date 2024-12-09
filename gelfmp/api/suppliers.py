@@ -10,6 +10,12 @@ def get_suppliers(request):
         data = []
         for supplier in suppliers:
             recent_entries = list(CharcoalEntry.objects.filter(supplier=supplier).order_by('-entry_date')[:30])
+            rating = None
+
+            # ! AJUSTAR
+            iqfs = supplier.get_iqfs()
+            if iqfs.exists():
+                rating = iqfs.order_by('-created_at').first().iqf
 
             if recent_entries:
                 last_date = recent_entries[0].entry_date.strftime('%d/%m/%Y')
@@ -30,7 +36,7 @@ def get_suppliers(request):
                 'corporate_name': supplier.corporate_name,
                 'cpf_cnpj': supplier.cpf_cnpj,
                 'material_type': supplier.material_type,
-                'rating': None,  # ! Adicionar avaliação posteriormente
+                'rating': rating,
                 'state': {
                     'abbr': supplier.state.abbr,
                     'name': supplier.state.name,

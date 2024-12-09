@@ -326,6 +326,9 @@ class Supplier(BaseModel):
     def get_contacts(self) -> QuerySet[Contact]:
         return self.contacts.all()
 
+    def get_iqfs(self) -> models.Manager[CharcoalIQF]:
+        return self.iqfs
+
     def save(self, *args, **kwargs):
         self.corporate_name = normalize_text_upper(self.corporate_name)
         return super().save(*args, **kwargs)

@@ -19,6 +19,14 @@
 }
 
 /*
+    Remove a borda aleatória no
+    topo da página inicial
+*/
+#main {
+    border-top: none !important;
+}
+
+/*
     Define o estilo dos links
     abaixo do header (breadcrumbs)
 */

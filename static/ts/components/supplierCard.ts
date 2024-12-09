@@ -98,9 +98,9 @@ function charcoalStats(supplier: Supplier) {
 }
 
 export function SupplierCard(supplier: Supplier, borderColor: string, ratingColor: string) {
-    const avaliacaoFmt = supplier.rating || " - ";
+    const ratingFmt = supplier.rating || " - ";
 
-    const distanciaFmt =
+    const distanceFmt =
         supplier.distance_in_meters !== null
             ? `${Math.round((supplier.distance_in_meters / 1000) * 10) / 10} km`
             : " - ";
@@ -152,14 +152,14 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                             class="flex items-center gap-2 bg-black bg-opacity-20 px-3 py-1 rounded-md w-fit h-fit"
                         >
                             <i class="ph-fill ph-path text-xl"></i>
-                            <span class="font-medium text-nowrap">${distanciaFmt}</span>
+                            <span class="font-medium translate-y-[1px] text-nowrap">${distanceFmt}</span>
                         </div>
                         <div
                             class="flex items-center gap-2 bg-black bg-opacity-20 px-3 py-1 rounded-md w-fit h-fit text-green-300"
                             id="supplier-rating"
                         >
                             <i class="ph-fill ph-star text-xl"></i>
-                            <span class="font-medium">${avaliacaoFmt}</span>
+                            <span class="font-medium translate-y-[1px]">${ratingFmt}</span>
                         </div>
                     </div>
                 </div>
