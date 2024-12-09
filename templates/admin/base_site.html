@@ -5,4 +5,20 @@
     <link rel="stylesheet"
           type="text/css"
           href="{% static 'admin/css/extend_admin.css' %}">
+    <script>
+        /*
+            Função para substituir o texto '---------'
+            que aparece como primeira opções nos selects
+        */
+        document.addEventListener('DOMContentLoaded', function () {
+            const selects = document.querySelectorAll('select');
+
+            selects.forEach(function(select) {
+                const firstOption = select.querySelector('option[value=""]');
+                if (firstOption && firstOption.textContent.trim() === '---------') {
+                    firstOption.textContent = "Selecione";
+                }
+            });
+        });
+    </script>
 {% endblock extrahead %}

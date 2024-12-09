@@ -10,20 +10,57 @@
     --weak-stroke-color: #1f242b;
     --fill-color: #151b2500;
     --off: #00000075;
+    --custom-border: #a6adb6;
 }
 
 * {
     font-family: "JetBrains Mono", sans-serif !important;
     box-sizing: border-box;
 }
+
+/*
+    Define o estilo dos links
+    abaixo do header (breadcrumbs)
+*/
+.breadcrumbs {
+    background: var(--dark-100) !important;
+}
+
+/*
+    Desativa o botão de alterar
+    entre o tema escuro e claro
+*/
 .theme-toggle {
     display: none !important;
 }
 
+/*
+    Altera o estilo dos botões que aparecem no canto
+    superior direito entre o header e o conteudo
+*/
+.object-tools > li > a {
+    background: var(--dark-200) !important;
+    border-radius: 0.4rem !important;
+    padding-left: 0.7rem !important;
+    padding-right: 0.7rem !important;
+    filter: none !important;
+}
+
+.object-tools > li > a:hover {
+    background: var(--primary-color) !important;
+}
+
+/*
+    Retira a margem do texto que aparece quando
+    um erro ocorre em um campo de formulário
+*/
 ul.errorlist {
     margin: 0px !important;
 }
 
+/*
+    Remove o sublinhado abaixo dos links
+*/
 a,
 a:hover,
 a:focus,
@@ -31,46 +68,169 @@ a:active {
     text-decoration: none !important;
 }
 
-input#searchbar {
+/*
+    Arruma o desnível entre o input de
+    pesquisa e o botão de pesquisar
+*/
+form#changelist-search {
+    display: flex;
+}
+form#changelist-search div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/*
+    Faz com que o input da searchbar se
+    extenda por toda a altura do container
+*/
+form#changelist-search div input#searchbar {
     height: 100% !important;
     margin: 0 !important;
 }
 
+/*
+    Concerta o alinhamento dos atalhos para
+    campos de data, colocando-os em linha
+*/
 .datetimeshortcuts {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
 }
 
+/*
+    Adiciona um padding horizontal ao redor
+    de todos os formulários do site admin
+    ao visualizar, editar e criar um registro
+*/
 .module.aligned {
     padding: 0 10vw;
 }
 
+/*
+    Faz com que formulários que não tem fieldsets
+    definidos, e que são mostrados em linha tenham
+    'space-between' como separação
+*/
 .form-row .flex-container {
     justify-content: space-between;
 }
 
+/*
+    Ajusta o tamanho dos botões
+    que aparecem cortados
+*/
 .deletelink,
 .button.cancel-link,
 .closelink {
     height: 100% !important;
 }
 
+/*
+    Arruma os estilos da barra de ações
+    acima da lista de registros
+*/
+.actions {
+    height: fit-content !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.actions label {
+    display: flex !important;
+    align-items: center;
+    gap: 0.4rem;
+}
+.actions select {
+    margin: 0 !important;
+}
+.actions button {
+    box-shadow: none;
+    height: 2rem !important;
+}
+
+/*
+    Configura o estilo dos
+    inputs do tipo checkbox
+*/
+.delete input[type="checkbox"] {
+    width: fit-content !important;
+}
+input[type="checkbox"]:checked {
+    accent-color: var(--primary-color);
+    width: fit-content !important;
+}
+
+/*
+    Alterar a borda do input
+    quando está em :focus
+*/
+input:focus,
+textarea:focus,
+select:focus,
+.admin input:focus,
+.admin textarea:focus,
+.admin select:focus {
+    outline: none !important;
+    border: 1px solid var(--custom-border) !important;
+    box-shadow: none !important;
+}
+
+/*
+    Tirar a sombra interna
+    dos botões e inputs
+*/
+#searchbar + input,
+.actions > button[type="submit"] {
+    box-shadow: none !important;
+}
+#searchbar + input:hover,
+.actions > button[type="submit"]:hover {
+    border: 1px solid var(--custom-border) !important;
+}
+
+/*
+    Remove a cor dos icones/imagens
+    deixando-as em preto e branco
+*/
+.related-widget-wrapper-link > img,
+.module .addlink,
+.module .changelink,
+.module .deletelink,
+.module .viewlink {
+    filter: grayscale(1) !important;
+}
+
+/*
+    Permite rolar a tabela de forma horizontal se o conteúdo for maior que a tela,
+    melhorando a usabilidade.
+*/
 .admin-interface .inline-related.tabular {
     overflow-x: auto;
 }
 
-.form-row {
-    width: 100%;
-}
+/*
+    Ajusta o layout dos campos de formulário para ocupar 100% da largura disponível,
+    garantindo que os campos se ajustem corretamente.
+*/
+.form-row,
 .form-row input {
     width: 100%;
 }
 
+/*
+    Ajusta a margem dos campos de formulário para que fiquem alinhados corretamente.
+*/
 .fieldBox {
     margin-right: 0 !important;
 }
 
+/*
+    Estiliza a linha de checkboxes para que os itens fiquem alinhados horizontalmente.
+*/
 .checkbox-row {
     display: flex;
     flex-direction: row;
@@ -78,15 +238,9 @@ input#searchbar {
     align-items: center;
 }
 
-p.date {
-    display: flex;
-    flex-direction: row;
-    gap: 0.1rem;
-}
-
 .checkbox-row input[type="checkbox"] {
     width: fit-content;
-    margin: 0;
+    margin: 0 !important;
 }
 
 .colM input,
@@ -140,22 +294,21 @@ fieldset.module select {
     text-overflow: ellipsis;
 }
 
+/*
+    Configurações de SCROLL
+*/
 html {
     scrollbar-color: #343c51 transparent;
 }
-
 html::-webkit-scrollbar {
     width: 10px;
 }
-
 html::-webkit-scrollbar-track {
     background: transparent;
 }
-
 html::-webkit-scrollbar-thumb {
     background: transparent;
 }
-
 html::-webkit-scrollbar-thumb:hover {
     background: transparent;
 }
