@@ -163,7 +163,7 @@ class Document(BaseModel):
     )
 
     def __str__(self):
-        return f'{self.type} - {self.validity}'
+        return f'{self.type} - {self.name}'
 
     class Meta:
         verbose_name = 'Documento'
@@ -222,7 +222,7 @@ class CharcoalMonthlyPlan(models.Model):
         verbose_name_plural = 'Programações de Carvão'
 
     def __str__(self):
-        return f'{self.supplier} - {self.month}-{self.year}'
+        return f'{self.supplier} - {self.month}/{self.year}'
 
 
 class CharcoalEntry(BaseModel):
@@ -246,7 +246,7 @@ class CharcoalEntry(BaseModel):
     )
 
     def __str__(self):
-        return f'{self.entry_volume} - {self.entry_date}'
+        return f'{self.entry_volume} - {self.entry_date} - {self.supplier}'
 
     class Meta:
         ordering = ['-entry_date']
