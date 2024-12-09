@@ -2,12 +2,16 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpRequest
 from django.shortcuts import render
 
+from gelfcore.router import Router
 from gelfmp.services.iqf_calculator import calculate_suppliers_iqf
 
 from .forms import CalculateIQFForm
 
+router = Router('task/')
+
 
 @staff_member_required
+@router('iqf/', name='calculate_iqf')
 def calculate_iqf(request: HttpRequest):
     errors = []
     processed_suppliers = []

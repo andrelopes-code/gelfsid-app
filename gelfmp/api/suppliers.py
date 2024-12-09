@@ -1,21 +1,16 @@
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
 
 from gelfmp.models import CharcoalEntry, Supplier
 
 
-def get_suppliers(request):
+def get_suppliers(request: HttpRequest):
     try:
         suppliers = Supplier.objects.select_related('city', 'state').all()
 
         data = []
         for supplier in suppliers:
             recent_entries = list(CharcoalEntry.objects.filter(supplier=supplier).order_by('-entry_date')[:30])
-            rating = None
-
-            # ! AJUSTAR
-            iqfs = supplier.get_iqfs()
-            if iqfs.exists():
-                rating = iqfs.order_by('-created_at').first().iqf
+            rating = None  # ! Adicionar o IQF de fornecedores aqui
 
             if recent_entries:
                 last_date = recent_entries[0].entry_date.strftime('%d/%m/%Y')
