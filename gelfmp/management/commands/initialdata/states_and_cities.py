@@ -5,6 +5,8 @@ from django.core.management.base import BaseCommand
 
 from gelfmp.models import City, State
 
+STATES_AND_CITIES_PATH = 'static/data/states_and_cities.json'
+
 
 def load(cmd: BaseCommand):
     with open(settings.STATES_AND_CITIES_PATH, 'r', encoding='utf-8') as file:

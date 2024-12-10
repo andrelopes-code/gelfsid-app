@@ -6,8 +6,8 @@ from gelfmp.models import CharcoalEntry, Supplier
 def get_suppliers(request: HttpRequest):
     try:
         suppliers = Supplier.objects.select_related('city', 'state').all()
-
         data = []
+
         for supplier in suppliers:
             recent_entries = list(CharcoalEntry.objects.filter(supplier=supplier).order_by('-entry_date')[:30])
             rating = None  # ! Adicionar o IQF de fornecedores aqui

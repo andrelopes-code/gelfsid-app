@@ -63,3 +63,18 @@ def end_of_today():
     """
     current = now()
     return current.replace(hour=23, minute=59, second=59, microsecond=999999)
+
+
+def last_month():
+    """
+    Retorna o mês anterior ao atual.
+    """
+    current_month = now().month
+    return 12 if current_month == 1 else current_month - 1
+
+
+def current_year():
+    """
+    Retorna o ano atual.
+    """
+    return now().year

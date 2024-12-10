@@ -4,14 +4,13 @@ from pathlib import Path
 from django.template import base as template_base
 from environ import Env
 
-# Adicionar suporte para multilinha em tags de template (GAMBIARRA)
+# Adicionar suporte para parsear multilinha em tags de template (GAMBIARRA)
 template_base.tag_re = re.compile(template_base.tag_re.pattern, re.DOTALL)
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 env = Env()
 env.read_env('.env')
-
 
 DEBUG = env.bool('DEBUG')
 SECRET_KEY = env.str('SECRET_KEY')
@@ -21,13 +20,8 @@ SECRET_KEY = env.str('SECRET_KEY')
 GRAPHHOPPER_API_KEY = env.str('GRAPHHOPPER_API_KEY', '')
 
 
-# Caminho para o arquivo json que contem a lista
-# de estados e cidades para popular o banco de dados
-STATES_AND_CITIES_PATH = 'static/data/states_and_cities.json'
-
-
 # Configurações que desabilitam
-# proteções de segurança em dev
+# proteções de segurança !!!!!!
 CORS_ALLOW_ALL_ORIGINS = True
 SECURE_SSL_REDIRECT = False
 ALLOWED_HOSTS = ['*']

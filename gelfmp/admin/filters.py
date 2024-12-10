@@ -5,11 +5,13 @@ from gelfmp.models import Supplier
 
 
 class SupplierWithEntriesFilter(SimpleListFilter):
-    title = 'Fornecedor com Entradas'
+    """Filtro para listagem apenas de fornecedores com entradas."""
+
+    title = 'Fornecedor'
     parameter_name = 'supplier_with_entries'
 
     def lookups(self, request, model_admin):
-        suppliers_with_entries = Supplier.objects.annotate(num_entries=Count('charcoal_entries')).filter(
+        suppliers_with_entries = Supplier.objects.annotate(num_entries=Count('charcoal_entries'),).filter(
             num_entries__gt=0
         )
         return [(supplier.id, supplier.corporate_name) for supplier in suppliers_with_entries]

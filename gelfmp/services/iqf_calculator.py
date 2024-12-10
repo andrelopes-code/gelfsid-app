@@ -9,17 +9,15 @@ MIN_DENSITY = 210
 
 
 def calculate_percentage(value, total):
-    """
-    Calcula o percentual de um valor em relação ao total.
-    """
+    """Calcula o percentual de um valor em relação ao total."""
+
     valid = total - value
     return (valid / total) * 100
 
 
 def calculate_invalid_volume_percentage(entries: pd.DataFrame, total_volume, max_fines, max_moisture, min_density):
-    """
-    Calcula o percentual de volume inválido para finos, umidade e densidade.
-    """
+    """Calcula o percentual de volume inválido para finos, umidade e densidade."""
+
     fines_above_max = entries[entries['fines'] >= max_fines]
     moisture_above_max = entries[entries['moisture'] >= max_moisture]
     density_below_min = entries[entries['density'] < min_density]
@@ -36,9 +34,8 @@ def calculate_invalid_volume_percentage(entries: pd.DataFrame, total_volume, max
 
 
 def calculate_iqf(programmed_volume: float, entries: pd.DataFrame):
-    """
-    Calcula o IQF baseado no volume programado e nas entradas.
-    """
+    """Calcula o IQF baseado no volume programado e nas entradas."""
+
     total_volume = entries['entry_volume'].sum()
     programmed_percentage = min(total_volume / programmed_volume * 100, 100)
 
@@ -65,9 +62,8 @@ def calculate_iqf(programmed_volume: float, entries: pd.DataFrame):
 
 
 def calculate_suppliers_iqf(month, year):
-    """
-    Função principal para calcular IQF por fornecedor e mês.
-    """
+    """Função principal para calcular IQF por fornecedor e mês."""
+
     entries = CharcoalEntry.objects.filter(
         entry_date__month=month,
         entry_date__year=year,

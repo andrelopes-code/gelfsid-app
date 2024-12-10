@@ -23,7 +23,12 @@ class DocumentInline(BaseTabularInline):
     model = models.Document
     extra = 1
 
-    fields = ('name', 'type', 'validity', 'filepath')
+    fields = (
+        'name',
+        'type',
+        'validity',
+        'filepath',
+    )
 
     verbose_name = 'Documento'
     verbose_name_plural = 'Documentos'
