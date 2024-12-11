@@ -1,6 +1,6 @@
 <div id="supplier-search"
      class="top-0 left-0 z-50 fixed flex-col justify-center items-center hidden bg-dark/50 opacity-0 backdrop-blur-[2px] w-screen h-screen transition-all duration-150 ease-out">
-    <form class="w-full max-w-[30%] h-fit max-h-[60%]">
+    <form class="w-full max-w-[40%] h-fit max-h-[60%]">
         <input hx-target="#supplier-search-result"
                hx-get="{% url 'supplier_search' %}"
                name="q"
@@ -19,7 +19,7 @@
 <!-- Botão de pesquisa -->
 <div class="flex justify-center items-center bg-dark-100 rounded-md w-10 h-10 text-md">
     <button id="supplier-search-button"
-            class="hover:brightness-125 w-full h-full transition-[filter] translate-y-[2px] duration-300">
+            class="hover:brightness-125 w-full h-full transition-[filter] duration-300">
         <i class="ph-bold ph-magnifying-glass text-primary"></i>
     </button>
 </div>
