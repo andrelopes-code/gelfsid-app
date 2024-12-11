@@ -20,6 +20,17 @@
     font-family: "JetBrains Mono", sans-serif;
 }
 
+.my-indicator {
+    display: none;
+}
+
+.htmx-request .my-indicator {
+    display: flex;
+}
+.htmx-request.my-indicator {
+    display: flex;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;

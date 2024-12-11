@@ -654,6 +654,10 @@ video {
   position: sticky;
 }
 
+.inset-0{
+  inset: 0px;
+}
+
 .left-0{
   left: 0px;
 }
@@ -1417,6 +1421,18 @@ video {
 
 * {
   font-family: "JetBrains Mono", sans-serif;
+}
+
+.my-indicator {
+  display: none;
+}
+
+.htmx-request .my-indicator {
+  display: flex;
+}
+
+.htmx-request.my-indicator {
+  display: flex;
 }
 
 input::-webkit-outer-spin-button,

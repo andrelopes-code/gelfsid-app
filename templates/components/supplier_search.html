@@ -2,7 +2,7 @@
      class="top-0 left-0 z-50 fixed flex-col justify-center items-center hidden bg-dark/50 opacity-0 backdrop-blur-[2px] w-screen h-screen transition-all duration-150 ease-out">
     <form class="w-full max-w-[40%] h-fit max-h-[60%]">
         <input hx-target="#supplier-search-result"
-               hx-get="{% url 'supplier_search' %}"
+               hx-get="{% url 'supplier_search_htmx' %}"
                name="q"
                hx-swap="innerHTML"
                hx-trigger="keyup changed delay:300ms"

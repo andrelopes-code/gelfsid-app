@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
 
@@ -49,3 +50,15 @@ def supplier_stats(request: HttpRequest, id):
     }
 
     return render(request, 'supplier/stats/index.html', context=context)
+
+
+@router('htmx/supplier/search/', name='supplier_search_htmx')
+def supplier_search(request: HttpRequest):
+    suppliers = []
+
+    if query := request.GET.get('q'):
+        suppliers = Supplier.objects.filter(
+            Q(corporate_name__icontains=query) | Q(city__name__icontains=query) | Q(cpf_cnpj__icontains=query),
+        )
+
+    return render(request, 'htmx/supplier_search/results.html', {'suppliers': suppliers})

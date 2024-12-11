@@ -13,30 +13,27 @@ router = Router('task/')
 @staff_member_required
 @router('iqf/', name='calculate_iqf')
 def calculate_iqf(request: HttpRequest):
-    errors = []
-    processed_suppliers = []
-    form = CalculateIQFForm(request.POST or None)
+    return render(
+        request,
+        'tasks/calculate_iqf.html',
+        {
+            'form': CalculateIQFForm(),
+        },
+    )
+
+
+@staff_member_required
+@router('htmx/iqf/', name='calculate_iqf_htmx')
+def calculate_iqf_htmx(request: HttpRequest):
+    form = CalculateIQFForm(request.POST)
 
     if request.method == 'POST' and form.is_valid():
         try:
             month = form.cleaned_data['month']
             year = form.cleaned_data['year']
+            processed_suppliers = calculate_suppliers_iqf(month, year)
 
-            result = calculate_suppliers_iqf(month, year)
-            processed_suppliers = result or ['Nenhum novo IQF de fornecedor foi calculado.']
+            return render(request, 'htmx/iqf/results.html', {'processed_suppliers': processed_suppliers})
 
         except Exception as e:
-            errors.append(str(e))
-
-    elif request.method == 'POST':
-        errors.append('Formulário inválido.')
-
-    return render(
-        request,
-        'tasks/calculate_iqf.html',
-        {
-            'form': form,
-            'errors': errors,
-            'processed_suppliers': processed_suppliers,
-        },
-    )
+            return render(request, 'htmx/iqf/results.html', {'processed_suppliers': [str(e)]})

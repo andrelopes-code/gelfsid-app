@@ -1,0 +1,9 @@
+{% if processed_suppliers %}
+    <ul>
+        {% for s in processed_suppliers %}<li>{{ s }}</li>{% endfor %}
+    </ul>
+{% else %}
+    <ul>
+        <li>Nenhum novo IQF de fornecedor foi calculado.</li>
+    </ul>
+{% endif %}
