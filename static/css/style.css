@@ -821,8 +821,8 @@ video {
   min-width: 33vw;
 }
 
-.max-w-\[30\%\]{
-  max-width: 30%;
+.max-w-\[40\%\]{
+  max-width: 40%;
 }
 
 .max-w-fit{
@@ -832,10 +832,6 @@ video {
 
 .max-w-full{
   max-width: 100%;
-}
-
-.max-w-\[40\%\]{
-  max-width: 40%;
 }
 
 .flex-1{
@@ -858,11 +854,6 @@ video {
 
 .translate-y-\[1px\]{
   --tw-translate-y: 1px;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.translate-y-\[2px\]{
-  --tw-translate-y: 2px;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
