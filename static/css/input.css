@@ -43,10 +43,6 @@ input[type="number"] {
     filter: brightness(1.5);
 }
 
-.noscrollbar::-webkit-scrollbar {
-    display: none !important;
-}
-
 .texthover {
     overflow: hidden;
     text-wrap: nowrap;
@@ -79,6 +75,16 @@ input[type="number"] {
 
 .custom-tooltip-gelf::before {
     border-top-color: var(--dark-200) !important;
+}
+
+.noscrollbar {
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.noscrollbar::-webkit-scrollbar {
+    display: none;
 }
 
 html {

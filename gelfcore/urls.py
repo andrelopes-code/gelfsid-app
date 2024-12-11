@@ -7,6 +7,7 @@ from django.views.generic.base import RedirectView
 
 from gelfmp.tasks.views import router as tasks_router
 from gelfmp.views import router as gelfmp_router
+from gelfmp.views_htmx import router as gelfmp_htmx_router
 
 urlpatterns = [
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('assets/favicon.ico'))),
@@ -16,6 +17,7 @@ urlpatterns = [
 
 urlpatterns.extend(tasks_router.urls)
 urlpatterns.extend(gelfmp_router.urls)
+urlpatterns.extend(gelfmp_htmx_router.urls)
 
 
 # Servir os arquivos de documentação

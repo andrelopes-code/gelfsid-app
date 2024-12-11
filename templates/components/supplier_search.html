@@ -1,0 +1,43 @@
+<div id="supplier-search"
+     class="top-0 left-0 z-50 fixed flex-col justify-center items-center hidden bg-dark/50 opacity-0 backdrop-blur-[2px] w-screen h-screen transition-all duration-150 ease-out">
+    <form class="w-full max-w-[30%] h-fit max-h-[60%]">
+        <input hx-target="#supplier-search-result"
+               hx-get="{% url 'supplier_search' %}"
+               name="q"
+               hx-swap="innerHTML"
+               hx-trigger="keyup changed delay:300ms"
+               class="border-2 border-slate-800 focus:border-primary bg-dark-100 px-3 rounded-md w-full h-10 text-md text-slate-300 text-xs placeholder:text-slate-600 transition-colors duration-200 outline-none"
+               spellcheck="false"
+               placeholder="Pesquisar..."
+               autocomplete="off"
+               type="text">
+        <div id="supplier-search-result"
+             class="gap-2 space-y-2 mt-2 w-full h-full text-slate-300 overflow-x-hidden overflow-y-auto noscrollbar">
+        </div>
+    </form>
+</div>
+<!-- Botão de pesquisa -->
+<div class="flex justify-center items-center bg-dark-100 rounded-md w-10 h-10 text-md">
+    <button id="supplier-search-button"
+            class="hover:brightness-125 w-full h-full transition-[filter] translate-y-[2px] duration-300">
+        <i class="ph-bold ph-magnifying-glass text-primary"></i>
+    </button>
+</div>
+<!-- Script para controlar o comportamento do botão -->
+<script>
+    const searchButton = document.getElementById('supplier-search-button');
+    const searchOverlay = document.getElementById('supplier-search');
+    const searchInput = searchOverlay.querySelector('input');
+
+    searchButton.onclick = () => {
+        searchOverlay.classList.remove('hidden');
+        searchOverlay.classList.add('flex');
+        setTimeout(() => searchOverlay.classList.add('opacity-100'), 10);
+        searchInput.focus();
+    };
+
+    searchInput.onblur = () => {
+        searchOverlay.classList.remove('opacity-100');
+        setTimeout(() => searchOverlay.classList.add('hidden'), 150);
+    };
+</script>

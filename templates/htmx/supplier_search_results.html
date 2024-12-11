@@ -1,0 +1,17 @@
+{% if suppliers %}
+    {% for supplier in suppliers %}
+        <li class="bg-dark-100 shadow-sm px-4 py-2 rounded-md w-full h-fit list-none">
+            <a href="{% url 'supplier_details'  id=supplier.id %}"
+               class="hover:text-primary transition-colors duration-200">
+                <div class="flex justify-between items-center w-full">
+                    <p class="flex-1 text-ellipsis text-xs whitespace-nowrap overflow-hidden">{{ supplier.corporate_name }} - {{ supplier.city|upper }}</p>
+                    <i class="ph-arrow-up-right ph"></i>
+                </div>
+            </a>
+        </li>
+    {% endfor %}
+{% else %}
+    <li class="bg-dark-100 shadow-sm px-4 py-2 rounded-md w-full h-fit text-center text-slate-500 text-xs list-none">
+        Nada foi encontrado.
+    </li>
+{% endif %}

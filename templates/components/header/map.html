@@ -5,8 +5,8 @@
         <div class="flex flex-wrap justify-start items-start gap-3 px-4 py-4 w-screen h-full">
             <a class="pointer-events-auto" href="{% url 'index' %}">
                 <img src="{% static 'assets/logo.png' %}"
-                 class="w-auto h-10"
-                 alt="Gelf logo" />
+                     class="w-auto h-10"
+                     alt="Gelf logo" />
             </a>
             <div class="pointer-events-auto">{% include "components/filter_switch.html" %}</div>
             {% url 'admin:index' as admin_url %}
@@ -15,6 +15,7 @@
             <div class="pointer-events-auto">
                 {% include "components/header/button.html" with href=dashboard_url text="DASHBOARD" %}
             </div>
+            <div class="pointer-events-auto">{% include "components/supplier_search.html" %}</div>
         </div>
     </nav>
 </div>
