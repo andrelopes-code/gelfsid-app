@@ -112,10 +112,10 @@ class CharcoalEntryAdmin(BaseModelAdmin):
 
 
 @admin.register(models.CharcoalMonthlyPlan)
-class charcoalmonthlyplan(BaseModelAdmin):
+class CharcoalMonthlyPlanAdmin(BaseModelAdmin):
     change_form_template = 'admin/charcoalmonthlyplan/change_form.html'
 
-    list_display = ('supplier', 'programmed_volume', 'month', 'year')
+    list_display = ('supplier', 'planned_volume', 'month', 'year')
     list_filter = ('month', 'year')
     search_fields = ('supplier__corporate_name',)
 
@@ -125,15 +125,15 @@ class charcoalmonthlyplan(BaseModelAdmin):
             {
                 'fields': (
                     'supplier',
-                    'programmed_volume',
+                    'planned_volume',
                     'month',
                     'year',
                 )
             },
         ),
         (
-            '',
-            {'fields': tuple()},
+            'GELF',
+            {'fields': ('price',)},
         ),
     )
 
@@ -164,7 +164,7 @@ class CharcoalIQFAdmin(BaseModelAdmin):
     list_display = (
         'supplier',
         'iqf',
-        'programmed_percentage',
+        'planned_percentage',
         'fines_percentage',
         'moisture_percentage',
         'density_percentage',

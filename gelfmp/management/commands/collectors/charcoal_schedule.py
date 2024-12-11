@@ -39,8 +39,8 @@ MONTHS = {
 
 def gelf_schedule(rows, month, year):
     _ = next(rows)
-    programmed_volume_row = next(rows)
-    programmed_volume = programmed_volume_row[month]
+    planned_volume_row = next(rows)
+    planned_volume = planned_volume_row[month]
 
     gelf = Supplier.objects.get(id=GELF_ID)
     if 'GELF' not in gelf.corporate_name.upper():
@@ -50,7 +50,7 @@ def gelf_schedule(rows, month, year):
         supplier=gelf,
         month=month - MONTH_DESLOC,
         year=year,
-        programmed_volume=programmed_volume,
+        planned_volume=planned_volume,
     )
 
 

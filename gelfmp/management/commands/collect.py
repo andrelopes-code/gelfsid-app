@@ -5,8 +5,8 @@ from gelfmp.management.commands.collectors import charcoal_entries, charcoal_sch
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        # suppliers_and_docs.collect()
-        # charcoal_entries.collect()
+        suppliers_and_docs.collect()
+        charcoal_entries.collect()
         charcoal_schedule.collect()
 
         self.stdout.write(self.style.SUCCESS('data collected successfully!'))

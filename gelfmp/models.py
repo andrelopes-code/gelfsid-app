@@ -2,6 +2,7 @@ from datetime import date
 
 from django.db import models
 from django.db.models.query import QuerySet
+from django.forms import ValidationError
 
 from gelfmp.utils import validators
 from gelfmp.utils.normalization import normalize_text_upper
@@ -179,7 +180,7 @@ class CharcoalIQF(BaseModel):
     )
 
     iqf = models.FloatField(verbose_name='IQF')
-    programmed_percentage = models.FloatField(
+    planned_percentage = models.FloatField(
         validators=[validators.validate_percentage], verbose_name='Programação Realizada (%)'
     )
     fines_percentage = models.FloatField(validators=[validators.validate_percentage], verbose_name='Finos (%)')
@@ -209,7 +210,26 @@ class CharcoalMonthlyPlan(models.Model):
     )
     month = models.IntegerField(choices=MonthType.choices, verbose_name='Mês')
     year = models.IntegerField(choices=year_choices(), verbose_name='Ano')
-    programmed_volume = models.FloatField(verbose_name='Volume Programado (m³)')
+    planned_volume = models.FloatField(verbose_name='Volume Programado (m³)')
+    price = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name='Preço (R$)',
+        help_text='Somente aplicável a GELF.',
+    )
+
+    def clean(self):
+        # Validação do campo 'price' com base no nome do fornecedor,
+        # o campo preço é aplicável apenas a própria GELF.
+        if self.price is not None and 'GELF' not in self.supplier.corporate_name.upper():
+            raise ValidationError({'price': 'Este campo não é aplicavel a esse fornecedor.'})
+
+        return super().clean()
+
+    def __str__(self):
+        return f'{self.supplier} - {self.month}/{self.year}'
 
     class Meta:
         constraints = [
@@ -220,9 +240,6 @@ class CharcoalMonthlyPlan(models.Model):
         ]
         verbose_name = 'Programação de Carvão'
         verbose_name_plural = 'Programações de Carvão'
-
-    def __str__(self):
-        return f'{self.supplier} - {self.month}/{self.year}'
 
 
 class CharcoalEntry(BaseModel):

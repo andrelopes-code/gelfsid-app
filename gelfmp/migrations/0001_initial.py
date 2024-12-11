@@ -128,7 +128,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('month', models.IntegerField(choices=[(1, 'Janeiro'), (2, 'Fevereiro'), (3, 'Março'), (4, 'Abril'), (5, 'Maio'), (6, 'Junho'), (7, 'Julho'), (8, 'Agosto'), (9, 'Setembro'), (10, 'Outubro'), (11, 'Novembro'), (12, 'Dezembro')], verbose_name='Mês')),
                 ('year', models.IntegerField(choices=[(2025, '2025'), (2024, '2024'), (2023, '2023'), (2022, '2022'), (2021, '2021'), (2020, '2020')], verbose_name='Ano')),
-                ('programmed_volume', models.FloatField(verbose_name='Volume Programado (m³)')),
+                ('planned_volume', models.FloatField(verbose_name='Volume Programado (m³)')),
                 ('supplier', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='monthly_plans', to='gelfmp.supplier', verbose_name='Fornecedor')),
             ],
             options={
@@ -143,7 +143,7 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Criado em')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Atualizado em')),
                 ('iqf', models.FloatField(verbose_name='IQF')),
-                ('programmed_percentage', models.FloatField(validators=[gelfmp.utils.validators.validate_percentage], verbose_name='Programação Realizada (%)')),
+                ('planned_percentage', models.FloatField(validators=[gelfmp.utils.validators.validate_percentage], verbose_name='Programação Realizada (%)')),
                 ('fines_percentage', models.FloatField(validators=[gelfmp.utils.validators.validate_percentage], verbose_name='Finos (%)')),
                 ('moisture_percentage', models.FloatField(validators=[gelfmp.utils.validators.validate_percentage], verbose_name='Umidade (%)')),
                 ('density_percentage', models.FloatField(validators=[gelfmp.utils.validators.validate_percentage], verbose_name='Densidade (%)')),

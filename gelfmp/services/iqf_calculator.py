@@ -33,11 +33,11 @@ def calculate_invalid_volume_percentage(entries: pd.DataFrame, total_volume, max
     return fines_percentage, moisture_percentage, density_percentage
 
 
-def calculate_iqf(programmed_volume: float, entries: pd.DataFrame):
+def calculate_iqf(planned_volume: float, entries: pd.DataFrame):
     """Calcula o IQF baseado no volume programado e nas entradas."""
 
     total_volume = entries['entry_volume'].sum()
-    programmed_percentage = min(total_volume / programmed_volume * 100, 100)
+    planned_percentage = min(total_volume / planned_volume * 100, 100)
 
     fines_percentage, moisture_percentage, density_percentage = calculate_invalid_volume_percentage(
         entries,
@@ -47,14 +47,14 @@ def calculate_iqf(programmed_volume: float, entries: pd.DataFrame):
         MIN_DENSITY,
     )
 
-    iqf = (programmed_percentage + fines_percentage + moisture_percentage + density_percentage) / 4
+    iqf = (planned_percentage + fines_percentage + moisture_percentage + density_percentage) / 4
 
     if iqf > 100:
         return f'O IQF não pode ser maior que 100: {iqf:.2f}'
 
     return (
         round(iqf, 2),
-        round(programmed_percentage, 2),
+        round(planned_percentage, 2),
         round(fines_percentage, 2),
         round(moisture_percentage, 2),
         round(density_percentage, 2),
@@ -94,8 +94,8 @@ def calculate_suppliers_iqf(month, year):
             log.warning(f'Fornecedor com ID {supplier_id} não encontrado.')
             continue
 
-        iqf, programmed_percentage, fines_percentage, moisture_percentage, density_percentage = calculate_iqf(
-            plan.programmed_volume, supplier_entries
+        iqf, planned_percentage, fines_percentage, moisture_percentage, density_percentage = calculate_iqf(
+            plan.planned_volume, supplier_entries
         )
 
         existing_iqf = CharcoalIQF.objects.filter(supplier=supplier, month=month, year=year).first()
@@ -109,7 +109,7 @@ def calculate_suppliers_iqf(month, year):
                 iqf=iqf,
                 month=month,
                 year=year,
-                programmed_percentage=programmed_percentage,
+                planned_percentage=planned_percentage,
                 fines_percentage=fines_percentage,
                 moisture_percentage=moisture_percentage,
                 density_percentage=density_percentage,
