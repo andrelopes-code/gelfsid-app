@@ -136,14 +136,14 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                             <i class="ph-fill ph-package"></i>
                             <span class="font-medium">${supplier.material_type}</span>
                         </div>
-                        <div class="flex items-center text-slate-400 group mb-4 mt-2 text-sm gap-4">
+                        <div class="flex items-center text-slate-400 group mb-4 text-sm gap-4">
                             <i
-                                class="ph-bold ph-link transition-colors duration-150 group-hover:text-primary"
+                                class="ph-bold ph-arrow-square-out transition-colors duration-150 group-hover:text-primary"
                             ></i>
                             <a
                                 href="supplier/${supplier.id}"
                                 class="font-medium cursor-pointer transition-colors duration-150 group-hover:text-primary"
-                                >Ver detalhes</a
+                                >Detalhes</a
                             >
                         </div>
                     </div>
