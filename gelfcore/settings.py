@@ -24,8 +24,8 @@ GRAPHHOPPER_API_KEY = env.str('GRAPHHOPPER_API_KEY', '')
 # proteções de segurança !!!!!!
 CORS_ALLOW_ALL_ORIGINS = True
 SECURE_SSL_REDIRECT = False
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['http://*', 'https://*']
+ALLOWED_HOSTS = ['https://192.168.15.7']
+CSRF_TRUSTED_ORIGINS = ['https://192.168.15.7']
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
