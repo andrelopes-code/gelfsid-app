@@ -20,17 +20,15 @@ SECRET_KEY = env.str('SECRET_KEY')
 GRAPHHOPPER_API_KEY = env.str('GRAPHHOPPER_API_KEY', '')
 
 
-# Configurações que desabilitam
-# proteções de segurança !!!!!!
 CORS_ALLOW_ALL_ORIGINS = True
 SECURE_SSL_REDIRECT = False
-ALLOWED_HOSTS = ['https://192.168.15.7']
-CSRF_TRUSTED_ORIGINS = ['https://192.168.15.7']
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://localhost', 'https://127.0.0.1']
+
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # URL Base para servir os arquivos de documentação

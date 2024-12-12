@@ -1,8 +1,8 @@
 services:
   django:
     build: .
-    container_name: django
-    command: ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn gelfcore.wsgi:application --bind 0.0.0.0:8000"]
+    container_name: django_dev
+    command: ["sh", "-c", "python manage.py migrate && python manage.py fixtures && python manage.py collectstatic --noinput && gunicorn gelfcore.wsgi:application --bind 0.0.0.0:8000 --reload"]
     volumes:
       - .:/app
     ports:
@@ -14,7 +14,7 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: nginx
+    container_name: nginx_dev
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./certs:/etc/nginx/certs
