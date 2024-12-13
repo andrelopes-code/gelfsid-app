@@ -36,10 +36,3 @@ def format_cpf_cnpj(value):
     elif len(value) == 14:
         return f'{value[:2]}.{value[2:5]}.{value[5:8]}/{value[8:12]}-{value[12:]}'
     return value
-
-
-@register.filter
-def get_doc_url(value):
-    if isinstance(value, str):
-        return settings.DOCS_FILES_BASE_URL + value
-    return value

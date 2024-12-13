@@ -14,13 +14,14 @@
         "webpack-cli": "^5.1.4"
     },
     "scripts": {
-        "dev": "npm-run-all --parallel django tw webpack-watch",
-        "watch": "npm-run-all --parallel tw webpack-watch",
-        "tw": "npx tailwindcss -i ./static/css/input.css -o ./static/css/style.css --watch",
+        "dev": "npm-run-all --parallel django tailwind-watch webpack-watch",
         "build": "webpack --mode production",
+        "watch": "npm-run-all --parallel tailwind-watch webpack-watch",
+        "tailwind-watch": "npx tailwindcss -i ./static/css/input.css -o ./static/css/style.css --watch",
         "webpack-watch": "webpack --watch",
         "django": "python manage.py runserver 0.0.0.0:8000",
-        "docker-dev": "docker compose -f docker-compose.dev.yml up --build --remove-orphans"
+        "docker-dev": "docker compose -f docker-compose.dev.yml up --build --remove-orphans",
+        "docker-shell": "docker exec -it django_dev /bin/bash"
     },
     "dependencies": {
         "@phosphor-icons/web": "^2.1.1",

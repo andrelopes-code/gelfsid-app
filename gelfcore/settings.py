@@ -22,17 +22,16 @@ GRAPHHOPPER_API_KEY = env.str('GRAPHHOPPER_API_KEY', '')
 
 CORS_ALLOW_ALL_ORIGINS = True
 SECURE_SSL_REDIRECT = False
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://localhost', 'https://127.0.0.1']
+
+ALLOWED_HOSTS = env.str('ALLOWED_HOSTS').split(',')
+CSRF_TRUSTED_ORIGINS = env.str('CSRF_TRUSTED_ORIGINS').split(',')
 
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-
-# URL Base para servir os arquivos de documentação
-DOCS_FILES_BASE_URL = '/media/docs/'
+STATICFILES_DIRS = [str(BASE_DIR / 'static')]
+STATIC_ROOT = str(BASE_DIR / 'staticfiles')
+MEDIA_ROOT = str(BASE_DIR / 'media')
+MEDIA_URL = '/media/'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

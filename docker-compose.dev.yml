@@ -5,6 +5,7 @@ services:
     command: ["sh", "-c", "python manage.py migrate && python manage.py fixtures && python manage.py collectstatic --noinput && gunicorn gelfcore.wsgi:application --bind 0.0.0.0:8000 --reload"]
     volumes:
       - .:/app
+      - ${BASE_DOCS_DIR}:/app/media
     ports:
       - "8000:8000"
     env_file:
@@ -19,6 +20,7 @@ services:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./certs:/etc/nginx/certs
       - .:/app
+      - ${BASE_DOCS_DIR}:/app/media
     ports:
       - "80:80"
       - "443:443"

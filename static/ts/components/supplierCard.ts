@@ -30,12 +30,7 @@ function linkfy(value: string, link?: string) {
     if (!link) {
         return value;
     }
-
-    return html`
-        <a href="${APP_CONFIG.staticFilesBaseUrl}/${link}" class="hover:text-slate-300" target="_blank"
-            >${value}</a
-        >
-    `;
+    return html` <a href="${link}" class="hover:text-slate-300" target="_blank">${value}</a> `;
 }
 
 function documentTableRow(label: string, document: Document) {

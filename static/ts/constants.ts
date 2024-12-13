@@ -12,7 +12,6 @@ interface ApiConfig {
 interface AppConfig {
     geojson: GeoJsonConfig;
     api: ApiConfig;
-    staticFilesBaseUrl: string;
 }
 
 export const APP_CONFIG: AppConfig = {
@@ -23,7 +22,6 @@ export const APP_CONFIG: AppConfig = {
     api: {
         suppliers: "/api/suppliers/",
     },
-    staticFilesBaseUrl: (window as any)?.staticFilesBaseUrl,
 };
 
 export const DEFAULT_MATERIAL_TYPE = "Todos";

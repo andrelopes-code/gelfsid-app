@@ -20,7 +20,7 @@
                     <td class="px-4 py-2">
                         {% if document.filepath %}
                             <a class="hover:text-slate-400"
-                               href="{{ document.filepath|get_doc_url }}">{{ document.type }}</a>
+                               href="{{ document.filepath }}">{{ document.type }}</a>
                         {% else %}
                             <span>{{ document.type }}</span>
                         {% endif %}

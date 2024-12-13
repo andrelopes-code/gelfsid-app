@@ -18,10 +18,5 @@ urlpatterns.extend(tasks_router.urls)
 urlpatterns.extend(gelfmp_router.urls)
 
 
-# Servir os arquivos de documentação
-# em modo de desenvolvimento
 if settings.DEBUG:
-    urlpatterns += static(
-        settings.DOCS_FILES_BASE_URL,
-        document_root=r'H:\DEMAT\Público\10 - DOCUMENTAÇÃO - CLIENTES E FORNECEDORES',
-    )
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

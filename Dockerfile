@@ -13,4 +13,6 @@ COPY pyproject.toml poetry.lock README.md ./
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --without dev
 
+COPY static/dist/ static/dist/
+
 COPY . .
