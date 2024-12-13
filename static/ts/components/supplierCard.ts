@@ -44,7 +44,7 @@ function documentTableRow(label: string, document: Document) {
                     <span class="font-medium text-sm">${label}</span>
                 </div>
             </td>
-            <td class="text-right px-4 py-3">
+            <td class="text-center px-4 py-3">
                 <span class="font-medium text-sm">${linkfy(document.name, document?.filepath)}</span>
             </td>
             <td class="text-right px-4 py-3 w-fit">

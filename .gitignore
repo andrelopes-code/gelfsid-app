@@ -167,6 +167,7 @@ tmp
 *.xls
 *.xlsx
 logs
+media
 staticfiles
 certs
 .vscode

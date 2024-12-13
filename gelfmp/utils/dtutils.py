@@ -1,6 +1,7 @@
+import re
 from datetime import timedelta
 
-from django.utils.timezone import now
+from django.utils.timezone import datetime, now
 
 
 def days_ago(days: int):
@@ -78,3 +79,19 @@ def current_year():
     Retorna o ano atual.
     """
     return now().year
+
+
+def extract_date_from_text(text):
+    """
+    Extrai uma data válida do texto, se possível.
+    Suporta formatos dd.mm.yyyy e dd-mm-yyyy.
+    """
+    date_match = re.search(r'(\d{1,2}[.\-]\d{1,2}[.\-]\d{2,4})', text)
+    if date_match:
+        date_str = date_match.group()
+        for date_format in ['%d.%m.%Y', '%d-%m-%Y', '%d.%m.%y', '%d-%m-%y']:
+            try:
+                return datetime.strptime(date_str, date_format).date()
+            except ValueError:
+                continue
+    return None

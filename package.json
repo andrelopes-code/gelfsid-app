@@ -20,7 +20,8 @@
         "tailwind-watch": "npx tailwindcss -i ./static/css/input.css -o ./static/css/style.css --watch",
         "webpack-watch": "webpack --watch",
         "django": "python manage.py runserver 0.0.0.0:8000",
-        "docker-dev": "docker compose -f docker-compose.dev.yml up --build --remove-orphans",
+        "docker-dev": "docker compose -f docker-compose.dev.yml build && docker compose -f docker-compose.dev.yml up",
+        "docker-dev-nc": "docker compose -f docker-compose.dev.yml build --no-cache && docker compose -f docker-compose.dev.yml up",
         "docker-shell": "docker exec -it django_dev /bin/bash"
     },
     "dependencies": {

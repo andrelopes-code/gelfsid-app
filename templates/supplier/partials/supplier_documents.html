@@ -1,56 +1,59 @@
 {% load custom_filters %}
-<div class="bg-dark-100 shadow-md rounded-md min-h-fit overflow-x-auto">
-    <!-- Título -->
-    <h2 class="bg-dark-200 mb-2 p-2 font-medium text-center text-md text-slate-300 uppercase">Documentos</h2>
-    <!-- Tabela de documentos -->
-    <table class="border-collapse mb-4 px-4 w-full h-fit text-center text-slate-300 text-sm">
-        <thead class="border-dark-200 border-b">
-            <tr>
-                <th class="px-4 py-2 font-medium text-slate-500">Tipo do Documento</th>
-                <th class="px-4 py-2 font-medium text-slate-500">Nome</th>
-                <th class="px-4 py-2 font-medium text-slate-500">Validade</th>
-                <th class="px-4 py-2 font-medium text-slate-500">Status</th>
-            </tr>
-        </thead>
-        <tbody class="w-full h-fit">
-            <!-- Iteração pelos documentos do fornecedor -->
-            {% for document in supplier.get_documents %}
-                <tr class="border-dark-200 {% if not forloop.last %}border-b{% endif %}">
-                    <!-- Tipo de Documento -->
-                    <td class="px-4 py-2">
-                        {% if document.filepath %}
-                            <a class="hover:text-slate-400"
-                               href="{{ document.filepath }}">{{ document.type }}</a>
-                        {% else %}
-                            <span>{{ document.type }}</span>
-                        {% endif %}
-                    </td>
-                    <!-- Nome do Documento -->
-                    <td class="px-4 py-2">
-                        <span>{{ document.name }}</span>
-                    </td>
-                    <!-- Validade do Documento -->
-                    <td class="px-4 py-2">
-                        <span>
-                            {% if document.validity %}
-                                {{ document.validity }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </span>
-                    </td>
-                    <!-- Status de Validade -->
-                    <td class="px-4 py-2">
-                        <span class="{{ document.validity|get_validity_status }}">
-                            {% if document.validity %}
-                                {{ document.validity|get_validity_status }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </span>
-                    </td>
+{% if documents %}
+    <div class="bg-dark-100 shadow-md rounded-md min-h-fit overflow-x-auto">
+        <!-- Título -->
+        <h2 class="bg-dark-200 mb-2 p-2 font-medium text-center text-md text-slate-300 uppercase">Documentos</h2>
+        <!-- Tabela de documentos -->
+        <table class="border-collapse mb-4 px-4 w-full h-fit text-center text-slate-300 text-sm">
+            <thead class="border-dark-200 border-b">
+                <tr>
+                    <th class="px-4 py-2 font-medium text-slate-500">Tipo do Documento</th>
+                    <th class="px-4 py-2 font-medium text-slate-500">Arquivo</th>
+                    <th class="px-4 py-2 font-medium text-slate-500">Validade</th>
+                    <th class="px-4 py-2 font-medium text-slate-500">Status</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody class="w-full h-fit">
+                <!-- Iteração pelos documentos do fornecedor -->
+                {% for document in documents %}
+                    <tr class="border-dark-200 {% if not forloop.last %}border-b{% endif %}">
+                        <!-- Tipo de Documento -->
+                        <td class="px-4 py-2">
+                            <span>{{ document.get_document_type_display }}</span>
+                        </td>
+                        <!-- Arquivo -->
+                        <td class="px-4 py-2">
+                            {% if document.file %}
+                                <a class="hover:text-slate-400"
+                                   href="{{ document.file.url }}"
+                                   target="_blank">{{ document.name }}</a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <!-- Validade do Documento -->
+                        <td class="px-4 py-2">
+                            <span>
+                                {% if document.validity %}
+                                    {{ document.validity }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </span>
+                        </td>
+                        <!-- Status de Validade -->
+                        <td class="px-4 py-2">
+                            <span class="{{ document.validity|get_validity_status }}">
+                                {% if document.validity %}
+                                    {{ document.validity|get_validity_status }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}

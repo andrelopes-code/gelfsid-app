@@ -108,6 +108,16 @@ form#changelist-search div input#searchbar {
     flex-wrap: nowrap;
     flex-direction: row;
 }
+p.date {
+    margin-top: 0;
+    display: flex;
+}
+p.date .datetimeshortcuts {
+    transform: translateY(0.45rem);
+}
+p.date input {
+    margin-top: 1px !important;
+}
 
 /*
     Adiciona um padding horizontal ao redor
@@ -246,7 +256,8 @@ select:focus,
     align-items: center;
 }
 
-.checkbox-row input[type="checkbox"] {
+.checkbox-row input[type="checkbox"],
+input[type="checkbox"] {
     width: fit-content;
     margin: 0 !important;
 }
@@ -277,7 +288,6 @@ label {
 }
 
 fieldset.module table {
-    table-layout: fixed;
     width: 100%;
     border-collapse: collapse;
 }
@@ -285,6 +295,7 @@ fieldset.module table {
 fieldset.module th,
 fieldset.module td {
     word-wrap: break-word;
+    vertical-align: middle;
     white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -300,6 +311,52 @@ fieldset.module select {
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/*
+    Campo de upload de arquivo
+*/
+.file-upload {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    max-width: 16rem;
+}
+.file-upload .clearable-file-input {
+    display: flex;
+    gap: 0;
+}
+.file-upload .clearable-file-input input {
+    width: fit-content !important;
+}
+.file-upload .clearable-file-input label {
+    margin-left: 0 !important;
+}
+.file-upload a {
+    font-size: 10px;
+    text-wrap: nowrap;
+}
+input[type="file"] {
+    transform: translateY(-0.1rem);
+}
+
+input[type="file"]::file-selector-button {
+    border-radius: 4px;
+    padding: 0 16px;
+    cursor: pointer;
+    margin-right: 0.8rem;
+    background-color: white;
+    border: 1px solid var(--border-color) !important;
+    min-height: 2rem !important;
+    transition: background-color 200ms;
+    color: var(--dark);
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #f3f4f6;
+}
+
+input[type="file"]::file-selector-button:active {
+    background-color: #e5e7eb;
 }
 
 /*

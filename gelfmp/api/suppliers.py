@@ -45,11 +45,11 @@ def get_suppliers(request: HttpRequest):
                     {
                         'id': document.id,
                         'name': document.name,
-                        'type': document.type,
-                        'filepath': document.filepath,
+                        'type': document.get_document_type_display(),
+                        'filepath': document.file.url,
                         'validity': document.validity,
                     }
-                    for document in supplier.get_documents()
+                    for document in supplier.get_visible_documents()
                 ],
                 'charcoal_recent_stats': charcoal_recent_stats,
             }

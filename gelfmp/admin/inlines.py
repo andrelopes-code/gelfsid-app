@@ -24,10 +24,11 @@ class DocumentInline(BaseTabularInline):
     extra = 1
 
     fields = (
+        'visible',
+        'document_type',
         'name',
-        'type',
         'validity',
-        'filepath',
+        'file',
     )
 
     verbose_name = 'Documento'

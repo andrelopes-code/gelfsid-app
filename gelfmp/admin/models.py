@@ -56,8 +56,9 @@ class BankDetailsAdmin(BaseModelAdmin):
 
 @admin.register(models.Document)
 class DocumentAdmin(BaseModelAdmin):
-    list_display = ('name', 'type', 'validity', 'supplier')
-    list_filter = ('type', 'supplier')
+    list_display = ('document_type', 'name', 'validity', 'supplier')
+    list_filter = ('document_type', 'supplier')
+    search_fields = ['name', 'supplier__corporate_name']
 
     fieldsets = (
         (
@@ -65,9 +66,11 @@ class DocumentAdmin(BaseModelAdmin):
             {
                 'fields': (
                     'supplier',
+                    'document_type',
+                    'visible',
                     'name',
-                    'type',
                     'validity',
+                    'file',
                 )
             },
         ),

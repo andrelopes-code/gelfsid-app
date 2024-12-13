@@ -1,10 +1,11 @@
+import os
 from datetime import date
 
 from django.db import models
 from django.db.models.query import QuerySet
 from django.forms import ValidationError
 
-from gelfmp.utils import validators
+from gelfmp.utils import dtutils, validators
 from gelfmp.utils.normalization import normalize_text_upper
 
 # ------------------ #
@@ -31,6 +32,7 @@ class ContactType(models.TextChoices):
     NEGOTIATION_RESP = 'accounting_responsible', 'Responsável do Setor Contábil'
     ACCOUNTING_RESP = 'negotiation_responsible', 'Responsável pela Negociação'
     NF_RESP = 'nf_responsible', 'Responsável pela Emissão de Notas Fiscais'
+    LOGISTICS_RESP = 'logistics_responsible', 'Reponsável Programação e Logística'
 
 
 class MonthType(models.IntegerChoices):
@@ -62,6 +64,18 @@ class MaterialType(models.TextChoices):
     FLUORITE = 'Fluorita', 'Fluorita'
     DOLOMITE = 'Dolomita', 'Dolomita'
     GRAPHITE = 'Grafite', 'Grafite'
+
+
+class DocumentType(models.TextChoices):
+    CTF = 'ctf', 'CADASTRO TÉCNICO FEDERAL'
+    LIC_AMBIENTAL = 'lic_ambiental', 'LICENÇA AMBIENTAL'
+    EXCEMPTION = 'exemption', 'DISPENSA'
+    REGIEF = 'reg_ief', 'REGISTRO IEF'
+    CAR = 'car', 'CADASTRO AMBIENTAL RURAL'
+    STATE_REGISTRATION = 'state_registration', 'INSCRIÇÃO ESTADUAL'
+    MUNICIPAL_REGISTRATION = 'municipal_registration', 'INSCRIÇÃO MUNICIPAL'
+    CNPJ_LOOKUP = 'cnpj_lookup', 'CONSULTA CNPJ'
+    OTHER = 'other', 'OUTRO'
 
 
 def year_choices():
@@ -146,15 +160,14 @@ class BankDetails(BaseModel):
 
 
 class Document(BaseModel):
-    name = models.CharField(max_length=80, verbose_name='Nome')
-    type = models.CharField(max_length=80, verbose_name='Tipo de Documento')
-    filepath = models.CharField(max_length=355, blank=True, null=True, verbose_name='Link do Arquivo')
-    validity = models.DateField(blank=True, null=True, verbose_name='Validade')
+    def document_upload_to(instance, filename):
+        return f'fornecedores/{instance.supplier.corporate_name}/documentos/{filename}'
 
-    def save(self, *args, **kwargs):
-        self.name = normalize_text_upper(self.name)
-        self.type = self.type.upper()
-        super().save(*args, **kwargs)
+    document_type = models.CharField(max_length=50, choices=DocumentType.choices, verbose_name='Tipo de Documento')
+    name = models.CharField(max_length=50, blank=True, verbose_name='Nome de Exibição')
+    file = models.FileField(upload_to=document_upload_to, max_length=255, verbose_name='Arquivo')
+    validity = models.DateField(blank=True, null=True, verbose_name='Validade')
+    visible = models.BooleanField(default=True, verbose_name='Visível')
 
     supplier = models.ForeignKey(
         'Supplier',
@@ -163,10 +176,49 @@ class Document(BaseModel):
         verbose_name='Fornecedor',
     )
 
+    @property
+    def filename(self):
+        return os.path.basename(self.file.name)
+
+    def delete(self, *args, **kwargs):
+        if os.path.isfile(self.file.path):
+            os.remove(self.file.path)
+
+        super().delete(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        # Deleta o documento antigo se caso ao
+        # atualizar seja um arquivo de mesmo nome
+        if self.pk:
+            try:
+                old_file = Document.objects.get(pk=self.pk).file
+                if old_file and old_file.name != self.file.name:
+                    if os.path.isfile(old_file.path):
+                        os.remove(old_file.path)
+            except Document.DoesNotExist:
+                pass
+
+        # Caso não seja informado um nome de exibição
+        # usar o próprio nome do arquivo
+        if not self.name:
+            self.name = self.filename
+
+        # Tenta extrair a data de validade do nome do
+        # arquivo caso ela não seja informada
+        if (
+            not self.validity
+            and self.document_type != DocumentType.EXCEMPTION
+            and self.document_type != DocumentType.OTHER
+        ):
+            self.validity = dtutils.extract_date_from_text(self.filename)
+
+        return super().save(*args, **kwargs)
+
     def __str__(self):
-        return f'{self.type} - {self.name}'
+        return f'{self.document_type} - {self.filename}'
 
     class Meta:
+        ordering = ['-created_at']
         verbose_name = 'Documento'
         verbose_name_plural = 'Documentos'
 
@@ -201,7 +253,7 @@ class CharcoalIQF(BaseModel):
         verbose_name_plural = 'IQFs de Fornecedores de Carvão'
 
 
-class CharcoalMonthlyPlan(models.Model):
+class CharcoalMonthlyPlan(BaseModel):
     supplier = models.ForeignKey(
         'Supplier',
         on_delete=models.CASCADE,
@@ -337,11 +389,8 @@ class Supplier(BaseModel):
         blank=True,
     )
 
-    def get_documents(self) -> QuerySet[Document]:
-        return self.documents.all()
-
-    def get_contacts(self) -> QuerySet[Contact]:
-        return self.contacts.all()
+    def get_visible_documents(self) -> QuerySet[Document]:
+        return self.documents.filter(visible=True)
 
     def get_iqfs(self) -> models.Manager[CharcoalIQF]:
         return self.iqfs

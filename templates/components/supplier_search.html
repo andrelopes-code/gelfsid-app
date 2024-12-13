@@ -1,6 +1,6 @@
 <div id="supplier-search"
      class="top-0 left-0 z-50 fixed flex-col justify-center items-center hidden bg-dark/50 opacity-0 backdrop-blur-[2px] w-screen h-screen transition-all duration-150 ease-out">
-    <form class="w-full max-w-[40%] h-fit max-h-[60%]">
+    <form class="w-full max-w-[40%] h-fit max-h-[60%]" onsubmit="return false">
         <input hx-target="#supplier-search-result"
                hx-get="{% url 'supplier_search_htmx' %}"
                name="q"
@@ -28,11 +28,16 @@
     const searchButton = document.getElementById('supplier-search-button');
     const searchOverlay = document.getElementById('supplier-search');
     const searchInput = searchOverlay.querySelector('input');
+    const searchResult = document.getElementById('supplier-search-result');
 
     searchButton.onclick = () => {
+        searchInput.value = '';
+        searchResult.innerHTML = '';
+
         searchOverlay.classList.remove('hidden');
         searchOverlay.classList.add('flex');
         setTimeout(() => searchOverlay.classList.add('opacity-100'), 10);
+
         searchInput.focus();
     };
 
@@ -40,4 +45,17 @@
         searchOverlay.classList.remove('opacity-100');
         setTimeout(() => searchOverlay.classList.add('hidden'), 150);
     };
+
+    searchInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            const results = searchResult.querySelectorAll('li');
+
+            if (results.length === 1) {
+                const link = results[0].querySelector('a');
+                if (link) {
+                    window.open(link.href, '_blank');
+                }
+            }
+        }
+    });
 </script>
