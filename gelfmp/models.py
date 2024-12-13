@@ -164,9 +164,27 @@ class Document(BaseModel):
         return f'fornecedores/{instance.supplier.corporate_name}/documentos/{filename}'
 
     document_type = models.CharField(max_length=50, choices=DocumentType.choices, verbose_name='Tipo de Documento')
-    name = models.CharField(max_length=50, blank=True, verbose_name='Nome de Exibição')
-    file = models.FileField(upload_to=document_upload_to, max_length=255, verbose_name='Arquivo')
-    validity = models.DateField(blank=True, null=True, verbose_name='Validade')
+    name = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name='Nome de Exibição',
+        help_text='Caso não informado, o nome do arquivo será usado para preencher este campo.',
+    )
+    file = models.FileField(
+        upload_to=document_upload_to,
+        max_length=255,
+        verbose_name='Arquivo',
+        validators=[validators.validate_max_file_size(10)],
+    )
+    validity = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Validade',
+        help_text=(
+            'Caso não informado e o nome do arquivo contém a data, ela será usada para preencher este campo.\n'
+            'Exemplo: nome do arquivo CTF_02.05.2020.pdf, a data 02/05/2020 será usada.'
+        ),
+    )
     visible = models.BooleanField(default=True, verbose_name='Visível')
 
     supplier = models.ForeignKey(

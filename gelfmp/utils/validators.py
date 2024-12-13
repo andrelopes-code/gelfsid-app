@@ -35,3 +35,13 @@ def validate_latitude(value):
 def validate_longitude(value):
     if value < -180 or value > 180:
         raise ValidationError('Longitude deve estar entre -180 e 180 graus.')
+
+
+def validate_max_file_size(mbsize):
+    def validate_file_size(file):
+        bsize = mbsize * 1024 * 1024
+
+        if file.size > bsize:
+            raise ValidationError(f'O arquivo não pode exceder {mbsize}MB.')
+
+    return validate_file_size
