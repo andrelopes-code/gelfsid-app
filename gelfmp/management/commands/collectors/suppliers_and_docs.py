@@ -113,6 +113,7 @@ def save_suppliers(suppliers: list[SupplierData]):
             if not supplier.environmental_permit.name:
                 raise ValueError(f'environmental permit not found for: {supplier.corporate_name}')
 
+            # ? Ignorar documentos
             # create_or_update_document(db_supplier, supplier.environmental_permit, ENVIRONMENTAL_PERMIT_TYPE)
             # create_or_update_document(db_supplier, supplier.ctf, CTF_TYPE)
             # create_or_update_document(db_supplier, supplier.regief, REGIEF_TYPE)
