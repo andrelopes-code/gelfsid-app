@@ -204,18 +204,7 @@ class Document(BaseModel):
 
         super().delete(*args, **kwargs)
 
-    def save(self, *args, **kwargs):
-        # Deleta o documento antigo se caso ao
-        # atualizar seja um arquivo de mesmo nome
-        if self.pk:
-            try:
-                old_file = Document.objects.get(pk=self.pk).file
-                if old_file and old_file.name != self.file.name:
-                    if os.path.isfile(old_file.path):
-                        os.remove(old_file.path)
-            except Document.DoesNotExist:
-                pass
-
+    def clean(self):
         # Caso não seja informado um nome de exibição
         # usar o próprio nome do arquivo
         if not self.name:
@@ -229,6 +218,20 @@ class Document(BaseModel):
             and self.document_type != DocumentType.OTHER
         ):
             self.validity = dtutils.extract_date_from_text(self.filename)
+
+        return super().clean()
+
+    def save(self, *args, **kwargs):
+        # Deleta o documento antigo se caso ao
+        # atualizar seja um arquivo de mesmo nome
+        if self.pk:
+            try:
+                old_file = Document.objects.get(pk=self.pk).file
+                if old_file and old_file.name != self.file.name:
+                    if os.path.isfile(old_file.path):
+                        os.remove(old_file.path)
+            except Document.DoesNotExist:
+                pass
 
         return super().save(*args, **kwargs)
 
