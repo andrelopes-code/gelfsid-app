@@ -76,7 +76,7 @@ class DocumentAdmin(BaseModelAdmin):
         ),
         (
             '',
-            {'fields': tuple()},
+            {'fields':  ('geojson',)},
         ),
     )
 

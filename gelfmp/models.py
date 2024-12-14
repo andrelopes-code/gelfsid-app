@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.forms import ValidationError
 
+from gelfmp.services import geojson
 from gelfmp.utils import dtutils, validators
 from gelfmp.utils.normalization import normalize_text_upper, normalize_to_numbers
 
@@ -75,6 +76,7 @@ class DocumentType(models.TextChoices):
     STATE_REGISTRATION = 'state_registration', 'INSCRIÇÃO ESTADUAL'
     MUNICIPAL_REGISTRATION = 'municipal_registration', 'INSCRIÇÃO MUNICIPAL'
     CNPJ_LOOKUP = 'cnpj_lookup', 'CONSULTA CNPJ'
+    SHAPEFILE = 'shapefile', 'SHAPEFILE'
     OTHER = 'other', 'OUTRO'
 
 
@@ -176,6 +178,13 @@ class Document(BaseModel):
         verbose_name='Arquivo',
         validators=[validators.validate_max_file_size],
     )
+
+    geojson = models.JSONField(
+        blank=True,
+        null=True,
+        verbose_name='GeoJSON',
+    )
+
     validity = models.DateField(
         blank=True,
         null=True,
@@ -219,6 +228,21 @@ class Document(BaseModel):
         ):
             self.validity = dtutils.extract_date_from_text(self.filename)
 
+        # Se o documento for um Shapefile obtem o GeoJSON
+        # convertendo-o e armazenando no campo geojson
+        if self.document_type == DocumentType.SHAPEFILE:
+            if self.file:
+                try:
+                    if self.file.name.lower().endswith('.zip'):
+                        self.geojson = geojson.from_shapefile_zip(self.file)
+                    elif self.file.name.lower().endswith('.shp'):
+                        self.geojson = geojson.from_shapefile(self.file)
+                    else:
+                        raise ValidationError('O arquivo enviado deve ser um ZIP ou Shapefile.')
+
+                except ValidationError as e:
+                    raise e
+
         return super().clean()
 
     def save(self, *args, **kwargs):
@@ -233,7 +257,7 @@ class Document(BaseModel):
             except Document.DoesNotExist:
                 pass
 
-        return super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.document_type} - {self.filename}'
