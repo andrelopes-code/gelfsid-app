@@ -20,13 +20,11 @@
     background-color: var(--color-bg);
 }
 
-/* Tabela */
 table {
     width: 100%;
     border-collapse: collapse;
 }
 
-/* Cabeçalho da tabela */
 thead {
     background-color: var(--color-header-bg);
 }
@@ -50,7 +48,6 @@ th a:hover {
     color: var(--color-link-hover);
 }
 
-/* Corpo da tabela */
 tbody tr {
     transition: background-color 0.2s;
 }

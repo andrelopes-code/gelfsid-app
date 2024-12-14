@@ -70,3 +70,9 @@ export const STATE_CODE_MAP: StateCodeMapping = {
     GO: 52,
     DF: 53,
 };
+
+/*
+this.satelliteLayer = L.tileLayer("http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
+    subdomains: ["mt0", "mt1", "mt2", "mt3"],
+});
+*/

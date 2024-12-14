@@ -1,0 +1,46 @@
+.state-layer,
+.city-layer {
+    transition: filter 0.3s ease;
+}
+
+.state-layer:hover {
+    fill: var(--weak-stroke-color) !important;
+}
+
+.city-layer:hover {
+    filter: brightness(1.5);
+}
+
+.texthover {
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+}
+
+.texthover:hover {
+    height: auto;
+    text-wrap: pretty;
+}
+
+.custom-tooltip {
+    background-color: var(--dark-200) !important;
+    border-color: var(--dark-200) !important;
+    color: #a1a1a1 !important;
+}
+
+.custom-tooltip::before {
+    border-top-color: var(--dark-200) !important;
+}
+
+.custom-tooltip-gelf {
+    background-color: var(--dark-200) !important;
+    border-color: var(--dark-200) !important;
+    opacity: 1 !important;
+    font-size: 0.7rem !important;
+    font-weight: bold;
+    color: var(--primary-color) !important;
+}
+
+.custom-tooltip-gelf::before {
+    border-top-color: var(--dark-200) !important;
+}

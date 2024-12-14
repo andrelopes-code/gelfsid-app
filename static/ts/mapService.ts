@@ -27,22 +27,85 @@ class MapService {
 
     private styleCache: Map<string, L.PathOptions> = new Map();
 
+    private inSatetelliteMode = false;
     private citySuppliers: CitySuppliers = {};
     private citiesGeojsonLayer: L.GeoJSON | null = null;
     private currentStateCode: number | null = null;
     private currentType: string | null = null;
+
     private activeCityLayers: Set<L.Layer> = new Set();
+    private activeShapefileLayers: Set<L.Layer> = new Set();
 
     private MAX_ZOOM = 18;
+    private MIN_ZOOM = 4;
+    private MAX_BOUNDS = L.latLngBounds(L.latLng(180, -180), L.latLng(-90, 180));
+    private GELF_COORDINATES = L.latLng(-19.43852652, -44.34155513);
+
+    private satelliteLayer: L.TileLayer | null = null;
 
     constructor() {
         this.map = L.map("map", {
             zoomControl: false,
             attributionControl: false,
             maxZoom: this.MAX_ZOOM,
+            minZoom: this.MIN_ZOOM,
+            maxBounds: this.MAX_BOUNDS,
         });
 
-        this.map.setView(BRAZIL_COORDINATES, 4);
+        this.satelliteLayer = L.tileLayer(
+            "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            {
+                attribution: '&copy; <a href="https://www.esri.com/">Esri</a>',
+            }
+        );
+
+        this.map.setView(BRAZIL_COORDINATES, this.MIN_ZOOM);
+        this.map.on("zoomend", this.onZoomChange);
+    }
+
+    private onZoomChange = () => {
+        if (this.map.getZoom() > 10) {
+            if (!this.map.hasLayer(this.satelliteLayer!)) {
+                this.satelliteLayer!.addTo(this.map);
+                this.updateGeoJSONStyleForSatellite(true);
+                this.addAdditionalLayers(true);
+                this.inSatetelliteMode = true;
+            }
+        } else {
+            if (this.map.hasLayer(this.satelliteLayer!)) {
+                this.map.removeLayer(this.satelliteLayer!);
+                this.updateGeoJSONStyleForSatellite(false);
+                this.addAdditionalLayers(false);
+                this.inSatetelliteMode = false;
+            }
+        }
+    };
+
+    private updateGeoJSONStyleForSatellite(showSatellite: boolean) {
+        if (this.citiesGeojsonLayer) {
+            this.citiesGeojsonLayer.setStyle((feature: any) => {
+                const cityKey = getCityKey(this.currentStateCode!, feature.properties.name);
+                if (showSatellite) {
+                    return {
+                        color: "transparent",
+                        interactive: false,
+                        weight: 0,
+                        fillOpacity: 0,
+                        className: "",
+                    };
+                } else {
+                    return this.cityStyleFunction(feature);
+                }
+            });
+        }
+    }
+
+    private async addAdditionalLayers(showSatellite: boolean) {
+        if (showSatellite) {
+            // Adiciona shapefiles
+        } else {
+            // Remove shapefiles
+        }
     }
 
     async loadGeoJSON(type: "states" | "cities", uf: string | null = null) {
@@ -71,6 +134,7 @@ class MapService {
 
     private calculateCityStyle(cityKey: string, currentType: string | null) {
         const cacheKey = `${cityKey}-${currentType}`;
+
         if (this.styleCache.has(cacheKey)) {
             return this.styleCache.get(cacheKey)!;
         }
@@ -98,7 +162,6 @@ class MapService {
                     break;
                 case "Todos":
                     base.fillColor = ORANGE_COLOR;
-                    break;
             }
         }
 
@@ -168,11 +231,16 @@ class MapService {
                     const isHostCity = cityKey === HOST_CITY_KEY;
 
                     if (isHostCity) {
-                        layer.bindTooltip(HOST_CITY_TOOLTIP_TEXT, {
+                        const tooltipLatLng = this.GELF_COORDINATES;
+
+                        const tooltip = L.tooltip({
                             permanent: true,
                             direction: "top",
                             className: "custom-tooltip-gelf",
-                        });
+                        }).setContent(HOST_CITY_TOOLTIP_TEXT);
+
+                        tooltip.setLatLng(tooltipLatLng).addTo(this.map);
+                        (layer as any).tooltip = tooltip;
                     }
 
                     this.activeCityLayers.add(layer);
@@ -185,7 +253,7 @@ class MapService {
                 const cityKey = getCityKey(stateCode, feature.properties.name);
 
                 if (e.type === "mouseover" && feature.properties) {
-                    if (cityKey === HOST_CITY_KEY) return;
+                    if (cityKey === HOST_CITY_KEY || this.inSatetelliteMode) return;
 
                     const tooltip = L.tooltip({
                         permanent: false,
@@ -213,6 +281,7 @@ class MapService {
                     }
                 } else if (e.type === "click") {
                     if (feature.properties) {
+                        layer._managedTooltip.tooltip.addTo(this.map);
                         supplierService.openDetails(cityKey, this.currentType);
                     }
                 }

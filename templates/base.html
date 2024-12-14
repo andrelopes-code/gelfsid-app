@@ -24,14 +24,13 @@
             <link rel="shortcut icon"
                   href="{% static 'assets/favicon.ico' %}"
                   type="image/x-icon" />
-            {% block extrahead %}
-            {% endblock extrahead %}
+            <!-- Scripts -->
             <script defer type="module" src="{% static 'dist/base.js' %}"></script>
             <script src="{% static 'js/htmx.min.js' %}"></script>
             <script src="{% static 'js/plotly-2.35.2.min.js' %}"></script>
             <script src="https://unpkg.com/@phosphor-icons/web"></script>
-            {% block scripts %}
-            {% endblock scripts %}
+            {% block extrahead %}
+            {% endblock extrahead %}
       </head>
       <body class="w-screen h-screen">
             <!-- Alerta de Tamanho de Tela -->

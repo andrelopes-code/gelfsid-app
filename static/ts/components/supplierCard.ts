@@ -105,6 +105,8 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
         ""
     );
 
+    const hasDocuments = supplier.documents.length > 0;
+
     return html`
         <div class="p-3 w-full text-slate-200" id="supplier-card-template">
             <div
@@ -159,15 +161,19 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                     </div>
                 </div>
                 ${charcoalStats(supplier)}
-                <div class="mt-5 w-full">
-                    <div class="bg-black bg-opacity-20 shadow-sm rounded-md overflow-hidden">
-                        <table class="w-full">
-                            <tbody>
-                                ${documentRows}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                ${hasDocuments
+                    ? html`
+                          <div class="mt-5 w-full">
+                              <div class="bg-black bg-opacity-20 shadow-sm rounded-md overflow-hidden">
+                                  <table class="w-full">
+                                      <tbody>
+                                          ${documentRows}
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                      `
+                    : ""}
             </div>
         </div>
     `;
