@@ -231,6 +231,14 @@ select:focus,
 }
 
 /*
+    Permite que campos de modelos relacionados ocupe
+    toda a largura disponível, e não se limitem a 1000px
+*/
+.admin-interface .related-widget-wrapper {
+    max-width: none;
+}
+
+/*
     Ajusta o layout dos campos de formulário para ocupar 100% da largura disponível,
     garantindo que os campos se ajustem corretamente.
 */
@@ -256,6 +264,18 @@ select:focus,
     align-items: center;
 }
 
+/*
+    Adiciona o simbolo de 'required'
+    aos labels do formulário
+*/
+label.required::after {
+    content: " *" !important;
+    color: var(--primary-color) !important;
+    font-size: 0.8em !important;
+    font-style: italic !important;
+    margin-bottom: 10px !important;
+}
+
 .checkbox-row input[type="checkbox"],
 input[type="checkbox"] {
     width: fit-content;
@@ -271,6 +291,22 @@ select {
 
 label {
     width: fit-content !important;
+}
+
+/*
+    Alinha horizontalmente apenas os campos
+    agrupados em linha (fieldsets)
+*/
+.form-row:has(> .fieldBox:nth-of-type(2)) {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+.form-row:has(> .fieldBox:nth-of-type(2)) .fieldBox {
+    width: 100%;
 }
 
 .form-row {

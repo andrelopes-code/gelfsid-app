@@ -6,7 +6,7 @@ from django.db.models.query import QuerySet
 from django.forms import ValidationError
 
 from gelfmp.utils import dtutils, validators
-from gelfmp.utils.normalization import normalize_text_upper
+from gelfmp.utils.normalization import normalize_text_upper, normalize_to_numbers
 
 # ------------------ #
 #  BASE MODEL CLASS  #
@@ -362,11 +362,12 @@ class Supplier(BaseModel):
     state = models.ForeignKey(State, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Estado')
     city = models.ForeignKey(City, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Cidade')
     cep = models.CharField(
-        max_length=8,
+        max_length=10,
         validators=[validators.validate_cep],
         help_text='Insira apenas os números.',
         verbose_name='CEP',
     )
+
     latitude = models.DecimalField(
         max_digits=11,
         decimal_places=8,
@@ -388,10 +389,9 @@ class Supplier(BaseModel):
 
     cpf_cnpj = models.CharField(
         unique=True,
-        max_length=14,
+        max_length=18,
         validators=[validators.validate_cpf_cnpj],
         verbose_name='CPF ou CNPJ',
-        help_text='Insira apenas os números.',
     )
 
     observations = models.TextField(
@@ -417,7 +417,12 @@ class Supplier(BaseModel):
         return self.iqfs
 
     def save(self, *args, **kwargs):
+        # Normaliza os campos para evitar inconsistências
         self.corporate_name = normalize_text_upper(self.corporate_name)
+        self.cpf_cnpj = normalize_to_numbers(self.cpf_cnpj)
+        self.address = normalize_text_upper(self.address)
+        self.cep = normalize_to_numbers(self.cep)
+
         return super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
