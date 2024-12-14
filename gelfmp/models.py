@@ -174,7 +174,7 @@ class Document(BaseModel):
         upload_to=document_upload_to,
         max_length=255,
         verbose_name='Arquivo',
-        validators=[validators.validate_max_file_size(10)],
+        validators=[validators.validate_max_file_size],
     )
     validity = models.DateField(
         blank=True,
