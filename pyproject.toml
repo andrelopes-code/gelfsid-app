@@ -23,7 +23,6 @@ django-extensions = "^3.2.3"
 django-admin-interface = "^0.29.2"
 django-tables2 = "^2.7.0"
 geopandas = "^1.0.1"
-fiona = "^1.10.1"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -1,6 +1,8 @@
+import re
+
 from django.http import HttpRequest, JsonResponse
 
-from gelfmp.models import CharcoalEntry, Supplier
+from gelfmp.models import CharcoalEntry, Document, DocumentType, Supplier
 
 
 def get_suppliers(request: HttpRequest):
@@ -59,3 +61,25 @@ def get_suppliers(request: HttpRequest):
         return JsonResponse(data, safe=False)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
+def get_state_shapefiles(request: HttpRequest, state):
+    if not re.match(r'^[A-Z]{2}$', state):
+        return JsonResponse({'error': 'Invalid state code.'}, status=400)
+
+    documents = Document.objects.filter(document_type=DocumentType.SHAPEFILE, supplier__state=state.upper()).values(
+        'id', 'name', 'supplier__corporate_name', 'geojson'
+    )
+
+    return JsonResponse(
+        [
+            {
+                'supplier_name': doc.pop('supplier__corporate_name'),
+                'id': doc.pop('id'),
+                'name': doc.pop('name'),
+                'geojson': doc.pop('geojson'),
+            }
+            for doc in documents
+        ],
+        safe=False,
+    )

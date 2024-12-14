@@ -53,3 +53,10 @@ export interface Supplier {
 export interface CitySuppliers {
     [key: string]: Supplier[];
 }
+
+export interface ShapefileData {
+    id: number;
+    name: string;
+    supplier_name: any;
+    geojson: string;
+}

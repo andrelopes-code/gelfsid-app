@@ -183,6 +183,7 @@ class Document(BaseModel):
         blank=True,
         null=True,
         verbose_name='GeoJSON',
+        help_text='Este campo é gerado automaticamente ao subir um Shapefile e não deve ser alterado manualmente.'
     )
 
     validity = models.DateField(
@@ -194,6 +195,7 @@ class Document(BaseModel):
             'Exemplo: nome do arquivo CTF_02.05.2020.pdf, a data 02/05/2020 será usada.'
         ),
     )
+
     visible = models.BooleanField(default=True, verbose_name='Visível')
 
     supplier = models.ForeignKey(
@@ -208,8 +210,10 @@ class Document(BaseModel):
         return os.path.basename(self.file.name)
 
     def delete(self, *args, **kwargs):
-        if os.path.isfile(self.file.path):
+        try:
             os.remove(self.file.path)
+        except FileNotFoundError:
+            pass
 
         super().delete(*args, **kwargs)
 

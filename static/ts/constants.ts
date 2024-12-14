@@ -7,6 +7,7 @@ interface GeoJsonConfig {
 
 interface ApiConfig {
     suppliers: string;
+    shapefiles: (state: string) => string;
 }
 
 interface AppConfig {
@@ -20,14 +21,15 @@ export const APP_CONFIG: AppConfig = {
         cities: "static/data/geojson/geojs-{uf}-mun.json",
     },
     api: {
-        suppliers: "/api/suppliers/",
+        suppliers: "api/suppliers/",
+        shapefiles: (state) => `api/shapefiles/${state}`,
     },
 };
 
 export const DEFAULT_MATERIAL_TYPE = "Todos";
 export const BRAZIL_COORDINATES: [number, number] = [-14.235, -51.925];
 export const HOST_CITY_COORDINATES = [-19.4457253885, -44.2600188074];
-export const HOST_CITY_TOOLTIP_TEXT = "GELF Sete Lagoas";
+export const HOST_CITY_TOOLTIP_TEXT = "GELF";
 export const HOST_CITY_KEY = "31-Sete Lagoas";
 export const html = String.raw;
 
@@ -70,9 +72,3 @@ export const STATE_CODE_MAP: StateCodeMapping = {
     GO: 52,
     DF: 53,
 };
-
-/*
-this.satelliteLayer = L.tileLayer("http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
-    subdomains: ["mt0", "mt1", "mt2", "mt3"],
-});
-*/

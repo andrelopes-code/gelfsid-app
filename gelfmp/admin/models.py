@@ -60,6 +60,21 @@ class DocumentAdmin(BaseModelAdmin):
     list_filter = ('document_type', 'supplier')
     search_fields = ['name', 'supplier__corporate_name']
 
+    actions = ['delete_files']
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+
+    def delete_files(self, request, queryset):
+        for obj in queryset:
+            obj.delete()
+        self.message_user(request, 'Documentos excluídos com sucesso!')
+
+    delete_files.short_description = 'Excluir Documentos selecionados'
+
     fieldsets = (
         (
             'Documento',
@@ -76,7 +91,7 @@ class DocumentAdmin(BaseModelAdmin):
         ),
         (
             '',
-            {'fields':  ('geojson',)},
+            {'fields': ('geojson',)},
         ),
     )
 
