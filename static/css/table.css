@@ -1,0 +1,108 @@
+:root {
+    --color-border: #e0e0e0;
+    --color-bg: #fff;
+    --color-header-bg: #f9f9f9;
+    --color-text: #333;
+    --color-link: #007bff;
+    --color-link-hover: #0056b3;
+    --color-row-hover: #eaf6ff;
+    --color-row-alt: #f7f7f7;
+    --color-border-bottom: #ddd;
+    --color-pagination-bg-active: #007bff;
+    --color-pagination-text-active: #fff;
+    --color-pagination-border: #ddd;
+}
+
+.table-container {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-bg);
+}
+
+/* Tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Cabeçalho da tabela */
+thead {
+    background-color: var(--color-header-bg);
+}
+
+th {
+    text-align: left;
+    padding: 12px;
+    font-weight: bold;
+    color: var(--color-text);
+    border-bottom: 2px solid var(--color-border-bottom);
+}
+
+th a {
+    text-decoration: none;
+    color: var(--color-link);
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+th a:hover {
+    color: var(--color-link-hover);
+}
+
+/* Corpo da tabela */
+tbody tr {
+    transition: background-color 0.2s;
+}
+
+tbody tr:nth-child(even) {
+    background-color: var(--color-row-alt);
+}
+
+tbody tr:hover {
+    background-color: var(--color-row-hover);
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid var(--color-border-bottom);
+    color: var(--color-text);
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    padding: 10px 0;
+    margin: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: var(--color-link);
+    border: 1px solid var(--color-pagination-border);
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination a:hover {
+    background-color: var(--color-link);
+    color: var(--color-pagination-text-active);
+}
+
+.pagination .active a {
+    background-color: var(--color-pagination-bg-active);
+    color: var(--color-pagination-text-active);
+    border-color: var(--color-pagination-bg-active);
+    pointer-events: none;
+}
+
+.pagination .next a {
+    font-weight: bold;
+}

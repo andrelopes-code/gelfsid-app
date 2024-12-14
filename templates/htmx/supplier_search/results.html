@@ -1,6 +1,6 @@
 {% if suppliers %}
     {% for supplier in suppliers %}
-        <li class="bg-dark-100 shadow-sm p-4 rounded-md w-full h-fit list-none">
+        <li class="bg-dark-100 shadow-sm px-4 py-3 rounded-md w-full h-fit list-none">
             <a href="{% url 'supplier_details'  id=supplier.id %}"
                class="hover:text-primary transition-colors duration-200">
                 <div class="flex justify-between items-center gap-4 w-full">

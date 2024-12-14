@@ -24,13 +24,12 @@
             <link rel="shortcut icon"
                   href="{% static 'assets/favicon.ico' %}"
                   type="image/x-icon" />
-            <!-- Scripts -->
+            {% block extrahead %}
+            {% endblock extrahead %}
             <script defer type="module" src="{% static 'dist/base.js' %}"></script>
+            <script src="{% static 'js/htmx.min.js' %}"></script>
+            <script src="{% static 'js/plotly-2.35.2.min.js' %}"></script>
             <script src="https://unpkg.com/@phosphor-icons/web"></script>
-            <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
-            <script src="https://unpkg.com/htmx.org@2.0.3"
-                    integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
-                    crossorigin="anonymous"></script>
             {% block scripts %}
             {% endblock scripts %}
       </head>

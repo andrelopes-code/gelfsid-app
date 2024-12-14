@@ -1,3 +1,5 @@
+import random
+
 import openpyxl
 from django.db import transaction
 
@@ -104,6 +106,7 @@ def save_suppliers(suppliers: list[SupplierData]):
                     'state': db_state,
                     'material_type': supplier.material_type,
                     'cpf_cnpj': supplier.cpf_cnpj,
+                    'cep': f'{random.randint(10000, 99999)}-{random.randint(100, 999)}',
                 },
             )
 

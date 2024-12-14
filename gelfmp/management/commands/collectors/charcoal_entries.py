@@ -84,7 +84,6 @@ def process_data(corporate_name, group):
 
 
 def collect():
-    """Coleta e processa os dados, solicitando ao usuário correspondências de fornecedores quando necessário"""
     suppliers_names = list(Supplier.objects.values_list('corporate_name', flat=True))
     if not suppliers_names:
         raise ValueError('Não existem fornecedores no banco de dados')
@@ -102,6 +101,7 @@ def collect():
 
         # Pega a melhor correspondência (a primeira)
         similarity, supplier_name = best_matches[0]
+        rich.print(f'Similaridade: {similarity:.2f} - Fornecedor: {supplier_name}: {entry_supplier_name}')
 
         if similarity >= MINIMUM_SIMILARITY:
             process_data(supplier_name, group)
