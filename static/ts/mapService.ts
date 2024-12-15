@@ -16,43 +16,23 @@ import type { Cache, CitySuppliers, ShapefileData } from "./types";
 import { supplierService } from "./supplierService";
 import { getCityKey } from "./utils";
 
-function createTooltipContent(properties: any, shapefile: any) {
-    const municipio = properties?.municipio ?? "Não informado";
-    const estado = properties?.estado ?? "Não informado";
-    const recibo = properties?.recibo ?? "Não informado";
-    const area = properties?.area ? `${properties.area} m²` : "Não informada";
-
-    const municipioAndEstado = municipio && estado ? ` - ${municipio}, ${estado}` : "";
-
-    return `
-        <div style="font-family: Arial, sans-serif; font-size: 12px;"  class="text-center">
-            <div style="font-weight: bold; font-size: 14px; margin-bottom: 8px;">
-                ${shapefile.name}${municipioAndEstado}
-            </div>
-            <div style="margin-bottom: 6px;" class="flex gap-4 justify-between w-full">
-                <strong>Fornecedor:</strong> ${shapefile.supplier_name || "Não informado"}
-            </div>
-            <div style="margin-bottom: 6px;"  class="flex gap-4 justify-between w-full">
-                <strong>Recibo:</strong> ${recibo}
-            </div>
-            <div  class="flex gap-4 justify-between w-full">
-                <strong>Área:</strong> ${area}
-            </div>
-        </div>
-    `;
-}
-
 class MapService {
-    private map: L.Map;
+    private MAX_ZOOM = 17;
+    private MIN_ZOOM = 4;
+    private SATELLITE_ZOOM = 10;
+    private MAX_BOUNDS = L.latLngBounds(L.latLng(180, -180), L.latLng(-90, 180));
+    private GELF_COORDINATES = L.latLng(-19.43852652, -44.34155513);
+
+    private map!: L.Map;
+    private gelfTooltip!: L.Tooltip;
+    private satelliteLayer!: L.TileLayer;
 
     private cache: Cache = {
         geojson: new Map(),
         suppliers: null,
         currentLayer: null,
     };
-
-    private styleCache: Map<string, L.PathOptions> = new Map();
-
+    private styleCache = new Map<string, L.PathOptions>();
     private satelliteMode = false;
     private citySuppliers: CitySuppliers = {};
     private currentStateCode: number | null = null;
@@ -60,19 +40,16 @@ class MapService {
     private currentType: string | null = null;
 
     private citiesGeojsonLayer: L.GeoJSON | null = null;
-    private activeCityLayers: Set<L.Layer> = new Set();
-    private activeShapefileLayers: Set<L.Layer> = new Set();
-    private gelfTooltip: L.Tooltip;
-
-    private MAX_ZOOM = 18;
-    private MIN_ZOOM = 4;
-    private SATELLITE_ZOOM = 10;
-    private MAX_BOUNDS = L.latLngBounds(L.latLng(180, -180), L.latLng(-90, 180));
-    private GELF_COORDINATES = L.latLng(-19.43852652, -44.34155513);
-
-    private satelliteLayer: L.TileLayer | null = null;
+    private activeCityLayers = new Set<L.Layer>();
+    private activeShapefileLayers = new Set<L.Layer>();
 
     constructor() {
+        this.initializeMap();
+        this.initializeSatelliteLayer();
+        this.initializeGelfTooltip();
+    }
+
+    private initializeMap() {
         this.map = L.map("map", {
             zoomControl: false,
             attributionControl: false,
@@ -80,28 +57,26 @@ class MapService {
             minZoom: this.MIN_ZOOM,
             maxBounds: this.MAX_BOUNDS,
         });
+        this.map.setView(BRAZIL_COORDINATES, this.MIN_ZOOM);
+        this.map.on("zoomend", this.onZoomChange);
+    }
 
-        this.gelfTooltip = L.tooltip({
-            permanent: true,
-            direction: "top",
-            className: "custom-tooltip custom-tooltip-gelf",
-        }).setContent(HOST_CITY_TOOLTIP_TEXT);
-
-        this.gelfTooltip.setLatLng(this.GELF_COORDINATES);
-
+    private initializeSatelliteLayer() {
         this.satelliteLayer = L.tileLayer(
             "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
             {
                 attribution: '&copy; <a href="https://www.esri.com/">Esri</a>',
             }
         );
+    }
 
-        // this.satelliteLayer = L.tileLayer("http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
-        //     subdomains: ["mt0", "mt1", "mt2", "mt3"],
-        // });
-
-        this.map.setView(BRAZIL_COORDINATES, this.MIN_ZOOM);
-        this.map.on("zoomend", this.onZoomChange);
+    private initializeGelfTooltip() {
+        this.gelfTooltip = L.tooltip({
+            permanent: true,
+            direction: "top",
+            className: "custom-tooltip custom-tooltip-gelf",
+        }).setContent(HOST_CITY_TOOLTIP_TEXT);
+        this.gelfTooltip.setLatLng(this.GELF_COORDINATES);
     }
 
     private onZoomChange = () => {
@@ -111,13 +86,7 @@ class MapService {
                 a camada de satelite deve ser adicionada juntamente
                 com os dados das propriedades (shapefiles)
             */
-            if (!this.map.hasLayer(this.satelliteLayer!)) {
-                this.satelliteLayer!.addTo(this.map);
-                this.updateGeoJSONStyleForSatelliteMode(true);
-                this.addShapefileLayers(true);
-
-                this.satelliteMode = true;
-            }
+            this.enableSatelliteMode();
         } else {
             /*
                 Caso o zoom seja menor que this.SATELLITE_ZOOM,
@@ -125,15 +94,27 @@ class MapService {
                 com os dados das propriedades (shapefiles) e as
                 camadas anteriores devem ser visíveis novamente
             */
-            if (this.map.hasLayer(this.satelliteLayer!)) {
-                this.map.removeLayer(this.satelliteLayer!);
-                this.updateGeoJSONStyleForSatelliteMode(false);
-                this.addShapefileLayers(false);
-
-                this.satelliteMode = false;
-            }
+            this.disableSatelliteMode();
         }
     };
+
+    private enableSatelliteMode() {
+        if (!this.map.hasLayer(this.satelliteLayer!)) {
+            this.satelliteLayer!.addTo(this.map);
+            this.updateGeoJSONStyleForSatelliteMode(true);
+            this.addShapefileLayers(true);
+            this.satelliteMode = true;
+        }
+    }
+
+    private disableSatelliteMode() {
+        if (this.map.hasLayer(this.satelliteLayer!)) {
+            this.map.removeLayer(this.satelliteLayer!);
+            this.updateGeoJSONStyleForSatelliteMode(false);
+            this.addShapefileLayers(false);
+            this.satelliteMode = false;
+        }
+    }
 
     private updateGeoJSONStyleForSatelliteMode(showSatellite: boolean) {
         if (this.citiesGeojsonLayer) {
@@ -162,53 +143,73 @@ class MapService {
 
     private async addShapefileLayers(showSatellite: boolean) {
         const currentState = this.currentStateFeature?.id;
-
         if (showSatellite && currentState) {
             const shapefiles: ShapefileData[] = await this.loadGeoJSON("shapefiles", currentState);
-
-            for (const shapefile of shapefiles) {
-                const geojson = JSON.parse(shapefile.geojson);
-
-                const layer = L.geoJSON(geojson, {
-                    style: {
-                        color: GREEN_COLOR,
-                        fillColor: GREEN_COLOR,
-                        fillOpacity: 0.1,
-                        weight: 2,
-                        className: "shapefile-layer",
-                    },
-                });
-
-                const properties = (layer.getLayers()[0] as any)?.feature?.properties;
-
-                layer.bindTooltip(createTooltipContent(properties, shapefile), {
-                    className: "shapefile-tooltip",
-                    permanent: true,
-                    direction: "top",
-                    offset: [0, -10],
-                });
-
-                layer.on("click", () => {
-                    this.map.fitBounds(layer.getBounds(), {
-                        animate: true,
-                        duration: 1.5,
-                        padding: [50, 50],
-                    });
-                });
-
-                layer.addTo(this.map);
-                this.activeShapefileLayers.add(layer);
-            }
+            shapefiles.forEach((shapefile) => this.addShapefileLayer(shapefile));
         } else {
-            this.activeShapefileLayers.forEach((layer) => {
-                this.map.removeLayer(layer);
-                layer.off("click");
-            });
-            this.activeShapefileLayers.clear();
+            this.clearShapefileLayers();
         }
     }
 
-    async loadGeoJSON(type: "states" | "cities" | "shapefiles", uf: string | null = null) {
+    private addShapefileLayer(shapefile: ShapefileData) {
+        const geojson = JSON.parse(shapefile.geojson);
+
+        const layer = L.geoJSON(geojson, {
+            style: { color: GREEN_COLOR, fillColor: GREEN_COLOR, fillOpacity: 0.1, weight: 2 },
+        });
+
+        const properties = (layer.getLayers()[0] as any)?.feature?.properties;
+
+        layer.bindTooltip(this.createTooltipContent(properties, shapefile), {
+            className: "shapefile-tooltip",
+            permanent: true,
+            direction: "top",
+            offset: [0, -10],
+        });
+
+        layer.on("click", () => {
+            this.map.fitBounds(layer.getBounds(), { animate: true, duration: 1.5, padding: [50, 50] });
+        });
+
+        layer.addTo(this.map);
+        this.activeShapefileLayers.add(layer);
+    }
+
+    private clearShapefileLayers() {
+        this.activeShapefileLayers.forEach((layer) => {
+            this.map.removeLayer(layer);
+            layer.off("click");
+        });
+        this.activeShapefileLayers.clear();
+    }
+
+    private createTooltipContent(properties: any, shapefile: any) {
+        const municipio = properties?.municipio ?? "Não informado";
+        const estado = properties?.estado ?? "Não informado";
+        const recibo = properties?.recibo ?? "Não informado";
+        const area = properties?.area ? `${properties.area} m²` : "Não informada";
+
+        const municipioAndEstado = municipio && estado ? ` - ${municipio}, ${estado}` : "";
+
+        return `
+        <div style="font-family: Arial, sans-serif; font-size: 12px;"  class="text-center">
+            <div style="font-weight: bold; font-size: 14px; margin-bottom: 8px;">
+                ${shapefile.name}${municipioAndEstado}
+            </div>
+            <div style="margin-bottom: 6px;" class="flex gap-4 justify-between w-full">
+                <strong>Fornecedor:</strong> ${shapefile.supplier_name || "Não informado"}
+            </div>
+            <div style="margin-bottom: 6px;"  class="flex gap-4 justify-between w-full">
+                <strong>Recibo:</strong> ${recibo}
+            </div>
+            <div  class="flex gap-4 justify-between w-full">
+                <strong>Área:</strong> ${area}
+            </div>
+        </div>
+    `;
+    }
+
+    private async loadGeoJSON(type: "states" | "cities" | "shapefiles", uf: string | null = null) {
         const key = type === "states" ? type : `${type}-${uf}`;
 
         if (!this.cache.geojson.has(key)) {
