@@ -150,7 +150,6 @@ def moisture_and_fines(group_by='day', months=3, supplier=None, html=False):
         if not supplier:
             raise ValueError('Fornecedor não encontrado.')
 
-        config['title'] += f' - Fornecedor #{supplier.id}'
         queryset = queryset.filter(supplier=supplier)
 
     queryset = (
@@ -264,3 +263,7 @@ def density(group_by='day', months=3, supplier=None, html=False):
     )
 
     return html_else_json(fig, html)
+
+
+def supplier_charcoal_entries(supplier, group_by='day', months=3, html=False):
+    return charcoal_entries(supplier=supplier, group_by=group_by, months=months, html=html)

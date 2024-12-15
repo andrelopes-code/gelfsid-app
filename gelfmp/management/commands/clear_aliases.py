@@ -13,12 +13,9 @@ class Command(BaseCommand):
             if file.endswith('.alias.json')
         ]
 
-        print('Tem certeza que deseja remover:\n')
         for alias_file in aliases_files:
+            print('Tem certeza que deseja remover:\n')
             print(f'  {alias_file}')
 
-        if input('\n[y/N] ? ') != 'y':
-            return
-
-        for alias_file in aliases_files:
-            os.remove(alias_file)
+            if input('\n[y/N] ? ') == 'y':
+                os.remove(alias_file)

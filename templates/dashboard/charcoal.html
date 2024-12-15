@@ -1,20 +1,20 @@
 <div class="gap-4 grid grid-rows-2 bg-dark px-4 pb-4 w-full h-full">
     <!-- Gráfico de entrada de carvão -->
     {% include "components/chart.html" with
-    chart_id="charcoal_entries"
-    form_id="charcoal_entries_form"
-    chart_data=charcoal_entries
-    form=charcoal_entries_form %}
+    chart_id=charts.0.id
+    form_id=charts.0.form_id
+    chart_data=charts.0.data
+    form=charts.0.form %}
     <div class="gap-4 grid grid-cols-2 w-full h-full">
         <!-- Gráfico de finos e umidade média por dia -->
         {% include "components/chart.html" with
-        chart_id="moisture_and_fines"
-        form_id="charcoal_entries_form"
-        chart_data=moisture_and_fines %}
+        chart_id=charts.1.id
+        form_id=charts.0.form_id
+        chart_data=charts.1.data %}
         <!-- Gráfico de densidade média por dia -->
         {% include "components/chart.html" with
-        chart_id="density"
-        form_id="charcoal_entries_form"
-        chart_data=density %}
+        chart_id=charts.2.id
+        form_id=charts.0.form_id
+        chart_data=charts.2.data %}
     </div>
 </div>

@@ -1,6 +1,4 @@
-{% extends "base.html" %}
-{% block extrahead %}
-    <script>
+document.addEventListener("DOMContentLoaded", function () {
     /*
         Script para ajustar o tamanho dos
         gráficos ao redimensionar a janela
@@ -8,15 +6,15 @@
     let resizeTimeout;
 
     function resizeCharts() {
-        const chartContainers = document.querySelectorAll('.plotly-chart');
-        chartContainers.forEach(chartContainer => {
+        const chartContainers = document.querySelectorAll(".plotly-chart");
+        chartContainers.forEach((chartContainer) => {
             Plotly.Plots.resize(chartContainer);
         });
     }
 
-    window.addEventListener('resize', function() {
+    window.addEventListener("resize", function () {
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(function() {
+        resizeTimeout = setTimeout(function () {
             resizeCharts();
         }, 200);
     });
@@ -35,7 +33,9 @@
         const chartContainer = document.getElementById(chartId);
 
         try {
-            const response = await fetch(`{% url 'update_chart' %}?chart_id=${chartId}&${urlParams.toString()}`, { method: 'GET' });
+            const response = await fetch(`${updateChartUrl}?chart_id=${chartId}&${urlParams.toString()}`, {
+                method: "GET",
+            });
             if (response.ok) {
                 const data = await response.json();
                 const chartContainer = document.getElementById(chartId);
@@ -44,14 +44,14 @@
                     // Garante que qualquer html existente
                     // seja removido antes do novo gráfico
                     // ser adicionado ao container
-                    chartContainer.innerHTML = '';
+                    chartContainer.innerHTML = "";
 
                     try {
                         const updatedChart = JSON.parse(data.chart_data);
 
                         const plotlyConfig = {
                             displayModeBar: false,
-                            showTips: false
+                            showTips: false,
                         };
 
                         // IMPORTANTE: Plotly.purge para limpar o container antes
@@ -61,12 +61,12 @@
 
                         Plotly.react(chartContainer, updatedChart.data, updatedChart.layout, plotlyConfig);
                         Plotly.relayout(chartContainer, {
-                            autosize: true
+                            autosize: true,
                         });
 
                         Plotly.Plots.resize(chartContainer);
                     } catch {
-                        chartContainer.innerHTML = data.chart_data
+                        chartContainer.innerHTML = data.chart_data;
                     }
                 }
             }
@@ -75,37 +75,26 @@
         }
     }
 
-    document.addEventListener('submit', async function (e) {
+    document.addEventListener("submit", async function (e) {
         e.preventDefault();
 
         const form = e.target;
-        const filterID = form.getAttribute('id');
+        const filterID = form.getAttribute("id");
         const chartElements = document.querySelectorAll(`.plotly-chart[data-related-form="${filterID}"]`);
 
         for (const ce of chartElements) {
-            const chartID = ce?.id
+            const chartID = ce?.id;
             if (chartID) {
-                updateChart(chartID, new FormData(form))
+                updateChart(chartID, new FormData(form));
             }
         }
     });
-    </script>
-{% endblock extrahead %}
-{% block content %}
-    <div class="relative flex bg-white w-screen h-screen overflow-hidden">
-        <div class="flex flex-col w-full h-full">
-            {% include "components/header/dashboard.html" %}
-            <main class="flex bg-dark w-full h-full overflow-y-hidden"
-                  id="dashboard-content"
-                  hx-get="{% url 'charcoal_dashboard_htmx' %}"
-                  hx-indicator="#dashboard-loading"
-                  hx-trigger="load">
-                <!-- Container -->
-                <div id="dashboard-loading"
-                     class="flex justify-center items-center my-indicator w-full h-full">
-                    {% include "components/loader.html" %}
-                </div>
-            </main>
-        </div>
-    </div>
-{% endblock content %}
+
+    /*
+        Garantir que o ajuste do gráfico também seja feito após o carregamento de novos dados via HTMX
+    */
+    document.body.addEventListener("htmx:afterSwap", function (event) {
+        // Aqui você pode chamar qualquer função para reprocessar ou ajustar os gráficos após um swap do HTMX
+        resizeCharts(); // Ajustar o tamanho do gráfico após a atualização de conteúdo dinâmico
+    });
+});

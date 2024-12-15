@@ -1,19 +1,15 @@
-from inspect import signature
+from inspect import getmembers, isfunction, signature
 
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
 
+from gelfcore.logger import log
 from gelfmp.charts import charts
 
-CHARTS = {
-    'charcoal_entries': charts.charcoal_entries,
-    'moisture_and_fines': charts.moisture_and_fines,
-    'density': charts.density,
-}
-
+CHARTS = {name: obj for name, obj in getmembers(charts, isfunction)}
 CHARTS_ARGS = {chart_id: set(signature(func).parameters.keys()) for chart_id, func in CHARTS.items()}
 
 
-def update_chart(request):
+def update_chart(request: HttpRequest):
     try:
         chart_id = request.GET.get('chart_id')
         if not chart_id or chart_id not in CHARTS:
@@ -28,4 +24,5 @@ def update_chart(request):
         return JsonResponse({'chart_data': updated_chart_json}, safe=False)
 
     except Exception as e:
+        log.error(str(e))
         return JsonResponse({'error': str(e)}, status=500)

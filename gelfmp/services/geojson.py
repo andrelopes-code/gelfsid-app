@@ -12,6 +12,15 @@ set_gdal_config_options({
 })
 
 
+def optimize_geojson(gdf, simplify_tolerance=0.001):
+    try:
+        gdf.geometry = gdf.geometry.simplify(tolerance=simplify_tolerance, preserve_topology=True)
+        return gdf.to_json()
+
+    except Exception as e:
+        raise ValidationError(f'Erro ao otimizar o GeoJSON: {str(e)}')
+
+
 def from_shapefile_zip(file):
     try:
         if not zipfile.is_zipfile(file):
@@ -40,6 +49,7 @@ def from_shapefile_zip(file):
                 raise ValidationError('Algumas geometrias no Shapefile são inválidas.')
 
             geojson = gdf.to_crs('EPSG:4326').to_json()
+
             return geojson
 
     except ValidationError as ve:

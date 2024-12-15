@@ -14,11 +14,6 @@ def index(request: HttpRequest):
     return render(request, 'index.html')
 
 
-@router('dashboard/', name='dashboard')
-def dashboard(request: HttpRequest):
-    return render(request, 'dashboard/index.html')
-
-
 @router('supplier/<int:id>/', name='supplier_details')
 def supplier_details(request: HttpRequest, id):
     supplier = Supplier.objects.filter(id=id).first()
@@ -40,12 +35,20 @@ def supplier_stats(request: HttpRequest, id):
 
     context = {
         'supplier': supplier,
+        'charts': [
+            {
+                'id': 'supplier_charcoal_entries',
+                'form_id': 'supplier_charcoal_entries_form',
+                'data': charts.supplier_charcoal_entries(supplier=id, html=True),
+                'form': forms.CharcoalSupplierEntriesChartForm(supplier_id=id),
+            },
+        ],
     }
 
     return render(request, 'supplier/stats/index.html', context=context)
 
 
-@router('supplier/search/htmx/', name='supplier_search_htmx')
+@router('supplier/htmx/search/', name='supplier_search_htmx')
 def supplier_search(request: HttpRequest):
     suppliers = []
 
@@ -57,13 +60,30 @@ def supplier_search(request: HttpRequest):
     return render(request, 'htmx/supplier_search/results.html', {'suppliers': suppliers})
 
 
+@router('dashboard/', name='dashboard')
+def dashboard(request: HttpRequest):
+    return render(request, 'dashboard/index.html')
+
+
 @router('dashboard/htmx/charcoal/', name='charcoal_dashboard_htmx')
 def charcoal_dashboard_htmx(request: HttpRequest):
     context = {
-        'charcoal_entries': charts.charcoal_entries(html=True),
-        'charcoal_entries_form': forms.CharcoalEntriesChartForm(),
-        'density': charts.density(html=True),
-        'moisture_and_fines': charts.moisture_and_fines(html=True),
+        'charts': [
+            {
+                'id': 'charcoal_entries',
+                'form_id': 'charcoal_entries_form',
+                'data': charts.charcoal_entries(html=True),
+                'form': forms.CharcoalEntriesChartForm(),
+            },
+            {
+                'id': 'density',
+                'data': charts.density(html=True),
+            },
+            {
+                'id': 'moisture_and_fines',
+                'data': charts.moisture_and_fines(html=True),
+            },
+        ],
     }
 
     return render(request, 'dashboard/charcoal.html', context=context)

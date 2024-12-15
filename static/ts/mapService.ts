@@ -19,7 +19,7 @@ import { getCityKey } from "./utils";
 class MapService {
     private MAX_ZOOM = 17;
     private MIN_ZOOM = 4;
-    private SATELLITE_ZOOM = 10;
+    private SATELLITE_ZOOM = 9;
     private MAX_BOUNDS = L.latLngBounds(L.latLng(180, -180), L.latLng(-90, 180));
     private GELF_COORDINATES = L.latLng(-19.43852652, -44.34155513);
 
