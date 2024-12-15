@@ -3,9 +3,6 @@
 {% load static %}
 {% block content %}
     <div class="flex flex-col w-screen h-screen">
-        <div class="absolute flex justify-center items-center w-screen h-screen text-slate-400 pointer-events-none">
-            Não implementado.
-        </div>
         <!-- HEADER -->
         <nav class="flex bg-dark w-full h-fit">
             <div class="flex flex-wrap justify-start items-start gap-3 px-4 py-4 w-screen h-full">
@@ -23,10 +20,12 @@
         <!-- MAIN -->
         <main class="flex flex-1 gap-4 bg-dark px-4 pb-4 overflow-hidden">
             <!-- ASIDE -->
-            <aside class="flex flex-col w-1/4 h-fit">
+            <aside class="flex flex-col gap-4 w-2/6 h-full overflow-auto noscrollbar">
+                {% include "supplier/partials/supplier_aside_info.html" %}
             </aside>
             <!-- CONTEÚDO PRINCIPAL -->
-            <div class="flex flex-col gap-4 shadow-md w-3/4 h-full max-h-full overflow-y-auto"></div>
+            <div class="flex flex-col gap-4 shadow-md w-4/6 h-full max-h-full overflow-y-auto">
+            </div>
         </main>
     </div>
 {% endblock content %}

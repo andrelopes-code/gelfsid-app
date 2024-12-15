@@ -8,10 +8,20 @@
                      class="w-auto h-10"
                      alt="Gelf logo" />
             </a>
-            {% url 'index' as index_url %}
-            {% include "components/header/button.html" with href=index_url text="MAPA" %}
-            {% url 'dashboard' as dashboard_url %}
-            {% include "components/header/button.html" with href=dashboard_url text="DADOS DE CARVÃO" %}
+            {% url 'index' as url %}
+            {% include "components/header/button.html" with href=url text="MAPA" %}
+            {% url 'admin:index' as url %}
+            {% include "components/header/button.html" with href=url text="ADMIN" %}
+            <!-- Dashboards -->
+            <div class="bg-dark-100 rounded-md h-10 font-semibold text-sm pointer-events-auto">
+                <button hx-get="{% url 'charcoal_dashboard_htmx' %}"
+                        hx-trigger="click"
+                        hx-target="#dashboard-content"
+                        hx-indicator="#dashboard-loading"
+                        class="hover:brightness-125 flex justify-center items-center px-2 w-fit h-full text-primary transition-[filter] duration-300">
+                    CARVÃO 01
+                </button>
+            </div>
         </div>
     </nav>
 </div>

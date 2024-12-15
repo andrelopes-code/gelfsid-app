@@ -16,14 +16,7 @@ def index(request: HttpRequest):
 
 @router('dashboard/', name='dashboard')
 def dashboard(request: HttpRequest):
-    context = {
-        'charcoal_entries': charts.charcoal_entries(html=True),
-        'charcoal_entries_form': forms.CharcoalEntriesChartForm(),
-        'density': charts.density(html=True),
-        'moisture_and_fines': charts.moisture_and_fines(html=True),
-    }
-
-    return render(request, 'dashboard/index.html', context=context)
+    return render(request, 'dashboard/index.html')
 
 
 @router('supplier/<int:id>/', name='supplier_details')
@@ -52,7 +45,7 @@ def supplier_stats(request: HttpRequest, id):
     return render(request, 'supplier/stats/index.html', context=context)
 
 
-@router('htmx/supplier/search/', name='supplier_search_htmx')
+@router('supplier/search/htmx/', name='supplier_search_htmx')
 def supplier_search(request: HttpRequest):
     suppliers = []
 
@@ -62,3 +55,15 @@ def supplier_search(request: HttpRequest):
         )
 
     return render(request, 'htmx/supplier_search/results.html', {'suppliers': suppliers})
+
+
+@router('dashboard/htmx/charcoal/', name='charcoal_dashboard_htmx')
+def charcoal_dashboard_htmx(request: HttpRequest):
+    context = {
+        'charcoal_entries': charts.charcoal_entries(html=True),
+        'charcoal_entries_form': forms.CharcoalEntriesChartForm(),
+        'density': charts.density(html=True),
+        'moisture_and_fines': charts.moisture_and_fines(html=True),
+    }
+
+    return render(request, 'dashboard/charcoal.html', context=context)

@@ -155,15 +155,21 @@ class MapService {
         const geojson = JSON.parse(shapefile.geojson);
 
         const layer = L.geoJSON(geojson, {
-            style: { color: GREEN_COLOR, fillColor: GREEN_COLOR, fillOpacity: 0.1, weight: 2 },
+            style: {
+                color: GREEN_COLOR,
+                fillColor: GREEN_COLOR,
+                fillOpacity: 0.1,
+                weight: 2,
+                className: "shapefile-layer",
+            },
         });
 
         const properties = (layer.getLayers()[0] as any)?.feature?.properties;
 
         layer.bindTooltip(this.createTooltipContent(properties, shapefile), {
-            className: "shapefile-tooltip",
             permanent: true,
             direction: "top",
+            className: "shapefile-tooltip",
             offset: [0, -10],
         });
 
