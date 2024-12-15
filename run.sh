@@ -28,6 +28,10 @@ else
     echo "Dependências do Node.js já instaladas."
 fi
 
+python manage.py collectstatic --noinput
+python manage.py migrate
+python manage.py fixtures
+
 echo "Construindo o projeto..."
 npm run build
 
