@@ -32,7 +32,7 @@ echo "Construindo o projeto..."
 npm run build
 
 echo "Construindo imagens Docker..."
-docker-compose build
+docker-compose -f docker-compose.dev.yml build
 
 echo "Subindo os containers com Docker Compose..."
 docker-compose up
