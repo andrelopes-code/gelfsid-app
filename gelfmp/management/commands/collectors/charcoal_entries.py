@@ -2,6 +2,7 @@ import pandas as pd
 import rich
 from django.db import transaction
 from django.db.utils import IntegrityError
+from rich.console import Console
 from rich.prompt import Prompt
 
 from gelfmp.models import CharcoalEntry, Supplier
@@ -11,6 +12,8 @@ from .types import Aliases
 from .utils import get_best_matches
 
 MINIMUM_SIMILARITY = 95
+
+console = Console()
 
 
 def datetime_convert(dates):
@@ -101,27 +104,30 @@ def collect():
 
         # Pega a melhor correspondência (a primeira)
         similarity, supplier_name = best_matches[0]
-        rich.print(f'Similaridade: {similarity:.2f} - Fornecedor: {supplier_name}: {entry_supplier_name}')
 
         if similarity >= MINIMUM_SIMILARITY:
             process_data(supplier_name, group)
             continue
 
-        rich.print(f'[red]FORNECEDOR NÃO ENCONTRADO: {entry_supplier_name}[/red]')
-        for i, (sim, name) in enumerate(best_matches):
-            rich.print(f'  {i + 1} => {name} [{sim:.2f}]')
+        console.print(f'\n[bold red]FORNECEDOR NÃO ENCONTRADO:[/bold red] {entry_supplier_name}')
+        console.print('\n[bold yellow]Escolha uma das opções abaixo ou pressione Enter para pular.[/bold yellow]\n')
 
-        option = Prompt.ask(
-            '[green]O nome não encontrado corresponde a alguma dessas opções? '
-            '(digite o número ou pressione enter para pular)[/green]',
-        )
-        print()
+        for i, (similarity, name) in enumerate(best_matches, start=1):
+            console.print(f'[cyan]{i}.[/cyan] {name} [dim](Similaridade: {similarity:.2f}%)[/dim]')
 
-        if option.strip().isdigit():
-            option = int(option.strip()) - 1
-            valid_index = 0 <= option < len(best_matches)
+        option = Prompt.ask('\n[green]Digite o número da opção escolhida[/green]', default='').strip()
 
-            if valid_index:
+        if option.isdigit():
+            option = int(option) - 1
+            if 0 <= option < len(best_matches):
                 supplier_name = best_matches[option][1]
                 aliases.add(entry_supplier_name, supplier_name)
                 process_data(supplier_name, group)
+                console.print(
+                    '[bold green]Fornecedor mapeado com sucesso![/bold green]'
+                    f'{entry_supplier_name} -> {supplier_name}\n'
+                )
+            else:
+                console.print('[bold yellow]Opção inválida. Nenhuma ação foi realizada.[/bold yellow]\n')
+        else:
+            console.print('[bold yellow]Nenhuma correspondência selecionada. Continuando...[/bold yellow]\n')

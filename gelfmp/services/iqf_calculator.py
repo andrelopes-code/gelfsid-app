@@ -53,7 +53,7 @@ def calculate_iqf(planned_volume: float, entries: pd.DataFrame):
         return f'O IQF não pode ser maior que 100: {iqf:.2f}'
 
     return (
-        round(iqf, 2),
+        round(iqf, 1),
         round(planned_percentage, 2),
         round(fines_percentage, 2),
         round(moisture_percentage, 2),
@@ -104,15 +104,17 @@ def calculate_suppliers_iqf(month, year):
             continue
 
         try:
-            CharcoalIQF.objects.create(
+            CharcoalIQF.objects.update_or_create(
                 supplier=supplier,
-                iqf=iqf,
                 month=month,
                 year=year,
-                planned_percentage=planned_percentage,
-                fines_percentage=fines_percentage,
-                moisture_percentage=moisture_percentage,
-                density_percentage=density_percentage,
+                defaults=dict(
+                    iqf=iqf,
+                    planned_percentage=planned_percentage,
+                    fines_percentage=fines_percentage,
+                    moisture_percentage=moisture_percentage,
+                    density_percentage=density_percentage,
+                ),
             )
 
             processed_suppliers.append(f'IQF CALCULADO PARA {supplier}: {iqf}')
