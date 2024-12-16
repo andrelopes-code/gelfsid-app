@@ -167,14 +167,22 @@ class MapService {
         const properties = (layer.getLayers()[0] as any)?.feature?.properties;
 
         layer.bindTooltip(this.createTooltipContent(properties, shapefile), {
-            permanent: true,
-            direction: "top",
+            permanent: false,
+            interactive: true,
+            direction: "center",
             className: "shapefile-tooltip",
             offset: [0, -10],
         });
 
+        layer.off();
+
+        layer.on("remove", () => {
+            layer.closeTooltip();
+        });
+
         layer.on("click", () => {
-            this.map.fitBounds(layer.getBounds(), { animate: true, duration: 1.5, padding: [50, 50] });
+            this.map.fitBounds(layer.getBounds(), { animate: true, duration: 1.5, padding: [15, 15] });
+            layer.isTooltipOpen() ? layer.closeTooltip() : layer.openTooltip();
         });
 
         layer.addTo(this.map);
@@ -190,29 +198,46 @@ class MapService {
     }
 
     private createTooltipContent(properties: any, shapefile: any) {
-        const municipio = properties?.municipio ?? "Não informado";
-        const estado = properties?.estado ?? "Não informado";
-        const recibo = properties?.recibo ?? "Não informado";
-        const area = properties?.area ? `${properties.area} m²` : "Não informada";
+        const excludedKeys = [
+            "vinculo",
+            "estado",
+            "recibo",
+            "livro",
+            "matricula",
+            "proprietar",
+            "denominaca",
+            "comarca",
+            "perimetro",
+        ];
 
+        const municipio = properties?.municipio;
+        const estado = properties?.estado;
         const municipioAndEstado = municipio && estado ? ` - ${municipio}, ${estado}` : "";
 
+        const dynamicContent = Object.entries(properties)
+            .filter(([key]) => !excludedKeys.includes(key.toLowerCase()))
+            .map(([key, value]) => {
+                const displayValue = value || "Não informado";
+                const label = key.toUpperCase();
+                return `
+                    <div style="margin-bottom: 6px;" class="flex gap-4 justify-between w-full">
+                        <strong>${label}:</strong> ${displayValue}
+                    </div>
+                `;
+            })
+            .join("");
+
         return `
-        <div style="font-family: Arial, sans-serif; font-size: 12px;"  class="text-center">
-            <div style="font-weight: bold; font-size: 14px; margin-bottom: 8px;">
-                ${shapefile.name}${municipioAndEstado}
+            <div style="font-family: Arial, sans-serif; font-size: 12px;" class="text-center">
+                <div style="font-weight: bold; font-size: 14px; margin-bottom: 8px;">
+                    ${shapefile.name}${municipioAndEstado}
+                </div>
+                 <div style="margin-bottom: 6px;" class="flex gap-4 justify-between w-full">
+                        <strong>FORNECEDOR:</strong> ${shapefile.supplier_name}
+                    </div>
+                ${dynamicContent}
             </div>
-            <div style="margin-bottom: 6px;" class="flex gap-4 justify-between w-full">
-                <strong>Fornecedor:</strong> ${shapefile.supplier_name || "Não informado"}
-            </div>
-            <div style="margin-bottom: 6px;"  class="flex gap-4 justify-between w-full">
-                <strong>Recibo:</strong> ${recibo}
-            </div>
-            <div  class="flex gap-4 justify-between w-full">
-                <strong>Área:</strong> ${area}
-            </div>
-        </div>
-    `;
+        `;
     }
 
     private async loadGeoJSON(type: "states" | "cities" | "shapefiles", uf: string | null = null) {

@@ -889,22 +889,6 @@ video {
   width: 100vw;
 }
 
-.w-6\/12{
-  width: 50%;
-}
-
-.w-8\/12{
-  width: 66.666667%;
-}
-
-.w-3\/12{
-  width: 25%;
-}
-
-.w-9\/12{
-  width: 75%;
-}
-
 .min-w-\[33vw\]{
   min-width: 33vw;
 }
@@ -1039,10 +1023,6 @@ video {
 
 .grid-rows-2{
   grid-template-rows: repeat(2, minmax(0, 1fr));
-}
-
-.flex-row{
-  flex-direction: row;
 }
 
 .flex-col{
@@ -1220,11 +1200,6 @@ video {
 .bg-white{
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-blue-500{
-  --tw-bg-opacity: 1;
-  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-20{
