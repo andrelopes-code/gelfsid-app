@@ -388,7 +388,7 @@ class MapService {
                     }
                 } else if (e.type === "click") {
                     if (feature.properties) {
-                        layer._managedTooltip.tooltip.addTo(this.map);
+                        layer._managedTooltip?.tooltip.addTo(this.map);
                         supplierService.openDetails(cityKey, this.currentType);
                     }
                 }
