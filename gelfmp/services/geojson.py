@@ -1,11 +1,12 @@
 import os
 import tempfile
 import zipfile
-from io import BytesIO
 
 import geopandas as gpd
 from django.core.exceptions import ValidationError
 from pyogrio import set_gdal_config_options
+
+from gelfcore.logger import log
 
 set_gdal_config_options({
     'SHAPE_RESTORE_SHX': 'YES',
@@ -18,7 +19,8 @@ def optimize_geojson(gdf, simplify_tolerance=0.001):
         return gdf.to_json()
 
     except Exception as e:
-        raise ValidationError(f'Erro ao otimizar o GeoJSON: {str(e)}')
+        log.error(f'Erro ao otimizar o GeoJSON: {e}')
+        raise ValidationError(f'Erro ao otimizar o GeoJSON: {e}')
 
 
 def from_shapefile_zip(file):
@@ -31,7 +33,7 @@ def from_shapefile_zip(file):
                 zf.extractall(temp_dir)
 
             shapefile_path = None
-            for root, dirs, files in os.walk(temp_dir):
+            for root, _, files in os.walk(temp_dir):
                 for filename in files:
                     if filename.lower().endswith('.shp'):
                         shapefile_path = os.path.join(root, filename)
@@ -45,45 +47,33 @@ def from_shapefile_zip(file):
             if gdf.empty:
                 raise ValidationError('O Shapefile está vazio e não pode ser convertido para GeoJSON.')
 
+            if gdf.crs is None:
+                prj_path = shapefile_path.replace('.shp', '.prj')
+
+                if os.path.exists(prj_path):
+                    with open(prj_path, 'r') as prj_file:
+                        prj_content = prj_file.read()
+
+                    inferred_crs = gpd.tools.crs.CRS.from_string(prj_content).to_string()
+                    gdf.set_crs(inferred_crs, inplace=True)
+
+                else:
+                    # Força a conversão para EPSG:31983 SIRGAS 2000 / UTM zone 23S
+                    # (UTM Brasil) caso não consiga inferir qual é o crs adequado.
+                    gdf.set_crs('EPSG:31983', inplace=True)
+
             if not gdf.geometry.is_valid.all():
                 raise ValidationError('Algumas geometrias no Shapefile são inválidas.')
 
+            # Converte o geo-dataframe em dados geojson
             geojson = gdf.to_crs('EPSG:4326').to_json()
 
             return geojson
 
     except ValidationError as ve:
+        log.error(f'Erro de validação ao tentar converter Shapefile: {ve}')
         raise ve
 
     except Exception as e:
-        raise ValidationError(f'Erro ao processar o Shapefile: {str(e)}')
-
-
-def from_shapefile(file):
-    try:
-        if not file.name.lower().endswith('.shp'):
-            raise ValidationError('O arquivo enviado não é um Shapefile válido.')
-
-        file_bytes = BytesIO(file.read())
-
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.shp') as tmp_file:
-            tmp_file.write(file_bytes.read())
-            tmp_file_path = tmp_file.name
-
-        gdf = gpd.read_file(tmp_file_path)
-        if gdf.empty:
-            raise ValidationError('O Shapefile está vazio e não pode ser convertido para GeoJSON.')
-
-        if not gdf.geometry.is_valid.all():
-            raise ValidationError('Algumas geometrias no Shapefile são inválidas.')
-
-        geojson = gdf.to_json()
-        os.remove(tmp_file_path)
-
-        return geojson
-
-    except ValidationError as ve:
-        raise ve
-
-    except Exception as e:
-        raise ValidationError(f'Erro ao processar o Shapefile: {str(e)}')
+        log.error(f'Erro ao processar o Shapefile: {e}')
+        raise ValidationError(f'Erro ao processar o Shapefile: {e}')

@@ -239,10 +239,8 @@ class Document(BaseModel):
                 try:
                     if self.file.name.lower().endswith('.zip'):
                         self.geojson = geojson.from_shapefile_zip(self.file)
-                    elif self.file.name.lower().endswith('.shp'):
-                        self.geojson = geojson.from_shapefile(self.file)
                     else:
-                        raise ValidationError('O arquivo enviado deve ser um ZIP ou Shapefile.')
+                        raise ValidationError('O arquivo enviado deve ser um arquivo ZIP válido.')
 
                 except ValidationError as e:
                     raise e
