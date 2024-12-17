@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.forms import ValidationError
 
+from gelfcore.logger import log
 from gelfmp.services import geojson
 from gelfmp.utils import dtutils, validators
 from gelfmp.utils.normalization import normalize_text_upper, normalize_to_numbers
@@ -117,9 +118,10 @@ class City(models.Model):
 
 
 class Contact(BaseModel):
-    contact_type = models.CharField(max_length=50, choices=ContactType.choices, verbose_name='Função')
     name = models.CharField(max_length=200, verbose_name='Nome')
     email = models.EmailField(verbose_name='Email')
+    contact_type = models.CharField(max_length=50, choices=ContactType.choices, verbose_name='Função')
+
     primary_phone = models.CharField(max_length=20, verbose_name='Telefone Principal', null=True, blank=True)
     secondary_phone = models.CharField(max_length=20, verbose_name='Telefone Secundário', null=True, blank=True)
 
@@ -139,20 +141,23 @@ class Contact(BaseModel):
 
 
 class BankDetails(BaseModel):
+    bank_name = models.CharField(max_length=255, verbose_name='Banco')
+    agency = models.CharField(max_length=10, verbose_name='Agência')
+    account_number = models.CharField(max_length=20, verbose_name='Número da Conta')
+
     bank_code = models.CharField(
         max_length=5,
         validators=[validators.validate_bank_code],
         verbose_name='Número do Banco',
     )
-    bank_name = models.CharField(max_length=255, verbose_name='Banco')
-    agency = models.CharField(max_length=10, verbose_name='Agência')
-    account_number = models.CharField(max_length=20, verbose_name='Número da Conta')
 
     def __str__(self):
-        return f'{self.bank_name} - {self.account_number} ({self.agency})'
+        return f'{self.bank_name} - Cc: {self.account_number} Ag: {self.agency}'
 
     def save(self, *args, **kwargs):
+        # Normaliza o nome do banco antes de salvar o registro.
         self.bank_name = normalize_text_upper(self.bank_name)
+
         super().save(*args, **kwargs)
 
     class Meta:
@@ -162,18 +167,18 @@ class BankDetails(BaseModel):
 
 
 class Document(BaseModel):
-    def document_upload_to(instance, filename):
+    def upload_to(instance, filename):
         return f'fornecedores/{instance.supplier.corporate_name}/documentos/{filename}'
 
-    document_type = models.CharField(max_length=50, choices=DocumentType.choices, verbose_name='Tipo de Documento')
     name = models.CharField(
         max_length=50,
         blank=True,
         verbose_name='Nome de Exibição',
         help_text='Caso não informado, o nome do arquivo será usado para preencher este campo.',
     )
+
     file = models.FileField(
-        upload_to=document_upload_to,
+        upload_to=upload_to,
         max_length=255,
         verbose_name='Arquivo',
         validators=[validators.validate_max_file_size],
@@ -183,7 +188,7 @@ class Document(BaseModel):
         blank=True,
         null=True,
         verbose_name='GeoJSON',
-        help_text='Este campo é gerado automaticamente ao subir um Shapefile e não deve ser alterado manualmente.'
+        help_text='Este campo é gerado automaticamente ao subir um Shapefile e não deve ser alterado manualmente.',
     )
 
     validity = models.DateField(
@@ -196,6 +201,7 @@ class Document(BaseModel):
         ),
     )
 
+    document_type = models.CharField(max_length=50, choices=DocumentType.choices, verbose_name='Tipo de Documento')
     visible = models.BooleanField(default=True, verbose_name='Visível')
 
     supplier = models.ForeignKey(
@@ -211,7 +217,14 @@ class Document(BaseModel):
 
     def delete(self, *args, **kwargs):
         try:
+            # Remove o arquivo relacionado
+            # ao registro de documento caso
+            # seja encontrado.
+            self.file.close()
             os.remove(self.file.path)
+
+        except PermissionError as e:
+            log.error(f'Erro ao tentar deletar arquivo de documento: {e}')
         except FileNotFoundError:
             pass
 
@@ -219,21 +232,22 @@ class Document(BaseModel):
 
     def clean(self):
         # Caso não seja informado um nome de exibição
-        # usar o próprio nome do arquivo
+        # usar o próprio nome do arquivo.
         if not self.name:
             self.name = self.filename
 
         # Tenta extrair a data de validade do nome do
-        # arquivo caso ela não seja informada
+        # arquivo caso ela não seja informada.
         if (
             not self.validity
             and self.document_type != DocumentType.EXCEMPTION
             and self.document_type != DocumentType.OTHER
+            and self.document_type != DocumentType.SHAPEFILE
         ):
             self.validity = dtutils.extract_date_from_text(self.filename)
 
         # Se o documento for um Shapefile obtem o GeoJSON
-        # convertendo-o e armazenando no campo geojson
+        # convertendo-o e armazenando no campo geojson.
         if self.document_type == DocumentType.SHAPEFILE:
             if self.file:
                 try:
@@ -248,21 +262,23 @@ class Document(BaseModel):
         return super().clean()
 
     def save(self, *args, **kwargs):
-        # Deleta o documento antigo se caso ao
-        # atualizar seja um arquivo de mesmo nome
+        # Deleta o documento antigo se ao atualizar
+        # seja um arquivo de mesmo nome.
         if self.pk:
             try:
                 old_file = Document.objects.get(pk=self.pk).file
+
                 if old_file and old_file.name != self.file.name:
                     if os.path.isfile(old_file.path):
                         os.remove(old_file.path)
+
             except Document.DoesNotExist:
                 pass
 
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.document_type} - {self.filename}'
+        return f'{self.get_document_type_display} - {self.filename}'
 
     class Meta:
         ordering = ['-created_at']
@@ -271,23 +287,25 @@ class Document(BaseModel):
 
 
 class CharcoalIQF(BaseModel):
-    supplier = models.ForeignKey(
-        'Supplier',
-        on_delete=models.CASCADE,
-        related_name='iqfs',
-        verbose_name='Fornecedor',
-    )
-
     iqf = models.FloatField(verbose_name='IQF')
+
     planned_percentage = models.FloatField(
         validators=[validators.validate_percentage], verbose_name='Programação Realizada (%)'
     )
+
     fines_percentage = models.FloatField(validators=[validators.validate_percentage], verbose_name='Finos (%)')
     moisture_percentage = models.FloatField(validators=[validators.validate_percentage], verbose_name='Umidade (%)')
     density_percentage = models.FloatField(validators=[validators.validate_percentage], verbose_name='Densidade (%)')
 
     month = models.IntegerField(choices=MonthType.choices, verbose_name='Mês')
     year = models.IntegerField(choices=year_choices(), verbose_name='Ano')
+
+    supplier = models.ForeignKey(
+        'Supplier',
+        on_delete=models.CASCADE,
+        related_name='iqfs',
+        verbose_name='Fornecedor',
+    )
 
     class Meta:
         constraints = [
@@ -301,15 +319,10 @@ class CharcoalIQF(BaseModel):
 
 
 class CharcoalMonthlyPlan(BaseModel):
-    supplier = models.ForeignKey(
-        'Supplier',
-        on_delete=models.CASCADE,
-        related_name='monthly_plans',
-        verbose_name='Fornecedor',
-    )
+    planned_volume = models.FloatField(verbose_name='Volume Programado (m³)')
     month = models.IntegerField(choices=MonthType.choices, verbose_name='Mês')
     year = models.IntegerField(choices=year_choices(), verbose_name='Ano')
-    planned_volume = models.FloatField(verbose_name='Volume Programado (m³)')
+
     price = models.DecimalField(
         max_digits=6,
         decimal_places=2,
@@ -319,11 +332,18 @@ class CharcoalMonthlyPlan(BaseModel):
         help_text='Somente aplicável a GELF.',
     )
 
+    supplier = models.ForeignKey(
+        'Supplier',
+        on_delete=models.CASCADE,
+        related_name='monthly_plans',
+        verbose_name='Fornecedor',
+    )
+
     def clean(self):
         # Validação do campo 'price' com base no nome do fornecedor,
         # o campo preço é aplicável apenas a própria GELF.
         if self.price is not None and 'GELF' not in self.supplier.corporate_name.upper():
-            raise ValidationError({'price': 'Este campo não é aplicavel a esse fornecedor.'})
+            raise ValidationError({'price': 'O campo `Preço` não é aplicavel a esse fornecedor.'})
 
         return super().clean()
 
@@ -342,11 +362,11 @@ class CharcoalMonthlyPlan(BaseModel):
 
 
 class CharcoalEntry(BaseModel):
-    entry_date = models.DateField(verbose_name='Data de Entrada')
     origin_ticket = models.CharField(max_length=50, unique=True, verbose_name='Ticket de Origem')
     vehicle_plate = models.CharField(max_length=50, verbose_name='Placa do Veículo')
     origin_volume = models.FloatField(verbose_name='Volume de Origem (m³)')
     entry_volume = models.FloatField(verbose_name='Volume de Entrada (m³)')
+    entry_date = models.DateField(verbose_name='Data de Entrada')
     moisture = models.FloatField(verbose_name='Umidade (%)')
     fines = models.FloatField(verbose_name='Finos (%)')
     density = models.FloatField(verbose_name='Densidade')
@@ -366,14 +386,16 @@ class CharcoalEntry(BaseModel):
 
     class Meta:
         ordering = ['-entry_date']
-        indexes = [models.Index(fields=['entry_date'])]
+        indexes = [
+            models.Index(fields=['entry_date']),
+            models.Index(fields=['supplier']),
+            models.Index(fields=['dcf']),
+        ]
         verbose_name = 'Entrada de Carvão'
         verbose_name_plural = 'Entradas de Carvão'
 
 
 class Supplier(BaseModel):
-    rm_code = models.CharField(max_length=30, null=True, blank=True, unique=True, verbose_name='Código RM')
-    active = models.BooleanField(default=True, verbose_name='Fornecedor Ativo')
     corporate_name = models.CharField(
         max_length=200,
         verbose_name='Razão Social',
@@ -381,12 +403,15 @@ class Supplier(BaseModel):
         help_text='Insira nomes padronizados para evitar inconsistência, como o próprio nome que consta no CNPJ.',
     )
 
+    rm_code = models.CharField(max_length=30, null=True, blank=True, unique=True, verbose_name='Código RM')
+    active = models.BooleanField(default=True, verbose_name='Fornecedor Ativo')
     material_type = models.CharField(max_length=100, choices=MaterialType.choices, verbose_name='Tipo de Material')
 
     distance_in_meters = models.IntegerField(blank=True, null=True, verbose_name='Distância em Metros')
     address = models.CharField(max_length=255, blank=True, null=True, verbose_name='Endereço')
     state = models.ForeignKey(State, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Estado')
     city = models.ForeignKey(City, on_delete=models.PROTECT, related_name='suppliers', verbose_name='Cidade')
+
     cep = models.CharField(
         max_length=10,
         validators=[validators.validate_cep],
@@ -443,7 +468,7 @@ class Supplier(BaseModel):
         return self.iqfs
 
     def save(self, *args, **kwargs):
-        # Normaliza os campos para evitar inconsistências
+        # Normaliza os campos para evitar inconsistência nos dados.
         self.corporate_name = normalize_text_upper(self.corporate_name)
         self.cpf_cnpj = normalize_to_numbers(self.cpf_cnpj)
         self.address = normalize_text_upper(self.address)
@@ -452,6 +477,8 @@ class Supplier(BaseModel):
         return super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
+        # Deleta detalhes de banco relacionados
+        # ao fornecedor caso exista algum.
         if self.bank_details:
             self.bank_details.delete()
 
@@ -463,6 +490,7 @@ class Supplier(BaseModel):
         indexes = [
             models.Index(fields=['material_type']),
             models.Index(fields=['state']),
+            models.Index(fields=['cpf_cnpj']),
         ]
 
         verbose_name = 'Fornecedor'

@@ -95,7 +95,7 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Atualizado em')),
                 ('document_type', models.CharField(choices=[('ctf', 'CADASTRO TÉCNICO FEDERAL'), ('lic_ambiental', 'LICENÇA AMBIENTAL'), ('exemption', 'DISPENSA'), ('reg_ief', 'REGISTRO IEF'), ('car', 'CADASTRO AMBIENTAL RURAL'), ('state_registration', 'INSCRIÇÃO ESTADUAL'), ('municipal_registration', 'INSCRIÇÃO MUNICIPAL'), ('cnpj_lookup', 'CONSULTA CNPJ'), ('shapefile', 'SHAPEFILE'), ('other', 'OUTRO')], max_length=50, verbose_name='Tipo de Documento')),
                 ('name', models.CharField(blank=True, help_text='Caso não informado, o nome do arquivo será usado para preencher este campo.', max_length=50, verbose_name='Nome de Exibição')),
-                ('file', models.FileField(max_length=255, upload_to=gelfmp.models.Document.document_upload_to, validators=[gelfmp.utils.validators.validate_max_file_size], verbose_name='Arquivo')),
+                ('file', models.FileField(max_length=255, upload_to=gelfmp.models.Document.upload_to, validators=[gelfmp.utils.validators.validate_max_file_size], verbose_name='Arquivo')),
                 ('geojson', models.JSONField(blank=True, help_text='Este campo é gerado automaticamente ao subir um Shapefile e não deve ser alterado manualmente.', null=True, verbose_name='GeoJSON')),
                 ('validity', models.DateField(blank=True, help_text='Caso não informado e o nome do arquivo contém a data, ela será usada para preencher este campo.\nExemplo: nome do arquivo CTF_02.05.2020.pdf, a data 02/05/2020 será usada.', null=True, verbose_name='Validade')),
                 ('visible', models.BooleanField(default=True, verbose_name='Visível')),
