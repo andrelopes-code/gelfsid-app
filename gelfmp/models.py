@@ -81,6 +81,12 @@ class DocumentType(models.TextChoices):
     OTHER = 'other', 'OUTRO'
 
 
+class SupplierType(models.TextChoices):
+    GELF = 'gelf', 'GELF'
+    BOTUMIRIM = 'botumirim', 'Botumirim'
+    THIRD_PARTY = 'third_party', 'Terceiro'
+
+
 def year_choices():
     current_year = date.today().year
     return [(year, str(year)) for year in range(current_year + 1, 2019, -1)]
@@ -405,7 +411,11 @@ class Supplier(BaseModel):
 
     rm_code = models.CharField(max_length=30, null=True, blank=True, unique=True, verbose_name='Código RM')
     active = models.BooleanField(default=True, verbose_name='Fornecedor Ativo')
+
     material_type = models.CharField(max_length=100, choices=MaterialType.choices, verbose_name='Tipo de Material')
+    supplier_type = models.CharField(
+        max_length=100, choices=SupplierType.choices, null=True, blank=True, verbose_name='Tipo de Fornecedor'
+    )
 
     distance_in_meters = models.IntegerField(blank=True, null=True, verbose_name='Distância em Metros')
     address = models.CharField(max_length=255, blank=True, null=True, verbose_name='Endereço')
@@ -415,7 +425,6 @@ class Supplier(BaseModel):
     cep = models.CharField(
         max_length=10,
         validators=[validators.validate_cep],
-        help_text='Insira apenas os números.',
         verbose_name='CEP',
     )
 

@@ -20,6 +20,7 @@ class ContactAdmin(BaseModelAdmin):
                     'supplier',
                     'contact_type',
                     'name',
+                    'email',
                     'primary_phone',
                     'secondary_phone',
                 )
@@ -59,18 +60,25 @@ class DocumentAdmin(BaseModelAdmin):
     list_display = ('document_type', 'name', 'validity', 'supplier')
     list_filter = ('document_type', 'supplier')
     search_fields = ['name', 'supplier__corporate_name']
-
     actions = ['delete_files']
 
     def get_actions(self, request):
         actions = super().get_actions(request)
+
+        # Remove a opção padrão de exclusão de documentos
+        # pois estava causando inconsistências não deletando
+        # o arquivo no sistema de arquivos.
         if 'delete_selected' in actions:
             del actions['delete_selected']
+
         return actions
 
     def delete_files(self, request, queryset):
+        # Action personalizada para deletar
+        # os documentos selecionados.
         for obj in queryset:
             obj.delete()
+
         self.message_user(request, 'Documentos excluídos com sucesso!')
 
     delete_files.short_description = 'Excluir Documentos selecionados'
@@ -99,8 +107,8 @@ class DocumentAdmin(BaseModelAdmin):
 @admin.register(models.CharcoalEntry)
 class CharcoalEntryAdmin(BaseModelAdmin):
     list_display = ('supplier', 'entry_volume', 'moisture', 'density', 'fines', 'entry_date')
-    list_filter = (SupplierWithEntriesFilter,)
     search_fields = ('supplier__corporate_name', 'dcf')
+    list_filter = (SupplierWithEntriesFilter,)
 
     fieldsets = (
         (
@@ -113,6 +121,7 @@ class CharcoalEntryAdmin(BaseModelAdmin):
                     'moisture',
                     'density',
                     'fines',
+                    'dcf',
                 )
             },
         ),
@@ -209,7 +218,7 @@ class SupplierAdmin(BaseModelAdmin):
         'active',
     )
 
-    list_filter = ('material_type', 'state')
+    list_filter = ('material_type', 'state', 'active')
     search_fields = ('corporate_name', 'cpf_cnpj')
 
     fieldsets = (
@@ -219,10 +228,9 @@ class SupplierAdmin(BaseModelAdmin):
                 'fields': [
                     'corporate_name',
                     'cpf_cnpj',
-                    'material_type',
+                    ('supplier_type', 'material_type'),
                     ('state_registration', 'municipal_registration'),
-                    'xml_email',
-                    'rm_code',
+                    ('xml_email', 'rm_code'),
                     'active',
                 ]
             },
