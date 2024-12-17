@@ -65,7 +65,9 @@ def from_shapefile_zip(file):
             if not gdf.geometry.is_valid.all():
                 raise ValidationError('Algumas geometrias no Shapefile são inválidas.')
 
-            # Converte o geo-dataframe em dados geojson
+            for col in gdf.select_dtypes(include=['datetime']).columns:
+                gdf[col] = gdf[col].dt.strftime('%Y-%m-%dT%H:%M:%S')
+
             geojson = gdf.to_crs('EPSG:4326').to_json()
 
             return geojson
