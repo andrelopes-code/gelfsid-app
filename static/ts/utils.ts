@@ -17,3 +17,20 @@ export function roundNumber(number: number, digits: number = 2) {
 export function getCityKey(stateCode: number, cityName: string) {
     return `${stateCode}-${cityName}`;
 }
+
+export function getRandomPastelColor() {
+    const pastelColors = [
+        "#FFB3BA",
+        "#FFDFBA",
+        "#FFFFBA",
+        "#BAFFC9",
+        "#BAE1FF",
+        "#E0BBE4",
+        "#FFCCE6",
+        "#D4A5A5",
+        "#C9C9FF",
+        "#B5EAD7",
+    ];
+    const randomIndex = Math.floor(Math.random() * pastelColors.length);
+    return pastelColors[randomIndex];
+}

@@ -1,4 +1,5 @@
 import L from "leaflet";
+
 import {
     BRAZIL_COORDINATES,
     APP_CONFIG,
@@ -12,20 +13,23 @@ import {
     ORANGE_COLOR,
     HOST_CITY_TOOLTIP_TEXT,
 } from "./constants";
+
 import type { Cache, CitySuppliers, ShapefileData } from "./types";
 import { supplierService } from "./supplierService";
-import { getCityKey } from "./utils";
+import { getCityKey, getRandomPastelColor } from "./utils";
 
 class MapService {
     private MAX_ZOOM = 17;
     private MIN_ZOOM = 4;
-    private SATELLITE_ZOOM = 9;
+    private SATELLITE_ZOOM = 11;
+
     private MAX_BOUNDS = L.latLngBounds(L.latLng(180, -180), L.latLng(-90, 180));
     private GELF_COORDINATES = L.latLng(-19.43852652, -44.34155513);
 
     private map!: L.Map;
     private gelfTooltip!: L.Tooltip;
     private satelliteLayer!: L.TileLayer;
+    private activeCityNameTooltip!: { tooltip: L.Tooltip };
 
     private cache: Cache = {
         geojson: new Map(),
@@ -57,6 +61,7 @@ class MapService {
             minZoom: this.MIN_ZOOM,
             maxBounds: this.MAX_BOUNDS,
         });
+
         this.map.setView(BRAZIL_COORDINATES, this.MIN_ZOOM);
         this.map.on("zoomend", this.onZoomChange);
     }
@@ -75,7 +80,9 @@ class MapService {
             permanent: true,
             direction: "top",
             className: "custom-tooltip custom-tooltip-gelf",
-        }).setContent(HOST_CITY_TOOLTIP_TEXT);
+        })
+
+        this.gelfTooltip.setContent(HOST_CITY_TOOLTIP_TEXT);
         this.gelfTooltip.setLatLng(this.GELF_COORDINATES);
     }
 
@@ -121,8 +128,15 @@ class MapService {
             this.citiesGeojsonLayer.setStyle((feature: any) => {
                 if (showSatellite) {
                     /*
-                        Caso esteja em modo de satellite,
-                        as camadas de cidade serão ocultadas
+                        Remove o ultimo tooltip mostrando o
+                        nome da cidade ao trocar para satélite.
+                    */
+                    this.activeCityNameTooltip.tooltip.close();
+
+                    /*
+                        muda o estilo das camadas de cidade
+                        ocultando-as para mostrar a camada
+                        de satélite.
                     */
                     return {
                         color: "transparent",
@@ -133,7 +147,7 @@ class MapService {
                     };
                 } else {
                     /*
-                        Caso contrário, retoma os estilos anteriores
+                        Caso contrário, retoma os estilos anteriores.
                     */
                     return this.cityStyleFunction(feature);
                 }
@@ -143,98 +157,121 @@ class MapService {
 
     private async addShapefileLayers(showSatellite: boolean) {
         const currentState = this.currentStateFeature?.id;
+
         if (showSatellite && currentState) {
             const shapefiles: ShapefileData[] = await this.loadGeoJSON("shapefiles", currentState);
             shapefiles.forEach((shapefile) => this.addShapefileLayer(shapefile));
         } else {
+            /*
+                Caso o modo satélite esteja desativado,
+                limpa todas as camadas de shapefile do mapa.
+            */
             this.clearShapefileLayers();
         }
     }
 
     private addShapefileLayer(shapefile: ShapefileData) {
         const geojson = JSON.parse(shapefile.geojson);
+        const randomColor = getRandomPastelColor();
+        const propertyColor = "#FFFFFF77";
 
-        const layer = L.geoJSON(geojson, {
-            style: {
-                color: GREEN_COLOR,
-                fillColor: GREEN_COLOR,
-                fillOpacity: 0.1,
-                weight: 2,
-                className: "shapefile-layer",
+        const mainLayer = L.geoJSON(geojson, {
+            style: (feature) => {
+                console.log(feature?.properties)
+                if (feature?.properties?.MATRICULA) {
+                    return {
+                        color: propertyColor,
+                        fillColor: propertyColor,
+                        fillOpacity: 0.1,
+                        weight: 2,
+                        className: "shapefile-layer",
+                    };
+                } else {
+                    return {
+                        color: randomColor,
+                        fillColor: randomColor,
+                        fillOpacity: 0.1,
+                        weight: 2,
+                        className: "shapefile-layer",
+                    };
+                }
             },
         });
 
-        const properties = (layer.getLayers()[0] as any)?.feature?.properties;
+        const layers = mainLayer.getLayers()
 
-        layer.bindTooltip(this.createTooltipContent(properties, shapefile), {
-            permanent: false,
-            interactive: true,
-            direction: "center",
-            className: "shapefile-tooltip",
-            offset: [0, -10],
-        });
+        for (const layer of layers) {
+            const layerProperties = (layer as any)?.feature?.properties;
 
-        layer.off();
+            layer.bindPopup(this.createTooltipContent(layerProperties, shapefile), {
+                closeButton: true,
+                className: "shapefile-popup",
+            });
 
-        layer.on("remove", () => {
-            layer.closeTooltip();
-        });
+            layer.on("click", () => {
+                layer.openPopup();
+            });
 
-        layer.on("click", () => {
-            this.map.fitBounds(layer.getBounds(), { animate: true, duration: 1.5, padding: [15, 15] });
-            layer.isTooltipOpen() ? layer.closeTooltip() : layer.openTooltip();
-        });
+            layer.on("remove", () => {
+                layer.closePopup();
+            });
 
-        layer.addTo(this.map);
-        this.activeShapefileLayers.add(layer);
+            this.activeShapefileLayers.add(layer);
+        }
+
+        mainLayer.addTo(this.map);
     }
 
     private clearShapefileLayers() {
         this.activeShapefileLayers.forEach((layer) => {
             this.map.removeLayer(layer);
-            layer.off("click");
+            layer.off();
         });
+
         this.activeShapefileLayers.clear();
     }
 
     private createTooltipContent(properties: any, shapefile: any) {
-        const excludedKeys = [
-            "vinculo",
-            "estado",
-            "recibo",
-            "livro",
-            "matricula",
-            "proprietar",
-            "denominaca",
-            "comarca",
-            "perimetro",
-        ];
+        const fieldMapping = {
+            PLANTIO: "Plantio",
+            EXECUCAO: "Execução",
+            DATAPLANTI: "Data do Plantio",
+            TALHAO: "Talhão",
+            CNPJ_CPF: "CNPJ/CPF",
+            AREA: "Área",
+            MUNICIPIO: "Municipio",
+            PROPRIETAR: "Proprietário",
+            MATRICULA: "Matricula",
+            CARTORIO: "Cartório",
+            // ESPACAMENT: "Espaçamento",
+            // IDENTIFICA: "Identificação",
+        };
 
-        const municipio = properties?.municipio;
-        const estado = properties?.estado;
-        const municipioAndEstado = municipio && estado ? ` - ${municipio}, ${estado}` : "";
+        const dynamicContent = Object.entries(fieldMapping)
+            .map(([key, label]) => {
+                const value = properties[key];
 
-        const dynamicContent = Object.entries(properties)
-            .filter(([key]) => !excludedKeys.includes(key.toLowerCase()))
-            .map(([key, value]) => {
-                const displayValue = value || "Não informado";
-                const label = key.toUpperCase();
-                return `
-                    <div style="margin-bottom: 6px;" class="flex gap-4 justify-between w-full">
-                        <strong>${label}:</strong> ${displayValue}
-                    </div>
-                `;
+                if (value) {
+                    const displayValue = value || "Não informado";
+                    return `
+                        <div style="margin-bottom: 6px;" class="flex gap-4 justify-between w-full">
+                            <strong>${label}:</strong> ${displayValue}
+                        </div>
+                    `;
+                }
+
+                return "";
             })
             .join("");
 
         return `
-            <div style="font-family: Arial, sans-serif; font-size: 12px;" class="text-center">
-                <div style="font-weight: bold; font-size: 14px; margin-bottom: 8px;">
-                    ${shapefile.name}${municipioAndEstado}
+            <div class="text-nowrap" style="font-size: 12px;" class="text-center">
+                <div class="text-center" style="font-weight: bold; font-size: 14px; margin-bottom: 16px;">
+                    ${shapefile.name} [#${shapefile.id}]
                 </div>
-                 <div style="margin-bottom: 6px;" class="flex gap-4 justify-between w-full">
-                        <strong>FORNECEDOR:</strong> ${shapefile.supplier_name}
-                    </div>
+                <div style="margin-bottom: 6px;" class="flex gap-4 justify-between w-full">
+                    <strong>Fornecedor:</strong> ${shapefile.supplier_name || "Não informado"}
+                </div>
                 ${dynamicContent}
             </div>
         `;
@@ -373,11 +410,7 @@ class MapService {
                 da GELF caso o estado selecionado
                 seja o estado de Minas Gerais
             */
-            if (stateCode == 31) {
-                this.gelfTooltip.addTo(this.map);
-            } else {
-                this.gelfTooltip.remove();
-            }
+            stateCode == 31 ? this.gelfTooltip.addTo(this.map) : this.gelfTooltip.remove();
 
             const handleMouseInteraction = (e: L.LeafletMouseEvent) => {
                 const layer = e.propagatedFrom;
@@ -397,23 +430,25 @@ class MapService {
 
                     this.map.addLayer(tooltip);
 
-                    layer._managedTooltip = {
+                    layer._activeTooltip = {
                         tooltip: tooltip,
                         moveHandler: (moveEvent: L.LeafletMouseEvent) => {
                             tooltip.setLatLng(moveEvent.latlng);
                         },
                     };
 
-                    layer.on("mousemove", layer._managedTooltip.moveHandler);
+                    this.activeCityNameTooltip = layer._activeTooltip;
+
+                    layer.on("mousemove", layer._activeTooltip.moveHandler);
                 } else if (e.type === "mouseout") {
-                    if (layer._managedTooltip) {
-                        this.map.removeLayer(layer._managedTooltip.tooltip);
-                        layer.off("mousemove", layer._managedTooltip.moveHandler);
-                        delete layer._managedTooltip;
+                    if (layer._activeTooltip) {
+                        this.map.removeLayer(layer._activeTooltip.tooltip);
+                        layer.off("mousemove", layer._activeTooltip.moveHandler);
+                        delete layer._activeTooltip;
                     }
-                } else if (e.type === "click") {
+                } else if (e.type === "click" && !this.satelliteMode) {
                     if (feature.properties) {
-                        layer._managedTooltip?.tooltip.addTo(this.map);
+                        layer._activeTooltip?.tooltip.addTo(this.map);
                         supplierService.openDetails(cityKey, this.currentType);
                     }
                 }
@@ -441,8 +476,20 @@ class MapService {
 
         for (let i = 0; i < states.length; i++) {
             const state = states[i];
+
+            /*
+                Adiciona o carregamento assíncrono de GeoJSON
+                para as cidades de cada estado na "pool".
+                A pool controla os carregamentos simultâneos.
+            */
             pool.push(this.loadGeoJSON("cities", STATE_CODE_MAP[state].toString()));
 
+            /*
+                Quando o limite máximo de carregamentos simultâneos
+                é alcançado ou todos os estados foram processados,
+                aguarda a conclusão dos carregamentos na pool
+                e a esvazia para continuar.
+            */
             if (pool.length >= maxConcurrent || i === states.length - 1) {
                 await Promise.all(pool);
                 pool.length = 0;

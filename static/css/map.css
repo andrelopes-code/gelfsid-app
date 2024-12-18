@@ -22,11 +22,14 @@ path {
 }
 
 .shapefile-layer {
-    transition: filter 0.5s ease;
+    transition-property: filter, fill-opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 250ms;
 }
 
 .shapefile-layer:hover {
-    filter: brightness(1.3) !important;
+    filter: brightness(1.1) !important;
+    fill-opacity: 0.3;
 }
 
 .texthover:hover {
@@ -37,11 +40,40 @@ path {
 .shapefile-tooltip {
     background-color: var(--dark-200) !important;
     border-color: var(--dark-200) !important;
+    pointer-events: none !important;
     color: #a1a1a1 !important;
 }
 
 .shapefile-tooltip::before {
     border-top-color: var(--dark-200) !important;
+}
+
+.shapefile-popup .leaflet-popup-content {
+    width: auto !important;
+}
+.shapefile-popup .leaflet-popup-content-wrapper {
+    background: var(--dark-200) !important;
+    color: #a1a1a1 !important;
+}
+
+.shapefile-popup .leaflet-popup-tip {
+    background: var(--dark-200) !important;
+}
+
+.shapefile-popup button.close-popup-btn {
+    background-color: transparent;
+    border: 1px solid #a1a1a1;
+    color: #a1a1a1;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.shapefile-popup button.close-popup-btn:hover {
+    background-color: #a1a1a1;
+    color: var(--dark-200);
 }
 
 .custom-tooltip {
@@ -55,7 +87,7 @@ path {
 }
 
 .custom-tooltip-gelf {
-    font-size: 0.5rem !important;
+    font-size: 0.75rem !important;
     font-weight: bold;
     color: var(--primary-color) !important;
 }

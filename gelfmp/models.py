@@ -284,7 +284,7 @@ class Document(BaseModel):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.get_document_type_display} - {self.filename}'
+        return f'{self.document_type} - {self.filename}'
 
     class Meta:
         ordering = ['-created_at']

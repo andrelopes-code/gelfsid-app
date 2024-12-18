@@ -71,15 +71,22 @@ def get_state_shapefiles(request: HttpRequest, state):
         'id', 'name', 'supplier__corporate_name', 'geojson'
     )
 
+    data = [
+        {
+            'supplier_name': doc.pop('supplier__corporate_name'),
+            'id': doc.pop('id'),
+            'name': doc.pop('name'),
+            'geojson': doc.pop('geojson'),
+        }
+        for doc in documents
+    ]
+
+    # ! Ajustar esse método posteriormente.
+    # ! Adicionar uma solução mais robusta e performática
+    # ! para ordenar os shapes de propriedade em primeiro.
+    data.sort(key=lambda x: 'PROPRIEDADE' not in x['name'])
+
     return JsonResponse(
-        [
-            {
-                'supplier_name': doc.pop('supplier__corporate_name'),
-                'id': doc.pop('id'),
-                'name': doc.pop('name'),
-                'geojson': doc.pop('geojson'),
-            }
-            for doc in documents
-        ],
+        data,
         safe=False,
     )

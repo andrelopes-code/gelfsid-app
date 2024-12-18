@@ -401,6 +401,24 @@ files = [
 all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
 
 [[package]]
+name = "inquirerpy"
+version = "0.3.4"
+description = "Python port of Inquirer.js (A collection of common interactive command-line user interfaces)"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "InquirerPy-0.3.4-py3-none-any.whl", hash = "sha256:c65fdfbac1fa00e3ee4fb10679f4d3ed7a012abf4833910e63c295827fe2a7d4"},
+    {file = "InquirerPy-0.3.4.tar.gz", hash = "sha256:89d2ada0111f337483cb41ae31073108b2ec1e618a49d7110b0d7ade89fc197e"},
+]
+
+[package.dependencies]
+pfzy = ">=0.3.1,<0.4.0"
+prompt-toolkit = ">=3.0.1,<4.0.0"
+
+[package.extras]
+docs = ["Sphinx (>=4.1.2,<5.0.0)", "furo (>=2021.8.17-beta.43,<2022.0.0)", "myst-parser (>=0.15.1,<0.16.0)", "sphinx-autobuild (>=2021.3.14,<2022.0.0)", "sphinx-copybutton (>=0.4.0,<0.5.0)"]
+
+[[package]]
 name = "isort"
 version = "5.13.2"
 description = "A Python utility / library to sort Python imports."
@@ -778,6 +796,20 @@ files = [
 ]
 
 [[package]]
+name = "pfzy"
+version = "0.3.4"
+description = "Python port of the fzy fuzzy string matching algorithm"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "pfzy-0.3.4-py3-none-any.whl", hash = "sha256:5f50d5b2b3207fa72e7ec0ef08372ef652685470974a107d0d4999fc5a903a96"},
+    {file = "pfzy-0.3.4.tar.gz", hash = "sha256:717ea765dd10b63618e7298b2d98efd819e0b30cd5905c9707223dceeb94b3f1"},
+]
+
+[package.extras]
+docs = ["Sphinx (>=4.1.2,<5.0.0)", "furo (>=2021.8.17-beta.43,<2022.0.0)", "myst-parser (>=0.15.1,<0.16.0)", "sphinx-autobuild (>=2021.3.14,<2022.0.0)", "sphinx-copybutton (>=0.4.0,<0.5.0)"]
+
+[[package]]
 name = "pillow"
 version = "11.0.0"
 description = "Python Imaging Library (Fork)"
@@ -883,6 +915,61 @@ files = [
 [package.dependencies]
 packaging = "*"
 tenacity = ">=6.2.0"
+
+[[package]]
+name = "polars"
+version = "1.17.1"
+description = "Blazingly fast DataFrame library"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "polars-1.17.1-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:d3a2172f7cf332010f0b034345111e9c86d59b5a5b0fc5aa0509121f40d9e43c"},
+    {file = "polars-1.17.1-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:82e98c69197df0d8ddc341a6175008508ceaea88f723f32044027810bcdb43fa"},
+    {file = "polars-1.17.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:59abdab015ed2ecfa0c63862b960816c35096e1f4df057dde3c44cd973af5029"},
+    {file = "polars-1.17.1-cp39-abi3-manylinux_2_24_aarch64.whl", hash = "sha256:6d2f922c403b8900b3ae3c23a27b2cae3a2db40ad790cc4fc368402b92629b11"},
+    {file = "polars-1.17.1-cp39-abi3-win_amd64.whl", hash = "sha256:d38156c8259554cbcb17874d91e6dfa9c404335f08a3307496aadfdee46baa31"},
+    {file = "polars-1.17.1.tar.gz", hash = "sha256:5a3dac3cb7cbe174d1fa898cba9afbede0c08e8728feeeab515554d762127019"},
+]
+
+[package.extras]
+adbc = ["adbc-driver-manager[dbapi]", "adbc-driver-sqlite[dbapi]"]
+all = ["polars[async,cloudpickle,database,deltalake,excel,fsspec,graph,iceberg,numpy,pandas,plot,pyarrow,pydantic,style,timezone]"]
+async = ["gevent"]
+calamine = ["fastexcel (>=0.9)"]
+cloudpickle = ["cloudpickle"]
+connectorx = ["connectorx (>=0.3.2)"]
+database = ["nest-asyncio", "polars[adbc,connectorx,sqlalchemy]"]
+deltalake = ["deltalake (>=0.19.0)"]
+excel = ["polars[calamine,openpyxl,xlsx2csv,xlsxwriter]"]
+fsspec = ["fsspec"]
+gpu = ["cudf-polars-cu12"]
+graph = ["matplotlib"]
+iceberg = ["pyiceberg (>=0.5.0)"]
+numpy = ["numpy (>=1.16.0)"]
+openpyxl = ["openpyxl (>=3.0.0)"]
+pandas = ["pandas", "polars[pyarrow]"]
+plot = ["altair (>=5.4.0)"]
+pyarrow = ["pyarrow (>=7.0.0)"]
+pydantic = ["pydantic"]
+sqlalchemy = ["polars[pandas]", "sqlalchemy"]
+style = ["great-tables (>=0.8.0)"]
+timezone = ["backports-zoneinfo", "tzdata"]
+xlsx2csv = ["xlsx2csv (>=0.8.0)"]
+xlsxwriter = ["xlsxwriter"]
+
+[[package]]
+name = "prompt-toolkit"
+version = "3.0.48"
+description = "Library for building powerful interactive command lines in Python"
+optional = false
+python-versions = ">=3.7.0"
+files = [
+    {file = "prompt_toolkit-3.0.48-py3-none-any.whl", hash = "sha256:f49a827f90062e411f1ce1f854f2aedb3c23353244f8108b89283587397ac10e"},
+    {file = "prompt_toolkit-3.0.48.tar.gz", hash = "sha256:d6623ab0477a80df74e646bdbc93621143f5caf104206aa29294d53de1a03d90"},
+]
+
+[package.dependencies]
+wcwidth = "*"
 
 [[package]]
 name = "pydantic"
@@ -1635,6 +1722,17 @@ files = [
 ]
 
 [[package]]
+name = "wcwidth"
+version = "0.2.13"
+description = "Measures the displayed width of unicode strings in a terminal"
+optional = false
+python-versions = "*"
+files = [
+    {file = "wcwidth-0.2.13-py2.py3-none-any.whl", hash = "sha256:3da69048e4540d84af32131829ff948f1e022c1c6bdb8d6102117aac784f6859"},
+    {file = "wcwidth-0.2.13.tar.gz", hash = "sha256:72ea0c06399eb286d978fdedb6923a9eb47e1c486ce63e9b4e64fc18303972b5"},
+]
+
+[[package]]
 name = "win32-setctime"
 version = "1.1.0"
 description = "A small Python utility to set file creation time on Windows"
@@ -1651,4 +1749,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "737afd1b3da817bb2678c7aa0e8dad6c6a2883b9866662f4c18711a5c81fe23e"
+content-hash = "f0902acd14e682a09073cb551b69f55a237142b8a2898ef58577d2b0473f085d"
