@@ -15,13 +15,13 @@ if settings.DEBUG:
         format='{time} | {name} | {level} | {message}',
         colorize=True,
     )
-
-# Configura o logger para logar em um arquivo
-# de erro com rotação de 7 dias e level de erro
-log.add(
-    f'{settings.BASE_DIR}/logs/error.log',
-    rotation='00:00',
-    retention='7 days',
-    level='ERROR',
-    format='{time} | {name} | {level} | {message}',
-)
+else:
+    # Configura o logger para logar em um arquivo
+    # de erro com rotação de 7 dias e level de erro
+    log.add(
+        f'{settings.BASE_DIR}/logs/error.log',
+        rotation='00:00',
+        retention='7 days',
+        level='ERROR',
+        format='{time} | {name} | {level} | {message}',
+    )
