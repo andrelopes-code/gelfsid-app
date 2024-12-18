@@ -80,7 +80,7 @@ class MapService {
             permanent: true,
             direction: "top",
             className: "custom-tooltip custom-tooltip-gelf",
-        })
+        });
 
         this.gelfTooltip.setContent(HOST_CITY_TOOLTIP_TEXT);
         this.gelfTooltip.setLatLng(this.GELF_COORDINATES);
@@ -177,7 +177,6 @@ class MapService {
 
         const mainLayer = L.geoJSON(geojson, {
             style: (feature) => {
-                console.log(feature?.properties)
                 if (feature?.properties?.MATRICULA) {
                     return {
                         color: propertyColor,
@@ -198,7 +197,7 @@ class MapService {
             },
         });
 
-        const layers = mainLayer.getLayers()
+        const layers = mainLayer.getLayers();
 
         for (const layer of layers) {
             const layerProperties = (layer as any)?.feature?.properties;

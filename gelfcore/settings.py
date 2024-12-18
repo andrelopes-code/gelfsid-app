@@ -114,3 +114,13 @@ LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 USE_TZ = True
+
+
+SHELL_PLUS = 'ipython'
+SHELL_PLUS_PRINT_SQL = True
+
+IPYTHON_ARGUMENTS = [
+    '--ext',
+    'django_extensions.management.notebook_extension',
+    '--debug',
+]
