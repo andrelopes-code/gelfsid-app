@@ -12,6 +12,7 @@ import {
     GREEN_COLOR,
     ORANGE_COLOR,
     HOST_CITY_TOOLTIP_TEXT,
+    html,
 } from "./constants";
 
 import type { Cache, CitySuppliers, ShapefileData } from "./types";
@@ -40,8 +41,8 @@ class MapService {
     private satelliteMode = false;
     private citySuppliers: CitySuppliers = {};
     private currentStateCode: number | null = null;
-    private currentStateFeature: any | null = null;
-    private currentType: string | null = null;
+    private activeStateFeature: any | null = null;
+    private currentMaterialType: string | null = null;
 
     private citiesGeojsonLayer: L.GeoJSON | null = null;
     private activeCityLayers = new Set<L.Layer>();
@@ -106,19 +107,23 @@ class MapService {
     };
 
     private enableSatelliteMode() {
-        if (!this.map.hasLayer(this.satelliteLayer!)) {
-            this.satelliteLayer!.addTo(this.map);
+        if (!this.map.hasLayer(this.satelliteLayer)) {
+            this.satelliteLayer.addTo(this.map);
+
             this.updateGeoJSONStyleForSatelliteMode(true);
             this.addShapefileLayers(true);
+
             this.satelliteMode = true;
         }
     }
 
     private disableSatelliteMode() {
-        if (this.map.hasLayer(this.satelliteLayer!)) {
-            this.map.removeLayer(this.satelliteLayer!);
+        if (this.map.hasLayer(this.satelliteLayer)) {
+            this.map.removeLayer(this.satelliteLayer);
+
             this.updateGeoJSONStyleForSatelliteMode(false);
             this.addShapefileLayers(false);
+
             this.satelliteMode = false;
         }
     }
@@ -128,13 +133,13 @@ class MapService {
             this.citiesGeojsonLayer.setStyle((feature: any) => {
                 if (showSatellite) {
                     /*
-                        Remove o ultimo tooltip mostrando o
-                        nome da cidade ao trocar para satélite.
+                        Remove o ultimo tooltip de nome de
+                        cidade ativo ao trocar para satélite.
                     */
                     this.activeCityNameTooltip.tooltip.close();
 
                     /*
-                        muda o estilo das camadas de cidade
+                        muda o estilo das camadas de cidade,
                         ocultando-as para mostrar a camada
                         de satélite.
                     */
@@ -156,15 +161,15 @@ class MapService {
     }
 
     private async addShapefileLayers(showSatellite: boolean) {
-        const currentState = this.currentStateFeature?.id;
+        const currentState = this.activeStateFeature?.id;
 
         if (showSatellite && currentState) {
             const shapefiles: ShapefileData[] = await this.loadGeoJSON("shapefiles", currentState);
             shapefiles.forEach((shapefile) => this.addShapefileLayer(shapefile));
         } else {
             /*
-                Caso o modo satélite esteja desativado,
-                limpa todas as camadas de shapefile do mapa.
+                Caso showSatellite seja falso, limpa as
+                camadas de shapefiles adicionadas.
             */
             this.clearShapefileLayers();
         }
@@ -172,9 +177,22 @@ class MapService {
 
     private addShapefileLayer(shapefile: ShapefileData) {
         const geojson = JSON.parse(shapefile.geojson);
+
+        /*
+            Cores aleatórias para as camadas de
+            produção florestal e uma cor fixa para
+            camadas de propriedade.
+        */
         const randomColor = getRandomPastelColor();
         const propertyColor = "#FFFFFF77";
 
+
+        /*
+            A camada principal que agrupa todas
+            as sub-camadas. Ela define o estilo
+            que terão as sub-camadas de acordo
+            com o tipo (propriedade ou produção florestal).
+        */
         const mainLayer = L.geoJSON(geojson, {
             style: (feature) => {
                 if (feature?.properties?.MATRICULA) {
@@ -197,13 +215,18 @@ class MapService {
             },
         });
 
-        const layers = mainLayer.getLayers();
+        const subLayers = mainLayer.getLayers();
 
-        for (const layer of layers) {
+        subLayers.forEach((layer) => {
+            /*
+                Tenta pegar as propriedades da camada caso existam.
+            */
             const layerProperties = (layer as any)?.feature?.properties;
 
             layer.bindPopup(this.createTooltipContent(layerProperties, shapefile), {
                 closeButton: true,
+                closeOnEscapeKey: true,
+                interactive: true,
                 className: "shapefile-popup",
             });
 
@@ -216,12 +239,16 @@ class MapService {
             });
 
             this.activeShapefileLayers.add(layer);
-        }
+        });
 
-        mainLayer.addTo(this.map);
+        this.map.addLayer(mainLayer);
     }
 
     private clearShapefileLayers() {
+        /*
+            Limpa as camadas de shapefiles ativas
+            e remove os event listeners.
+        */
         this.activeShapefileLayers.forEach((layer) => {
             this.map.removeLayer(layer);
             layer.off();
@@ -231,7 +258,7 @@ class MapService {
     }
 
     private createTooltipContent(properties: any, shapefile: any) {
-        const fieldMapping = {
+        const propertiesMapping = {
             PLANTIO: "Plantio",
             EXECUCAO: "Execução",
             DATAPLANTI: "Data do Plantio",
@@ -242,16 +269,16 @@ class MapService {
             PROPRIETAR: "Proprietário",
             MATRICULA: "Matricula",
             CARTORIO: "Cartório",
-            // ESPACAMENT: "Espaçamento",
-            // IDENTIFICA: "Identificação",
+            IDENTIFICA: "Identificação",
         };
 
-        const dynamicContent = Object.entries(fieldMapping)
+        const dynamicContent = Object.entries(propertiesMapping)
             .map(([key, label]) => {
                 const value = properties[key];
 
                 if (value) {
                     const displayValue = value || "Não informado";
+
                     return `
                         <div style="margin-bottom: 6px;" class="flex gap-4 justify-between w-full">
                             <strong>${label}:</strong> ${displayValue}
@@ -266,7 +293,7 @@ class MapService {
         return `
             <div class="text-nowrap" style="font-size: 12px;" class="text-center">
                 <div class="text-center" style="font-weight: bold; font-size: 14px; margin-bottom: 16px;">
-                    ${shapefile.name} [#${shapefile.id}]
+                    ${shapefile.name} (${shapefile.id})
                 </div>
                 <div style="margin-bottom: 6px;" class="flex gap-4 justify-between w-full">
                     <strong>Fornecedor:</strong> ${shapefile.supplier_name || "Não informado"}
@@ -277,12 +304,20 @@ class MapService {
     }
 
     private async loadGeoJSON(type: "states" | "cities" | "shapefiles", uf: string | null = null) {
-        const key = type === "states" ? type : `${type}-${uf}`;
+        const cacheKey = type === "states" ? type : `${type}-${uf}`;
 
-        if (!this.cache.geojson.has(key)) {
+        /*
+            Verifica se o GeoJSON já está em cache.
+            Caso contrário, faz a requisição e o armazena.
+        */
+        if (!this.cache.geojson.has(cacheKey)) {
             try {
                 let url = "";
 
+                /*
+                    Define a URL do recurso com base no tipo
+                    e no estado (se aplicável).
+                */
                 if (type === "shapefiles") {
                     url = APP_CONFIG.api.shapefiles(uf as string);
                 } else if (type === "states") {
@@ -291,28 +326,52 @@ class MapService {
                     url = APP_CONFIG.geojson.cities.replace("{uf}", uf as string);
                 }
 
+                /*
+                    Faz a requisição ao recurso e lança uma exceção
+                    em caso de erro na resposta.
+                */
                 const response = await fetch(url);
-                if (!response.ok) throw new Error(`failed to load ${key}`);
+                if (!response.ok) {
+                    throw new Error(`failed to load ${cacheKey}`);
+                }
 
+                /*
+                    Parseia os dados GeoJSON e os armazena em cache
+                    para evitar futuras requisições.
+                */
                 const geojsonData = await response.json();
-                this.cache.geojson.set(key, geojsonData);
+                this.cache.geojson.set(cacheKey, geojsonData);
+
             } catch (error) {
-                console.error(`error loading ${key}:`, error);
+                console.error(`error loading ${cacheKey}:`, error);
                 throw error;
             }
         }
 
-        return this.cache.geojson.get(key);
+        return this.cache.geojson.get(cacheKey);
     }
 
-    private calculateCityStyle(cityKey: string, currentType: string | null) {
-        const cacheKey = `${cityKey}-${currentType}`;
+    private cityStyleFunction(feature: any) {
+        /*
+            Calcula e retorna o estilo da cidade com base na
+            chave gerada e no tipo de exibição atual.
+        */
+        const cityKey = getCityKey(this.currentStateCode!, feature.properties.name);
+        return this.calculateCityStyle(cityKey, this.currentMaterialType);
+    }
 
+    private calculateCityStyle(cityKey: string, currentMaterialType: string | null) {
+        const cacheKey = `${cityKey}-${currentMaterialType}`;
+
+        /*
+            Verifica se o estilo da cidade já está armazenado no cache.
+            Caso esteja, retorna diretamente o estilo previamente calculado.
+        */
         if (this.styleCache.has(cacheKey)) {
             return this.styleCache.get(cacheKey)!;
         }
 
-        const base: L.PathOptions = {
+        const style: L.PathOptions = {
             color: WEAK_STROKE_COLOR,
             fillColor: FILL_COLOR,
             fillOpacity: 1,
@@ -320,43 +379,50 @@ class MapService {
             className: "city-layer",
         };
 
+        /*
+            Obtém os fornecedores associados à cidade e verifica se
+            o filtro de tipo de material está habilitado ou desabilitado.
+        */
         const suppliers = this.citySuppliers[cityKey];
-        const filterDisabled = currentType === DEFAULT_MATERIAL_TYPE;
+        const filterDisabled = currentMaterialType === DEFAULT_MATERIAL_TYPE;
+        const supplierHasCurrentMaterialType = suppliers?.some((s) => s.material_type === currentMaterialType)
 
-        if (suppliers && (filterDisabled || suppliers.some((s) => s.material_type === currentType))) {
-            base.fillColor = STROKE_COLOR;
+        if (suppliers && (filterDisabled || supplierHasCurrentMaterialType)) {
+            style.fillColor = STROKE_COLOR;
 
-            switch (currentType) {
+            /*
+                Aplica uma cor específica ao preenchimento
+                com base no tipo atual de material.
+            */
+            switch (currentMaterialType) {
                 case "Carvão Vegetal":
-                    base.fillColor = GREEN_COLOR;
+                    style.fillColor = GREEN_COLOR;
                     break;
                 case "Minério de Ferro":
-                    base.fillColor = ORANGE_COLOR;
+                    style.fillColor = ORANGE_COLOR;
                     break;
                 case "Todos":
-                    base.fillColor = ORANGE_COLOR;
+                    style.fillColor = ORANGE_COLOR;
             }
         }
 
-        if (suppliers && base.fillColor === FILL_COLOR) {
-            base.fillColor = "var(--off)";
+        /*
+            Se a cidade possui fornecedores, mas nenhuma cor foi atribuída,
+            usa uma cor de preenchimento para indicar inatividade.
+        */
+        if (suppliers && style.fillColor === FILL_COLOR) {
+            style.fillColor = "var(--off)";
         }
 
-        // Armazena o estilo calculado no cache
-        this.styleCache.set(cacheKey, base);
-        return base;
-    }
-
-    private cityStyleFunction(feature: any) {
-        const cityKey = getCityKey(this.currentStateCode!, feature.properties.name);
-        return this.calculateCityStyle(cityKey, this.currentType);
+        this.styleCache.set(cacheKey, style);
+        return style;
     }
 
     async loadStates() {
         try {
-            const data = await this.loadGeoJSON("states");
+            const statesGeojsonData = await this.loadGeoJSON("states");
 
-            L.geoJSON(data, {
+            L.geoJSON(statesGeojsonData, {
                 style: {
                     color: WEAK_STROKE_COLOR,
                     fillColor: FILL_COLOR,
@@ -366,34 +432,29 @@ class MapService {
                 onEachFeature: (feature, layer) => {
                     layer.on({
                         click: async () => {
-                            this.currentStateFeature = feature;
-                            await this.loadCities(STATE_CODE_MAP[feature.id as string]);
+                            this.activeStateFeature = feature;
+                            await this.loadStateCities(STATE_CODE_MAP[feature.id as string]);
                         },
                     });
                 },
             }).addTo(this.map);
+
         } catch (error) {
             console.error("error loading states:", error);
         }
     }
 
-    async loadCities(stateCode: number) {
+    async loadStateCities(stateCode: number) {
         try {
-            // Caso tenha uma camada de cidades carregada,
-            // remove os event listeners e a camada do mapa
             if (this.citiesGeojsonLayer) {
                 this.map.removeLayer(this.citiesGeojsonLayer);
             }
 
-            // Remove os event listeners das camadas anteriores
-            // e limpa o Set que armazena essas camadas
             this.activeCityLayers.forEach((layer) => {
                 layer.off();
             });
             this.activeCityLayers.clear();
 
-            // Carrega o novo geoJSON para o estado
-            //  selecionado e o adiciona ao mapa
             const data = await this.loadGeoJSON("cities", stateCode.toString());
             this.currentStateCode = stateCode;
 
@@ -405,20 +466,25 @@ class MapService {
             }).addTo(this.map);
 
             /*
-                Adiciona o tooltip indicando o local
-                da GELF caso o estado selecionado
-                seja o estado de Minas Gerais
+                Exibe ou remove o tooltip da GELF com base no estado selecionado.
+                (GELF é exibido apenas em Minas Gerais, código 31).
             */
             stateCode == 31 ? this.gelfTooltip.addTo(this.map) : this.gelfTooltip.remove();
 
+
+            /*
+                Define o comportamento de interação com o mouse
+                nas camadas de cidade (mouseover, mouseout e click).
+            */
             const handleMouseInteraction = (e: L.LeafletMouseEvent) => {
                 const layer = e.propagatedFrom;
                 const feature = layer.feature;
                 const cityKey = getCityKey(stateCode, feature.properties.name);
 
-                if (e.type === "mouseover" && feature.properties) {
-                    if (cityKey === HOST_CITY_KEY || this.satelliteMode) return;
+                const notInSatelliteMode = !this.satelliteMode;
+                const isNotHostCity = cityKey !== HOST_CITY_KEY;
 
+                if (e.type === "mouseover" && feature.properties && isNotHostCity && notInSatelliteMode) {
                     const tooltip = L.tooltip({
                         permanent: false,
                         direction: "top",
@@ -437,19 +503,21 @@ class MapService {
                     };
 
                     this.activeCityNameTooltip = layer._activeTooltip;
-
                     layer.on("mousemove", layer._activeTooltip.moveHandler);
+
                 } else if (e.type === "mouseout") {
                     if (layer._activeTooltip) {
                         this.map.removeLayer(layer._activeTooltip.tooltip);
                         layer.off("mousemove", layer._activeTooltip.moveHandler);
                         delete layer._activeTooltip;
                     }
-                } else if (e.type === "click" && !this.satelliteMode) {
+
+                } else if (e.type === "click" && notInSatelliteMode) {
                     if (feature.properties) {
                         layer._activeTooltip?.tooltip.addTo(this.map);
-                        supplierService.openDetails(cityKey, this.currentType);
+                        supplierService.openDetails(cityKey, this.currentMaterialType);
                     }
+
                 }
             };
 
@@ -457,6 +525,7 @@ class MapService {
                 .on("mouseover", handleMouseInteraction)
                 .on("mouseout", handleMouseInteraction)
                 .on("click", handleMouseInteraction);
+
         } catch (error) {
             console.error("error loading cities:", error);
         }
@@ -496,8 +565,8 @@ class MapService {
         }
     }
 
-    setCurrentType(type: string) {
-        this.currentType = type;
+    setCurrentMaterialType(type: string) {
+        this.currentMaterialType = type;
         this.updateGeoJSONStyle();
     }
 

@@ -8,7 +8,7 @@ class App {
 
     constructor() {
         this.mapService = new MapService();
-        this.mapService.setCurrentType(DEFAULT_MATERIAL_TYPE);
+        this.mapService.setCurrentMaterialType(DEFAULT_MATERIAL_TYPE);
     }
 
     private async initializeFilter(materialTypes: Set<string>) {
@@ -41,7 +41,7 @@ class App {
                 // Atualiza o tipo de material atualmente filtrado ao mapService
                 const value = selectedOption.getAttribute("data-value");
                 if (value) {
-                    this.mapService.setCurrentType(value);
+                    this.mapService.setCurrentMaterialType(value);
                 }
             });
 
