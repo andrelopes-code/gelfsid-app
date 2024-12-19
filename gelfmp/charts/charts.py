@@ -88,6 +88,13 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
     if df.empty:
         return no_data_error(config['title'])
 
+    spacing = pd.Timedelta(days=2)
+
+    if group_by == 'week':
+        spacing = pd.Timedelta(days=5)
+    elif group_by == 'month':
+        spacing = pd.Timedelta(days=15)
+
     fig = px.bar(
         data_frame=df,
         x='entry_period',
@@ -115,7 +122,13 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
         xaxis_title='',
         title_x=0.5,
         margin=dict(l=30, r=15, t=40, b=20),
-        xaxis=dict(dtick=config['dtick']),
+        xaxis=dict(
+            range=[
+                pd.to_datetime(df['entry_period'].min()) - spacing,
+                pd.to_datetime(df['entry_period'].max()) + spacing,
+            ],
+            dtick=config['dtick'],
+        ),
         autosize=True,
     )
 
@@ -276,6 +289,8 @@ def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
     target_month = (current_month - months_ago - 1) % 12 + 1
     target_year = current_year + ((current_month - months_ago - 1) // 12)
 
+    # Seleciona os IQFs de fornecedores nos
+    # últimos 3 meses caso esses valores existam.
     iqfs = CharcoalIQF.objects.filter(
         year__gte=target_year,
         year__lte=current_year,
@@ -288,9 +303,9 @@ def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
     if df.empty:
         return no_data_error(f'IQFs nos últimos {months_ago} meses')
 
-    df['month_year'] = df['month'].astype(str) + '/' + df['year'].astype(str)
+    df['month_year'] = df.apply(lambda row: f"{row['month']}/{row['year']}", axis=1)
 
-    fig = px.bar(
+    fig = px.area(
         df,
         x='month_year',
         y='iqf',
@@ -299,21 +314,33 @@ def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
         labels={'month_year': 'Mês/Ano', 'iqf': 'IQF'},
     )
 
-    fig.update_traces(
-        texttemplate='%{text:.1f}',
-        textfont=dict(color='white'),
-        textposition='outside',
-        cliponaxis=False,
-    )
-
     fig.update_layout(
         uniformtext_minsize=8,
         uniformtext_mode='hide',
-        xaxis_title='',
-        title_y=0.98,
-        margin=dict(l=30, r=15, t=40, b=20),
+        title_y=0.95,
+        margin=dict(l=30, r=20, t=50, b=40),
         autosize=True,
         dragmode=False,
+        xaxis=dict(
+            title='',
+            range=[-0.2, len(df['month_year']) - 0.9,] if len(df['month_year']) > 1 else [-0.1, 0.1],
+            tickfont=dict(size=10),
+        ),
+        yaxis=dict(
+            automargin=True,
+            rangemode='tozero',
+            ticksuffix='%',
+        ),
+    )
+
+    fig.update_traces(
+        hovertemplate='%{text:.1f}%',
+        texttemplate='%{text:.1f}%',
+        textfont=dict(color='white'),
+        textposition='top center',
+        cliponaxis=False,
+        marker=dict(size=8, symbol='circle'),
+        line=dict(width=2),
     )
 
     return html_else_json(fig, html)
