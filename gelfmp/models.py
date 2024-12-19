@@ -480,6 +480,9 @@ class Supplier(BaseModel):
     def get_iqfs(self) -> models.Manager[CharcoalIQF]:
         return self.iqfs
 
+    def is_charcoal_supplier(self):
+        return self.material_type == MaterialType.CHARCOAL
+
     def clean(self):
         # Impede que o campo `Tipo de Fornecedor` seja
         # utilizado em fornecedores que não sejam de carvão.
