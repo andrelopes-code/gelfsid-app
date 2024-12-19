@@ -27,10 +27,10 @@ def supplier_details(request: HttpRequest, id):
     return render(request, 'supplier/index.html', context=context)
 
 
-@router('supplier/<int:id>/stats', name='supplier_stats')
+@router('supplier/<int:id>/stats', name='charcoal_supplier_stats')
 def supplier_stats(request: HttpRequest, id):
     supplier = Supplier.objects.filter(id=id).first()
-    if not supplier:
+    if not supplier or not supplier.is_charcoal_supplier():
         return redirect('index')
 
     context = {
@@ -41,6 +41,10 @@ def supplier_stats(request: HttpRequest, id):
                 'form_id': 'supplier_charcoal_entries_form',
                 'data': charts.supplier_charcoal_entries(supplier=id, html=True),
                 'form': forms.CharcoalSupplierEntriesChartForm(supplier_id=id),
+            },
+            {
+                'id': 'supplier_iqfs_last_3_months',
+                'data': charts.supplier_iqfs_last_3_months(supplier_id=id, html=True),
             },
         ],
     }
@@ -60,13 +64,8 @@ def supplier_search(request: HttpRequest):
     return render(request, 'htmx/supplier_search/results.html', {'suppliers': suppliers})
 
 
-@router('dashboard/', name='dashboard')
+@router('dashboard/charcoal/', name='charcoal_dashboard')
 def dashboard(request: HttpRequest):
-    return render(request, 'dashboard/index.html')
-
-
-@router('dashboard/htmx/charcoal/', name='charcoal_dashboard_htmx')
-def charcoal_dashboard_htmx(request: HttpRequest):
     context = {
         'charts': [
             {

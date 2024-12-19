@@ -11,10 +11,13 @@
                          class="w-auto h-10"
                          alt="Gelf logo" />
                 </a>
-                {% url 'index' as index_url %}
-                {% include "components/header/button.html" with href=index_url text="MAPA" %}
-                {% url 'supplier_stats' id=supplier.id as stats_url %}
-                {% include "components/header/button.html" with href=stats_url text="VER ESTATÍSTICAS DO FORNECEDOR" %}
+                {% url 'index' as url %}
+                {% include "components/header/button.html" with href=url text="MAPA" %}
+                {% if supplier.is_charcoal_supplier %}
+                    {% url 'charcoal_supplier_stats' id=supplier.id as url %}
+                    {% include "components/header/button.html" with href=url text="VER ESTATÍSTICAS" %}
+                {% endif %}
+                <div class="pointer-events-auto">{% include "components/supplier_search.html" %}</div>
             </div>
         </nav>
         <!-- MAIN -->

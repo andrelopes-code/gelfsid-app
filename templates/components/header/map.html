@@ -5,15 +5,15 @@
         <div class="flex flex-wrap justify-start items-start gap-3 bg-dark m-2 px-2 py-2 rounded-md w-fit h-full max-h-[56px]">
             <a class="pointer-events-auto" href="{% url 'index' %}">
                 <img src="{% static 'assets/logo.png' %}"
-                     class="w-auto h-10"
-                     alt="Gelf logo" />
+                class="w-auto h-10"
+                alt="Gelf logo" />
             </a>
             <div class="pointer-events-auto">{% include "components/filter_switch.html" %}</div>
             {% url 'admin:index' as admin_url %}
             <div class="pointer-events-auto">{% include "components/header/button.html" with href=admin_url text="ADMIN" %}</div>
-            {% url 'dashboard' as dashboard_url %}
+            {% url 'charcoal_dashboard' as url %}
             <div class="pointer-events-auto">
-                {% include "components/header/button.html" with href=dashboard_url text="DASHBOARD" %}
+                {% include "components/header/button.html" with href=url text="DASHBOARD" %}
             </div>
             <div class="pointer-events-auto">{% include "components/supplier_search.html" %}</div>
         </div>

@@ -1,20 +1,37 @@
-<div class="gap-4 grid grid-rows-2 bg-dark px-4 pb-4 w-full h-full">
-    <!-- Gráfico de entrada de carvão -->
-    {% include "components/chart.html" with
-    chart_id=charts.0.id
-    form_id=charts.0.form_id
-    chart_data=charts.0.data
-    form=charts.0.form %}
-    <div class="gap-4 grid grid-cols-2 w-full h-full">
-        <!-- Gráfico de finos e umidade média por dia -->
-        {% include "components/chart.html" with
-        chart_id=charts.1.id
-        form_id=charts.0.form_id
-        chart_data=charts.1.data %}
-        <!-- Gráfico de densidade média por dia -->
-        {% include "components/chart.html" with
-        chart_id=charts.2.id
-        form_id=charts.0.form_id
-        chart_data=charts.2.data %}
+{% extends "base.html" %}
+{% load static %}
+{% block extrahead %}
+    <script>const updateChartUrl = "{% url 'update_chart' %}";</script>
+    <script src="{% static 'js/charts_update_handler.js' %}"></script>
+{% endblock extrahead %}
+{% block content %}
+    <div class="relative flex bg-white w-screen h-screen overflow-hidden">
+        <div class="flex flex-col w-full h-full">
+            {% include "components/header/dashboard.html" %}
+            <main class="flex bg-dark w-full h-full overflow-y-hidden"
+                  id="dashboard-content">
+                <!-- Container -->
+                <div class="gap-4 grid grid-rows-2 bg-dark px-4 pb-4 w-full h-full">
+                    <!-- Gráfico de entrada de carvão -->
+                    {% include "components/chart.html" with
+                    chart_id=charts.0.id
+                    form_id=charts.0.form_id
+                    chart_data=charts.0.data
+                    form=charts.0.form %}
+                    <div class="gap-4 grid grid-cols-2 w-full h-full">
+                        <!-- Gráfico de finos e umidade média por dia -->
+                        {% include "components/chart.html" with
+                        chart_id=charts.1.id
+                        form_id=charts.0.form_id
+                        chart_data=charts.1.data %}
+                        <!-- Gráfico de densidade média por dia -->
+                        {% include "components/chart.html" with
+                        chart_id=charts.2.id
+                        form_id=charts.0.form_id
+                        chart_data=charts.2.data %}
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
-</div>
+{% endblock content %}

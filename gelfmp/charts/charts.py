@@ -7,7 +7,7 @@ from django.db.models.functions import TruncDay, TruncMonth, TruncWeek
 
 from gelfmp.charts import theme
 from gelfmp.charts.utils import WEEK_DTICK, html_else_json, no_data_error
-from gelfmp.models import CharcoalEntry, Supplier
+from gelfmp.models import CharcoalEntry, CharcoalIQF, Supplier
 from gelfmp.utils import dtutils
 from gelfmp.utils.error_handlers import handle_chart_error
 
@@ -16,7 +16,7 @@ pio.templates.default = go.layout.Template(layout=theme.custom_layout)
 
 
 @handle_chart_error
-def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
+def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name=True, html=False):
     months = int(months)
 
     group_by_config = {
@@ -68,7 +68,9 @@ def charcoal_entries(group_by='day', months=3, supplier=None, html=False):
         if not supplier:
             raise ValueError('Fornecedor não encontrado.')
 
-        config['title'] += f' - {supplier}'
+        if show_supplier_name:
+            config['title'] += f' - {supplier}'
+
         queryset = queryset.filter(supplier=supplier)
 
     queryset = (
@@ -265,5 +267,57 @@ def density(group_by='day', months=3, supplier=None, html=False):
     return html_else_json(fig, html)
 
 
+@handle_chart_error
+def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
+    current_date = dtutils.now()
+    current_month = current_date.month
+    current_year = current_date.year
+
+    target_month = (current_month - months_ago - 1) % 12 + 1
+    target_year = current_year + ((current_month - months_ago - 1) // 12)
+
+    iqfs = CharcoalIQF.objects.filter(
+        year__gte=target_year,
+        year__lte=current_year,
+        month__gte=target_month,
+        month__lt=current_month,
+        supplier_id=supplier_id,
+    ).values()
+
+    df = pd.DataFrame(iqfs)
+    if df.empty:
+        return no_data_error(f'IQFs nos últimos {months_ago} meses')
+
+    df['month_year'] = df['month'].astype(str) + '/' + df['year'].astype(str)
+
+    fig = px.bar(
+        df,
+        x='month_year',
+        y='iqf',
+        text='iqf',
+        title=f'IQF (últimos {months_ago} meses)',
+        labels={'month_year': 'Mês/Ano', 'iqf': 'IQF'},
+    )
+
+    fig.update_traces(
+        texttemplate='%{text:.1f}',
+        textfont=dict(color='white'),
+        textposition='outside',
+        cliponaxis=False,
+    )
+
+    fig.update_layout(
+        uniformtext_minsize=8,
+        uniformtext_mode='hide',
+        xaxis_title='',
+        title_y=0.98,
+        margin=dict(l=30, r=15, t=40, b=20),
+        autosize=True,
+        dragmode=False,
+    )
+
+    return html_else_json(fig, html)
+
+
 def supplier_charcoal_entries(supplier, group_by='day', months=3, html=False):
-    return charcoal_entries(supplier=supplier, group_by=group_by, months=months, html=html)
+    return charcoal_entries(supplier=supplier, group_by=group_by, months=months, show_supplier_name=False, html=html)

@@ -94,7 +94,6 @@ document.addEventListener("DOMContentLoaded", function () {
         Garantir que o ajuste do gráfico também seja feito após o carregamento de novos dados via HTMX
     */
     document.body.addEventListener("htmx:afterSwap", function (event) {
-        // Aqui você pode chamar qualquer função para reprocessar ou ajustar os gráficos após um swap do HTMX
-        resizeCharts(); // Ajustar o tamanho do gráfico após a atualização de conteúdo dinâmico
+        resizeCharts();
     });
 });

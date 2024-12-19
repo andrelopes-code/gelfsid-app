@@ -18,7 +18,8 @@
                 {% url 'index' as index_url %}
                 {% include "components/header/button.html" with href=index_url text="MAPA" %}
                 {% url 'supplier_details' id=supplier.id as details_url %}
-                {% include "components/header/button.html" with href=details_url text="VER DETALHES DO FORNECEDOR" %}
+                {% include "components/header/button.html" with href=details_url text="VER DETALHES" %}
+                <div class="pointer-events-auto">{% include "components/supplier_search.html" %}</div>
             </div>
         </nav>
         <!-- MAIN -->
@@ -26,6 +27,13 @@
             <!-- ASIDE -->
             <aside class="flex flex-col gap-4 w-2/6 h-full overflow-auto noscrollbar">
                 {% include "supplier/partials/supplier_aside_info.html" %}
+                <div class="w-full h-[250px]">
+                    {% include "components/chart.html" with
+                    chart_id=charts.1.id
+                    form_id=charts.1.form_id
+                    chart_data=charts.1.data
+                    form=charts.1.form %}
+                </div>
             </aside>
             <!-- CONTEÚDO PRINCIPAL -->
             <div class="flex flex-col gap-4 shadow-md w-4/6 h-full max-h-full overflow-y-auto">
