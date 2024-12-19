@@ -7,6 +7,7 @@
             "updated_at": "2024-01-01T00:00:00.000Z",
             "active": true,
             "corporate_name": "GELF SIDERURGIA SA FAZENDA TAMANDUA_POCOES",
+            "supplier_type": "gelf",
             "material_type": "Carvão Vegetal",
             "distance_in_meters": null,
             "address": "RODOVIA BR 308 NÚMERO/KM 72 S/N BAIRRO ZONA RURAL",

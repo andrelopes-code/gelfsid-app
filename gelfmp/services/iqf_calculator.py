@@ -1,7 +1,7 @@
 import pandas as pd
 
 from gelfcore.logger import log
-from gelfmp.models import CharcoalEntry, CharcoalIQF, CharcoalMonthlyPlan, MaterialType, Supplier
+from gelfmp.models import CharcoalEntry, CharcoalIQF, CharcoalMonthlyPlan, MaterialType, Supplier, SupplierType
 
 MOISTURE_MAX = 7
 FINES_MAX = 10
@@ -81,6 +81,9 @@ def calculate_suppliers_iqf(month, year):
 
         try:
             supplier = Supplier.objects.get(id=supplier_id)
+            if supplier.supplier_type == SupplierType.GELF:
+                continue
+
             plan = CharcoalMonthlyPlan.objects.get(supplier=supplier, month=month, year=year)
 
         except CharcoalMonthlyPlan.DoesNotExist:

@@ -171,5 +171,6 @@ media
 staticfiles
 certs
 .vscode
+.dummy
 .sample-data
 *.alias.json

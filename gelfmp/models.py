@@ -414,7 +414,11 @@ class Supplier(BaseModel):
 
     material_type = models.CharField(max_length=100, choices=MaterialType.choices, verbose_name='Tipo de Material')
     supplier_type = models.CharField(
-        max_length=100, choices=SupplierType.choices, null=True, blank=True, verbose_name='Tipo de Fornecedor'
+        max_length=100,
+        choices=SupplierType.choices,
+        null=True,
+        blank=True,
+        verbose_name='Tipo de Fornecedor (Carvão)',
     )
 
     distance_in_meters = models.IntegerField(blank=True, null=True, verbose_name='Distância em Metros')
@@ -475,6 +479,16 @@ class Supplier(BaseModel):
 
     def get_iqfs(self) -> models.Manager[CharcoalIQF]:
         return self.iqfs
+
+    def clean(self):
+        # Impede que o campo `Tipo de Fornecedor` seja
+        # utilizado em fornecedores que não sejam de carvão.
+        if self.supplier_type and self.material_type != MaterialType.CHARCOAL:
+            raise ValidationError({
+                'supplier_type': 'O campo `Tipo de Fornecedor` é exclusivo para fornecedores de carvão.'
+            })
+
+        return super().clean()
 
     def save(self, *args, **kwargs):
         # Normaliza os campos para evitar inconsistência nos dados.

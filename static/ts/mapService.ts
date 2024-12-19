@@ -12,7 +12,6 @@ import {
     GREEN_COLOR,
     ORANGE_COLOR,
     HOST_CITY_TOOLTIP_TEXT,
-    html,
 } from "./constants";
 
 import type { Cache, CitySuppliers, ShapefileData } from "./types";

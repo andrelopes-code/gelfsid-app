@@ -3,7 +3,7 @@ import random
 import openpyxl
 from django.db import transaction
 
-from gelfmp.models import City, Document, MaterialType, State, Supplier
+from gelfmp.models import City, Document, MaterialType, State, Supplier, SupplierType
 
 from .constants import CTF_TYPE, ENVIRONMENTAL_PERMIT_TYPE, REGIEF_TYPE, SUPPLIERS_DOCS_PATH
 from .types import DocumentData, SupplierData
@@ -34,6 +34,7 @@ def collect():
             id=rmna(row[0].value),
             rm_code=rmna(row[1].value),
             corporate_name=rmna(row[2].value),
+            supplier_type=None,
             material_type=rmna(row[6].value),
             city='',
             state='',
@@ -72,12 +73,20 @@ def collect():
         supplier.city = city
         supplier.state = state
 
-        for name, value in MaterialType.choices:
+        for piece, value in MaterialType.choices:
             if supplier.material_type == value:
-                supplier.material_type = name
+                supplier.material_type = piece
                 break
         else:
             raise ValueError(f'MaterialType ({supplier.material_type}) not found in choices: {MaterialType.choices}')
+
+        if supplier.material_type == MaterialType.CHARCOAL:
+            for piece in ['ONIX', 'AMM', 'FERREIRA E SENNA', 'HF EMPRESA', 'JK EMPREENDIMENTO', 'DIAS FLORESTAL']:
+                if piece in supplier.corporate_name.upper():
+                    supplier.supplier_type = SupplierType.BOTUMIRIM
+                    break
+            else:
+                supplier.supplier_type = SupplierType.THIRD_PARTY
 
         suppliers.append(supplier)
     save_suppliers(suppliers)
@@ -104,6 +113,7 @@ def save_suppliers(suppliers: list[SupplierData]):
                     'corporate_name': supplier.corporate_name,
                     'city': db_city,
                     'state': db_state,
+                    'supplier_type': supplier.supplier_type,
                     'material_type': supplier.material_type,
                     'cpf_cnpj': supplier.cpf_cnpj,
                     'cep': f'{random.randint(10000, 99999)}-{random.randint(100, 999)}',
@@ -113,10 +123,11 @@ def save_suppliers(suppliers: list[SupplierData]):
             if created:
                 print(f'created new supplier: {db_supplier.corporate_name} - {db_supplier.cpf_cnpj}')
 
-            if not supplier.environmental_permit.name:
-                raise ValueError(f'environmental permit not found for: {supplier.corporate_name}')
-
             # ? Ignorar documentos
+
+            # if not supplier.environmental_permit.name:
+            #     raise ValueError(f'environmental permit not found for: {supplier.corporate_name}')
+
             # create_or_update_document(db_supplier, supplier.environmental_permit, ENVIRONMENTAL_PERMIT_TYPE)
             # create_or_update_document(db_supplier, supplier.ctf, CTF_TYPE)
             # create_or_update_document(db_supplier, supplier.regief, REGIEF_TYPE)

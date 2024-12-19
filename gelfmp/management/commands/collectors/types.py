@@ -50,6 +50,7 @@ class SupplierData(BaseModel):
     city: str
     cpf_cnpj: str
     state: str
+    supplier_type: Optional[str]
     material_type: str
     environmental_permit: DocumentData
     ctf: DocumentData
