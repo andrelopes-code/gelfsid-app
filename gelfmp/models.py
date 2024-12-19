@@ -491,6 +491,13 @@ class Supplier(BaseModel):
                 'supplier_type': 'O campo `Tipo de Fornecedor` é exclusivo para fornecedores de carvão.'
             })
 
+        # Garante que o campo `Tipo de Fornecedor` seja
+        # preenchido caso seja um fornecedor de carvão.
+        if self.material_type == MaterialType.CHARCOAL and not self.supplier_type:
+            raise ValidationError({
+                'supplier_type': 'O campo `Tipo de Fornecedor` é obrigatório para fornecedores de carvão.'
+            })
+
         return super().clean()
 
     def save(self, *args, **kwargs):
