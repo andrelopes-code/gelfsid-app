@@ -8,7 +8,7 @@ from django.forms import ValidationError
 from gelfcore.logger import log
 from gelfmp.services import geojson
 from gelfmp.utils import dtutils, validators
-from gelfmp.utils.normalization import normalize_phone, normalize_text_upper, normalize_to_numbers
+from gelfmp.utils.normalization import normalize_name, normalize_phone, normalize_text_upper, normalize_to_numbers
 
 # ------------------ #
 #  BASE MODEL CLASS  #
@@ -32,7 +32,7 @@ class ContactType(models.TextChoices):
     WITNESS = 'witness', 'Testemunha'
     LEGAL_REPRESENTATIVE = 'legal_representative', 'Representante Legal'
     NEGOTIATION_RESP = 'accounting_responsible', 'Setor Contábil'
-    ACCOUNTING_RESP = 'negotiation_responsible', 'Negociação'
+    ACCOUNTING_RESP = 'negotiation_responsible', 'Negociação (Comercial)'
     NF_RESP = 'nf_responsible', 'Emissão de Notas Fiscais'
     LOGISTICS_RESP = 'logistics_responsible', 'Programação e Logística'
 
@@ -148,6 +148,8 @@ class Contact(BaseModel):
 
     def clean(self):
         self.primary_phone = normalize_phone(self.primary_phone)
+        self.secondary_phone = normalize_phone(self.secondary_phone)
+        self.name = normalize_name(self.name)
 
         return super().clean()
 
