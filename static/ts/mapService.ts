@@ -329,14 +329,14 @@ class MapService {
     private focusLayer(layer: L.Layer) {
         const bounds = (layer as any).getBounds?.();
 
+        layer.openPopup();
+
         if (bounds) {
             this.map.fitBounds(bounds, {
                 padding: [50, 50],
                 maxZoom: 16,
             });
         }
-
-        layer.openPopup();
     }
 
     private createTooltipContent(properties: any, shapefile: any) {
