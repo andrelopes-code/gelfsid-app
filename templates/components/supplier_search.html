@@ -1,3 +1,8 @@
+<!--
+    Container que contem o input de pesquisa,
+    ativado quando o botão de pesquisa é clicado
+    ocupando a tela inteira.
+-->
 <div id="supplier-search"
      class="top-0 left-0 z-50 fixed flex-col justify-center items-center hidden bg-black/35 opacity-0 backdrop-blur-[2px] w-screen h-screen transition-all duration-150 ease-out">
     <form class="w-full max-w-[40%] h-fit max-h-[60%]" onsubmit="return false">
@@ -11,6 +16,7 @@
                placeholder="Pesquisar..."
                autocomplete="off"
                type="text">
+        <!-- Div para mostrar os resultados da busca -->
         <div id="supplier-search-result"
              class="gap-2 space-y-2 mt-2 w-full h-full text-slate-300 overflow-x-hidden overflow-y-auto noscrollbar">
         </div>
@@ -23,7 +29,6 @@
         <i class="ph-bold ph-magnifying-glass text-primary"></i>
     </button>
 </div>
-<!-- Script para controlar o comportamento do botão -->
 <script>
     const searchButton = document.getElementById('supplier-search-button');
     const searchOverlay = document.getElementById('supplier-search');

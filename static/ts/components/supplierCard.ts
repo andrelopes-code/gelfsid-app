@@ -37,7 +37,7 @@ function documentTableRow(label: string, document: Document) {
     const [validityStatus, validityColor] = getValidityStatusAndColor(document);
 
     return html`
-        <tr class="border-slate-800 border-b">
+        <tr class="border-dark-200 border-b">
             <td class="px-4 py-3">
                 <div class="flex items-center text-slate-400 gap-2">
                     <i class="ph-fill ph-file-text"></i>
@@ -162,7 +162,7 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                 </div>
                 ${charcoalStats(supplier)}
                 ${hasDocuments
-                    ? html`
+            ? html`
                           <div class="mt-5 w-full">
                               <div class="bg-black bg-opacity-20 shadow-sm rounded-md overflow-hidden">
                                   <table class="w-full">
@@ -173,7 +173,7 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                               </div>
                           </div>
                       `
-                    : ""}
+            : ""}
             </div>
         </div>
     `;
