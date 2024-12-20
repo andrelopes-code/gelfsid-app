@@ -49,7 +49,7 @@ class MapService {
 
     private lastSearchResults: L.Layer[] = [];
     private currentSearchIndex: number = -1;
-    private lastSearchQuery: string = '';
+    private lastSearchQuery: string = "";
 
     constructor() {
         this.initializeMap();
@@ -120,6 +120,9 @@ class MapService {
 
             // Mostra os controles de pesquisa de shapefiles
             document.getElementById("shapes-search-controls")?.classList.remove("hidden");
+
+            // Fecha os detalhes de fornecedores caso estejam abertos.
+            supplierService.closeDetails();
         }
     }
 
@@ -193,8 +196,7 @@ class MapService {
             camadas de propriedade.
         */
         const randomColor = getRandomPastelColor();
-        const propertyColor = "#FFFFFF77";
-
+        const propertyColor = "#FFFFFF33";
 
         /*
             A camada principal que agrupa todas
@@ -274,7 +276,6 @@ class MapService {
         const results: L.Layer[] = [];
         query = query.toLowerCase();
 
-
         /*
             Percorre todas as camadas de shapefile ativas
             e verifica se algum deles contém o termo de
@@ -287,7 +288,7 @@ class MapService {
                 const searchableAttributes = [
                     layerProperties.supplier_name?.toLowerCase(),
                     layerProperties?.name?.toLowerCase(),
-                    layerProperties?.TALHAO?.toLowerCase(),
+                    layerProperties?.TALHAO?.toString().toLowerCase(),
                 ];
 
                 if (searchableAttributes.some((attr) => attr && attr.includes(query))) {
@@ -299,9 +300,8 @@ class MapService {
         return results;
     }
 
-    public searchAndNavigate(query: string, direction: 'next' | 'prev') {
+    public searchAndNavigate(query: string, direction: "next" | "prev") {
         if (this.satelliteMode) {
-
             if (query !== this.lastSearchQuery) {
                 this.lastSearchResults = this.searchLayers(query);
                 this.currentSearchIndex = -1;
@@ -313,11 +313,12 @@ class MapService {
                 return;
             }
 
-            if (direction === 'next') {
+            if (direction === "next") {
                 this.currentSearchIndex = (this.currentSearchIndex + 1) % this.lastSearchResults.length;
-            } else if (direction === 'prev') {
+            } else if (direction === "prev") {
                 this.currentSearchIndex =
-                    (this.currentSearchIndex - 1 + this.lastSearchResults.length) % this.lastSearchResults.length;
+                    (this.currentSearchIndex - 1 + this.lastSearchResults.length) %
+                    this.lastSearchResults.length;
             }
 
             const layer = this.lastSearchResults[this.currentSearchIndex];
@@ -422,7 +423,6 @@ class MapService {
                 */
                 const geojsonData = await response.json();
                 this.cache.geojson.set(cacheKey, geojsonData);
-
             } catch (error) {
                 console.error(`error loading ${cacheKey}:`, error);
                 throw error;
@@ -466,7 +466,9 @@ class MapService {
         */
         const suppliers = this.citySuppliers[cityKey];
         const filterDisabled = currentMaterialType === DEFAULT_MATERIAL_TYPE;
-        const supplierHasCurrentMaterialType = suppliers?.some((s) => s.material_type === currentMaterialType)
+        const supplierHasCurrentMaterialType = suppliers?.some(
+            (s) => s.material_type === currentMaterialType
+        );
 
         if (suppliers && (filterDisabled || supplierHasCurrentMaterialType)) {
             style.fillColor = STROKE_COLOR;
@@ -519,7 +521,6 @@ class MapService {
                     });
                 },
             }).addTo(this.map);
-
         } catch (error) {
             console.error("error loading states:", error);
         }
@@ -551,7 +552,6 @@ class MapService {
                 (GELF é exibido apenas em Minas Gerais, código 31).
             */
             stateCode == 31 ? this.gelfTooltip.addTo(this.map) : this.gelfTooltip.remove();
-
 
             /*
                 Define o comportamento de interação com o mouse
@@ -585,20 +585,17 @@ class MapService {
 
                     this.activeCityNameTooltip = layer._activeTooltip;
                     layer.on("mousemove", layer._activeTooltip.moveHandler);
-
                 } else if (e.type === "mouseout") {
                     if (layer._activeTooltip) {
                         this.map.removeLayer(layer._activeTooltip.tooltip);
                         layer.off("mousemove", layer._activeTooltip.moveHandler);
                         delete layer._activeTooltip;
                     }
-
                 } else if (e.type === "click" && notInSatelliteMode) {
                     if (feature.properties) {
                         layer._activeTooltip?.tooltip.addTo(this.map);
                         supplierService.openDetails(cityKey, this.currentMaterialType);
                     }
-
                 }
             };
 
@@ -606,7 +603,6 @@ class MapService {
                 .on("mouseover", handleMouseInteraction)
                 .on("mouseout", handleMouseInteraction)
                 .on("click", handleMouseInteraction);
-
         } catch (error) {
             console.error("error loading cities:", error);
         }

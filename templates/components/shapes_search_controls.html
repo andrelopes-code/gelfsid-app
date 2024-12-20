@@ -21,16 +21,15 @@
 
     #shapes-search-controls button:hover {
         background-color: var(--primary-color);
-        color: #151b25;
+        color: var(--dark);
     }
 </style>
 <div class="top-4 right-4 hidden bg-dark shadow-md p-4 rounded-md text-xs pointer-events-auto"
      id="shapes-search-controls">
     <input class="border-2 border-slate-800 focus:border-primary bg-dark-100 px-3 rounded-md w-full h-10 text-md text-slate-300 text-xs placeholder:text-slate-600 transition-colors duration-200 outline-none"
            spellcheck="false"
-           placeholder="Buscar shapefiles..."
+           placeholder="Buscar shapes..."
            autocomplete="off"
-           id="search-value"
            type="text">
     <div class="flex gap-2">
         <button id="next-button">Próximo</button>

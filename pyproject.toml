@@ -22,7 +22,6 @@ django-extensions = "^3.2.3"
 django-admin-interface = "^0.29.2"
 django-tables2 = "^2.7.0"
 geopandas = "^1.0.1"
-polars = "^1.17.1"
 inquirerpy = "^0.3.4"
 
 [tool.poetry.group.dev.dependencies]
@@ -33,8 +32,6 @@ faker = "^33.0.0"
 rich = "^13.9.4"
 ruff = "^0.8.0"
 ipython = "^8.30.0"
-jupyter = "^1.1.1"
-notebook = "^7.3.1"
 
 [build-system]
 requires = ["poetry-core"]
