@@ -11,6 +11,7 @@ class ContactInline(BaseTabularInline):
         'contact_type',
         'name',
         'email',
+        'cpf',
         'primary_phone',
         'secondary_phone',
     )

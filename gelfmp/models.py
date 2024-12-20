@@ -8,7 +8,7 @@ from django.forms import ValidationError
 from gelfcore.logger import log
 from gelfmp.services import geojson
 from gelfmp.utils import dtutils, validators
-from gelfmp.utils.normalization import normalize_text_upper, normalize_to_numbers
+from gelfmp.utils.normalization import normalize_phone, normalize_text_upper, normalize_to_numbers
 
 # ------------------ #
 #  BASE MODEL CLASS  #
@@ -31,10 +31,10 @@ class BaseModel(models.Model):
 class ContactType(models.TextChoices):
     WITNESS = 'witness', 'Testemunha'
     LEGAL_REPRESENTATIVE = 'legal_representative', 'Representante Legal'
-    NEGOTIATION_RESP = 'accounting_responsible', 'Responsável do Setor Contábil'
-    ACCOUNTING_RESP = 'negotiation_responsible', 'Responsável pela Negociação'
-    NF_RESP = 'nf_responsible', 'Responsável pela Emissão de Notas Fiscais'
-    LOGISTICS_RESP = 'logistics_responsible', 'Reponsável Programação e Logística'
+    NEGOTIATION_RESP = 'accounting_responsible', 'Setor Contábil'
+    ACCOUNTING_RESP = 'negotiation_responsible', 'Negociação'
+    NF_RESP = 'nf_responsible', 'Emissão de Notas Fiscais'
+    LOGISTICS_RESP = 'logistics_responsible', 'Programação e Logística'
 
 
 class MonthType(models.IntegerChoices):
@@ -125,6 +125,14 @@ class City(models.Model):
 
 class Contact(BaseModel):
     name = models.CharField(max_length=200, verbose_name='Nome')
+    cpf = models.CharField(
+        max_length=14,
+        blank=True,
+        null=True,
+        validators=[validators.validate_cpf_cnpj],
+        verbose_name='CPF',
+    )
+
     email = models.EmailField(verbose_name='Email')
     contact_type = models.CharField(max_length=50, choices=ContactType.choices, verbose_name='Função')
 
@@ -137,6 +145,11 @@ class Contact(BaseModel):
         related_name='contacts',
         verbose_name='Fornecedor',
     )
+
+    def clean(self):
+        self.primary_phone = normalize_phone(self.primary_phone)
+
+        return super().clean()
 
     def __str__(self):
         return f'{self.contact_type} - {self.name}'
@@ -174,6 +187,7 @@ class BankDetails(BaseModel):
 
 class Document(BaseModel):
     def upload_to(instance, filename):
+        filename = instance.name + '.' + filename.split('.')[-1] if instance.name else filename
         return f'fornecedores/{instance.supplier.corporate_name}/documentos/{filename}'
 
     name = models.CharField(

@@ -1348,6 +1348,47 @@ video {
   line-height: 1rem;
 }
 
+.\!text-xs{
+  font-size: 0.75rem !important;
+  line-height: 1rem !important;
+}
+
+.\!text-\[2px\]{
+  font-size: 2px !important;
+}
+
+.text-\[14px\]{
+  font-size: 14px;
+}
+
+.text-\[12px\]{
+  font-size: 12px;
+}
+
+.text-\[1rem\]{
+  font-size: 1rem;
+}
+
+.text-\[0\.2rem\]{
+  font-size: 0.2rem;
+}
+
+.text-\[0\.9rem\]{
+  font-size: 0.9rem;
+}
+
+.text-\[0\.8rem\]{
+  font-size: 0.8rem;
+}
+
+.text-\[0\.79rem\]{
+  font-size: 0.79rem;
+}
+
+.text-\[0\.75rem\]{
+  font-size: 0.75rem;
+}
+
 .font-bold{
   font-weight: 700;
 }
@@ -1422,6 +1463,10 @@ video {
 .text-white{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-\[12\]{
+  color: 12;
 }
 
 .underline{
