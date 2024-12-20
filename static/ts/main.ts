@@ -1,7 +1,7 @@
+import "leaflet/dist/leaflet.css";
 import { DEFAULT_MATERIAL_TYPE } from "./constants";
 import { MapService } from "./mapService";
 import { supplierService } from "./supplierService";
-import "leaflet/dist/leaflet.css";
 
 class App {
     private mapService: MapService;
@@ -58,6 +58,25 @@ class App {
         });
     }
 
+    private initializeShapefileSearchControls() {
+        const searchElem = document.getElementById("shapes-search-controls") as HTMLInputElement;
+
+        const nextBtn = searchElem.querySelector("#next-button") as HTMLButtonElement;
+        const prevBtn = searchElem.querySelector("#prev-button") as HTMLButtonElement;
+
+        nextBtn.addEventListener("click", () => {
+            const input = searchElem.querySelector("input") as HTMLInputElement;
+
+            this.mapService.searchAndNavigate(input.value, "next");
+        });
+
+        prevBtn.addEventListener("click", () => {
+            const input = searchElem.querySelector("input") as HTMLInputElement;
+
+            this.mapService.searchAndNavigate(input.value, "prev");
+        });
+    }
+
     private hideScreenLoader() {
         (document.getElementById("main-loader") as HTMLElement).style.display = "none";
     }
@@ -70,8 +89,8 @@ class App {
 
             this.mapService.setCitySuppliers(citySuppliers);
             supplierService.setCitySuppliers(citySuppliers);
-
             this.initializeFilter(supplierService.materialTypes);
+            this.initializeShapefileSearchControls();
 
             this.mapService.preloadCities();
             this.mapService.loadStates();

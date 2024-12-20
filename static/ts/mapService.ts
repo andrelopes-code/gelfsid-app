@@ -47,6 +47,10 @@ class MapService {
     private activeCityLayers = new Set<L.Layer>();
     private activeShapefileLayers = new Set<L.Layer>();
 
+    private lastSearchResults: L.Layer[] = [];
+    private currentSearchIndex: number = -1;
+    private lastSearchQuery: string = '';
+
     constructor() {
         this.initializeMap();
         this.initializeSatelliteLayer();
@@ -113,6 +117,9 @@ class MapService {
             this.addShapefileLayers(true);
 
             this.satelliteMode = true;
+
+            // Mostra os controles de pesquisa de shapefiles
+            document.getElementById("shapes-search-controls")?.classList.remove("hidden");
         }
     }
 
@@ -124,6 +131,9 @@ class MapService {
             this.addShapefileLayers(false);
 
             this.satelliteMode = false;
+
+            // Oculta os controles de pesquisa de shapefiles
+            document.getElementById("shapes-search-controls")?.classList.add("hidden");
         }
     }
 
@@ -237,6 +247,10 @@ class MapService {
                 layer.closePopup();
             });
 
+            // Adiciona as propriedades do shapefile nas propriedades da camada.
+            (layer as any).feature.properties.supplier_name = shapefile.supplier_name;
+            (layer as any).feature.properties.name = shapefile.name;
+
             this.activeShapefileLayers.add(layer);
         });
 
@@ -254,6 +268,74 @@ class MapService {
         });
 
         this.activeShapefileLayers.clear();
+    }
+
+    private searchLayers(query: string): Array<L.Layer> {
+        const results: L.Layer[] = [];
+        query = query.toLowerCase();
+
+
+        /*
+            Percorre todas as camadas de shapefile ativas
+            e verifica se algum deles contém o termo de
+            busca, armazenando-as na lista de resultados.
+        */
+        this.activeShapefileLayers.forEach((layer) => {
+            const layerProperties = (layer as any)?.feature?.properties;
+
+            if (layerProperties) {
+                const searchableAttributes = [
+                    layerProperties.supplier_name?.toLowerCase(),
+                    layerProperties?.name?.toLowerCase(),
+                    layerProperties?.TALHAO?.toLowerCase(),
+                ];
+
+                if (searchableAttributes.some((attr) => attr && attr.includes(query))) {
+                    results.push(layer);
+                }
+            }
+        });
+
+        return results;
+    }
+
+    public searchAndNavigate(query: string, direction: 'next' | 'prev') {
+        if (this.satelliteMode) {
+
+            if (query !== this.lastSearchQuery) {
+                this.lastSearchResults = this.searchLayers(query);
+                this.currentSearchIndex = -1;
+                this.lastSearchQuery = query;
+            }
+
+            if (this.lastSearchResults.length === 0) {
+                alert("No results found");
+                return;
+            }
+
+            if (direction === 'next') {
+                this.currentSearchIndex = (this.currentSearchIndex + 1) % this.lastSearchResults.length;
+            } else if (direction === 'prev') {
+                this.currentSearchIndex =
+                    (this.currentSearchIndex - 1 + this.lastSearchResults.length) % this.lastSearchResults.length;
+            }
+
+            const layer = this.lastSearchResults[this.currentSearchIndex];
+            this.focusLayer(layer);
+        }
+    }
+
+    private focusLayer(layer: L.Layer) {
+        const bounds = (layer as any).getBounds?.();
+
+        if (bounds) {
+            this.map.fitBounds(bounds, {
+                padding: [50, 50],
+                maxZoom: 16,
+            });
+        }
+
+        layer.openPopup();
     }
 
     private createTooltipContent(properties: any, shapefile: any) {
