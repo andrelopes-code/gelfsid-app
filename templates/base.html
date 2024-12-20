@@ -28,7 +28,16 @@
             <script defer type="module" src="{% static 'dist/base.js' %}"></script>
             <script src="{% static 'js/htmx.min.js' %}"></script>
             <script src="{% static 'js/plotly-2.35.2.min.js' %}"></script>
-            <script src="https://unpkg.com/@phosphor-icons/web"></script>
+            <!-- ICONS -->
+            <link rel="stylesheet"
+                  type="text/css"
+                  href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+            <link rel="stylesheet"
+                  type="text/css"
+                  href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+            <link rel="stylesheet"
+                  type="text/css"
+                  href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
             {% block extrahead %}
             {% endblock extrahead %}
       </head>

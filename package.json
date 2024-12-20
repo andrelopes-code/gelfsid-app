@@ -25,7 +25,6 @@
         "docker-shell": "docker exec -it django_dev /bin/bash"
     },
     "dependencies": {
-        "@phosphor-icons/web": "^2.1.1",
         "alpinejs": "^3.14.5",
         "htmx.org": "^1.9.12",
         "leaflet": "^1.9.4"

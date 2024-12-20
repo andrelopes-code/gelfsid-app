@@ -1,8 +1,5 @@
 import Alpine from "alpinejs";
 
-import "@phosphor-icons/web/bold/style.css";
-import "@phosphor-icons/web/fill/style.css";
-import "@phosphor-icons/web/regular/style.css";
 import "htmx.org";
 
 Alpine.start();
