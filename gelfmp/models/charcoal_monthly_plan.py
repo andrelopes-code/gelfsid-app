@@ -1,7 +1,7 @@
 from django.db import models
 from django.forms import ValidationError
 
-from .base import BaseModel
+from .base_model import BaseModel
 from .choices import MonthType, year_choices
 
 

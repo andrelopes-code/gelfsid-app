@@ -61,7 +61,7 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
+    entries_queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
@@ -71,10 +71,10 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
         if show_supplier_name:
             config['title'] += f' - {supplier}'
 
-        queryset = queryset.filter(supplier=supplier)
+        entries_queryset = entries_queryset.filter(supplier=supplier)
 
-    queryset = (
-        queryset.annotate(entry_period=config['trunc_function']('entry_date'))
+    entries_queryset = (
+        entries_queryset.annotate(entry_period=config['trunc_function']('entry_date'))
         .values('entry_period')
         .annotate(
             total_volume=Sum('entry_volume'),
@@ -84,7 +84,7 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
         )
     )
 
-    df = pd.DataFrame(queryset)
+    df = pd.DataFrame(entries_queryset)
     if df.empty:
         return no_data_error(config['title'])
 
@@ -94,9 +94,7 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
         y='total_volume',
         text='total_volume',
         title=config['title'],
-        labels={
-            'total_volume': 'Volume Total',
-        },
+        labels={'total_volume': 'Volume Total'},
         custom_data=['average_moisture', 'average_fines', 'average_density'],
     )
 
@@ -115,9 +113,7 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
         xaxis_title='',
         title_x=0.5,
         margin=dict(l=30, r=15, t=40, b=20),
-        xaxis=dict(
-            dtick=config['dtick'],
-        ),
+        xaxis=dict(dtick=config['dtick']),
         autosize=True,
     )
 
@@ -147,23 +143,23 @@ def moisture_and_fines(group_by='day', months=3, supplier=None, html=False):
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
+    entries_queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
         if not supplier:
             raise ValueError('Fornecedor não encontrado.')
 
-        queryset = queryset.filter(supplier=supplier)
+        entries_queryset = entries_queryset.filter(supplier=supplier)
 
-    queryset = (
-        queryset.annotate(entry_period=config['trunc_function']('entry_date'))
+    entries_queryset = (
+        entries_queryset.annotate(entry_period=config['trunc_function']('entry_date'))
         .values('entry_period')
         .annotate(avg_fines=Avg('fines'), avg_moisture=Avg('moisture'))
         .order_by('entry_period')
     )
 
-    df = pd.DataFrame(queryset)
+    df = pd.DataFrame(entries_queryset)
     if df.empty:
         return no_data_error(config['title'])
 
@@ -225,23 +221,23 @@ def density(group_by='day', months=3, supplier=None, html=False):
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
+    entries_queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
         if not supplier:
             raise ValueError('Fornecedor não encontrado.')
 
-        queryset = queryset.filter(supplier=supplier)
+        entries_queryset = entries_queryset.filter(supplier=supplier)
 
-    queryset = (
-        queryset.annotate(entry_period=config['trunc_function']('entry_date'))
+    entries_queryset = (
+        entries_queryset.annotate(entry_period=config['trunc_function']('entry_date'))
         .values('entry_period')
         .annotate(avg_density=Avg('density'))
         .order_by('entry_period')
     )
 
-    df = pd.DataFrame(queryset)
+    df = pd.DataFrame(entries_queryset)
     if df.empty:
         return no_data_error(config['title'])
 
@@ -275,8 +271,10 @@ def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
     current_month = current_date.month
     current_year = current_date.year
 
-    target_month = (current_month - months_ago - 1) % 12 + 1
-    target_year = current_year + ((current_month - months_ago - 1) // 12)
+    date_months_ago = dtutils.first_day_months_ago(months_ago)
+
+    target_month = date_months_ago.month
+    target_year = date_months_ago.year
 
     # Seleciona os IQFs de fornecedores nos
     # últimos 3 meses caso esses valores existam.
@@ -303,6 +301,15 @@ def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
         labels={'month_year': 'Mês/Ano', 'iqf': 'IQF'},
     )
 
+    xaxis_range = (
+        [
+            -0.2,
+            len(df['month_year']) - 0.9,
+        ]
+        if len(df['month_year']) > 1
+        else [-0.1, 0.1]
+    )
+
     fig.update_layout(
         uniformtext_minsize=8,
         uniformtext_mode='hide',
@@ -312,12 +319,7 @@ def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
         dragmode=False,
         xaxis=dict(
             title='',
-            range=[
-                -0.2,
-                len(df['month_year']) - 0.9,
-            ]
-            if len(df['month_year']) > 1
-            else [-0.1, 0.1],
+            range=xaxis_range,
             tickfont=dict(size=10),
         ),
         yaxis=dict(

@@ -6,7 +6,7 @@ from gelfmp.utils import validators
 from gelfmp.utils.normalization import normalize_text_upper, normalize_to_numbers
 
 from .bank_details import BankDetails
-from .base import BaseModel
+from .base_model import BaseModel
 from .charcoal_iqf import CharcoalIQF
 from .choices import MaterialType, SupplierType
 from .city_state import City, State

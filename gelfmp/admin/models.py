@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from gelfmp import models
 
-from .base import BaseModelAdmin
+from .base import BaseModelAdmin, ROBaseModelAdmin
 from .filters import MonthFilter, SupplierWithEntriesFilter
 from .inlines import ContactInline, DocumentInline
 
@@ -12,6 +12,7 @@ class ContactAdmin(BaseModelAdmin):
     list_display = ('contact_type', 'name', 'email')
     search_fields = ('name', 'email')
     list_filter = ('contact_type',)
+
     fieldsets = (
         (
             'Contato',
@@ -36,6 +37,7 @@ class ContactAdmin(BaseModelAdmin):
 @admin.register(models.BankDetails)
 class BankDetailsAdmin(BaseModelAdmin):
     list_display = ('bank_name', 'account_number', 'agency')
+
     fieldsets = (
         (
             'Detalhes Bancários',
@@ -59,8 +61,29 @@ class BankDetailsAdmin(BaseModelAdmin):
 class DocumentAdmin(BaseModelAdmin):
     list_display = ('document_type', 'name', 'validity', 'supplier')
     list_filter = ('document_type', 'supplier')
-    search_fields = ['name', 'supplier__corporate_name']
+    search_fields = ('name', 'supplier__corporate_name')
+
     actions = ['delete_files']
+
+    fieldsets = (
+        (
+            'Documento',
+            {
+                'fields': (
+                    'supplier',
+                    'document_type',
+                    'visible',
+                    'name',
+                    'validity',
+                    'file',
+                )
+            },
+        ),
+        (
+            '',
+            {'fields': ('geojson',)},
+        ),
+    )
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -83,29 +106,9 @@ class DocumentAdmin(BaseModelAdmin):
 
     delete_files.short_description = 'Excluir Documentos selecionados'
 
-    fieldsets = (
-        (
-            'Documento',
-            {
-                'fields': (
-                    'supplier',
-                    'document_type',
-                    'visible',
-                    'name',
-                    'validity',
-                    'file',
-                )
-            },
-        ),
-        (
-            '',
-            {'fields': ('geojson',)},
-        ),
-    )
-
 
 @admin.register(models.CharcoalEntry)
-class CharcoalEntryAdmin(BaseModelAdmin):
+class CharcoalEntryAdmin(ROBaseModelAdmin):
     list_display = ('supplier', 'entry_volume', 'moisture', 'density', 'fines', 'entry_date')
     search_fields = ('supplier__corporate_name', 'dcf')
     list_filter = (SupplierWithEntriesFilter, MonthFilter)
@@ -130,12 +133,6 @@ class CharcoalEntryAdmin(BaseModelAdmin):
             {'fields': tuple()},
         ),
     )
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
-    def has_add_permission(self, request):
-        return False
 
 
 @admin.register(models.CharcoalMonthlyPlan)
@@ -166,7 +163,7 @@ class CharcoalMonthlyPlanAdmin(BaseModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'supplier':
-            # Adciona apenas fornecedores de carvão ao seletor de fornecedores
+            # Adciona apenas fornecedores de carvão ao seletor de fornecedores.
             kwargs['queryset'] = models.Supplier.objects.filter(material_type=models.MaterialType.CHARCOAL)
 
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
@@ -185,7 +182,7 @@ class CharcoalMonthlyPlanAdmin(BaseModelAdmin):
 
 
 @admin.register(models.CharcoalIQF)
-class CharcoalIQFAdmin(BaseModelAdmin):
+class CharcoalIQFAdmin(ROBaseModelAdmin):
     change_list_template = 'admin/charcoaliqf/change_form.html'
 
     list_display = (
@@ -198,28 +195,17 @@ class CharcoalIQFAdmin(BaseModelAdmin):
         'month',
         'year',
     )
+
     list_filter = ('month', 'year')
     search_fields = ('supplier__corporate_name',)
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
-    def has_add_permission(self, request, obj=None):
-        return False
 
 
 @admin.register(models.Supplier)
 class SupplierAdmin(BaseModelAdmin):
-    list_display = (
-        'corporate_name',
-        'material_type',
-        'cpf_cnpj',
-        'city',
-        'active',
-    )
-
+    list_display = ('corporate_name', 'material_type', 'cpf_cnpj', 'city', 'active')
     list_filter = ('material_type', 'state', 'active')
     search_fields = ('corporate_name', 'cpf_cnpj')
+    inlines = [DocumentInline, ContactInline]
 
     fieldsets = (
         (
@@ -268,14 +254,15 @@ class SupplierAdmin(BaseModelAdmin):
         ),
     )
 
-    inlines = [DocumentInline, ContactInline]
-
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
 
+        # Remove a correção ortográfica no campo de observações.
         if db_field.name == 'observations':
             formfield.widget.attrs.update({'spellcheck': 'false'})
 
+        # Remove a correção ortográfica no campo de nome da corporação
+        # e força o uso de letras maiúsculas no campo.
         if db_field.name == 'corporate_name':
             formfield.widget.attrs.update({'spellcheck': 'false', 'style': 'text-transform: uppercase;'})
 
@@ -284,6 +271,7 @@ class SupplierAdmin(BaseModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'city':
             state = request.POST.get('state') or request.GET.get('state')
+
             if state:
                 kwargs['queryset'] = models.City.objects.filter(state_id=state)
             else:

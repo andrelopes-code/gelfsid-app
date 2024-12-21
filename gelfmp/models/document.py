@@ -7,7 +7,7 @@ from gelfcore.logger import log
 from gelfmp.services import geojson
 from gelfmp.utils import dtutils, validators
 
-from .base import BaseModel
+from .base_model import BaseModel
 from .choices import DocumentType
 
 

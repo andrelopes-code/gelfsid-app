@@ -2,7 +2,7 @@ from django.db import models
 
 from gelfmp.utils import validators
 
-from .base import BaseModel
+from .base_model import BaseModel
 
 
 class CharcoalEntry(BaseModel):

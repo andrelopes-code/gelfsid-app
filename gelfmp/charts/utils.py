@@ -1,6 +1,6 @@
 from django.template.loader import render_to_string
 
-WEEK_DTICK = 604800000
+WEEK_DTICK = 1000 * 60 * 60 * 24 * 7
 
 
 def html_else_json(fig, html):

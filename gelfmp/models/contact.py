@@ -3,7 +3,7 @@ from django.db import models
 from gelfmp.utils import validators
 from gelfmp.utils.normalization import normalize_name, normalize_phone
 
-from .base import BaseModel
+from .base_model import BaseModel
 from .choices import ContactType
 
 
