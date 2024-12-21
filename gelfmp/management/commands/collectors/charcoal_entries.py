@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 import rich
 from django.db import transaction
@@ -119,6 +120,7 @@ def collect():
 
         if option.isdigit():
             option = int(option) - 1
+
             if 0 <= option < len(best_matches):
                 supplier_name = best_matches[option][1]
                 aliases.add(entry_supplier_name, supplier_name)
@@ -128,6 +130,8 @@ def collect():
                     f'{entry_supplier_name} -> {supplier_name}\n'
                 )
             else:
-                console.print('[bold yellow]Opção inválida. Nenhuma ação foi realizada.[/bold yellow]\n')
+                console.print('[bold yellow]Opção inválida. Nenhuma ação foi realizada. Saindo...[/bold yellow]\n')
+                sys.exit(1)
         else:
-            console.print('[bold yellow]Nenhuma correspondência selecionada. Continuando...[/bold yellow]\n')
+            console.print('[bold yellow]Nenhuma correspondência selecionada. Saindo...[/bold yellow]\n')
+            sys.exit(1)
