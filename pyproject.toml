@@ -23,6 +23,7 @@ django-admin-interface = "^0.29.2"
 django-tables2 = "^2.7.0"
 geopandas = "^1.0.1"
 inquirerpy = "^0.3.4"
+pytest-django = "^4.9.0"
 
 [tool.poetry.group.dev.dependencies]
 djlint = "^1.36.1"

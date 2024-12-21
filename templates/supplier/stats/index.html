@@ -27,23 +27,24 @@
             <!-- ASIDE -->
             <aside class="flex flex-col gap-4 w-2/6 h-full overflow-auto noscrollbar">
                 {% include "supplier/partials/supplier_aside_info.html" %}
-                <div class="w-full h-[250px]">
+                <span class="h-[250px] min-h-[250px]">
                     {% include "components/chart.html" with
                     chart_id=charts.1.id
                     form_id=charts.1.form_id
                     chart_data=charts.1.data
                     form=charts.1.form %}
-                </div>
+                </span>
             </aside>
             <!-- CONTEÚDO PRINCIPAL -->
-            <div class="flex flex-col gap-4 shadow-md w-4/6 h-full max-h-full overflow-y-auto">
-                <div class="gap-4 grid grid-rows-2 bg-dark w-full h-full">
-                    {% include "components/chart.html" with
-                    chart_id=charts.0.id
-                    form_id=charts.0.form_id
-                    chart_data=charts.0.data
-                    form=charts.0.form %}
-                    <div class="gap-4 grid grid-cols-2 w-full h-full"></div>
+            <div class="flex flex-col gap-4 shadow-md rounded-md w-4/6 h-full max-h-full overflow-y-auto noscrollbar">
+                <div class="flex flex-col gap-4 bg-dark w-full h-full *:min-h-[400px]">
+                    <span class="h-[400px]">
+                        {% include "components/chart.html" with
+                        chart_id=charts.0.id
+                        form_id=charts.0.form_id
+                        chart_data=charts.0.data
+                        form=charts.0.form %}
+                    </span>
                 </div>
             </div>
         </main>

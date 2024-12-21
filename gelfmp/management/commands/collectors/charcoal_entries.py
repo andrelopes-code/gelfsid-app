@@ -1,4 +1,5 @@
 import sys
+
 import pandas as pd
 import rich
 from django.db import transaction
@@ -8,7 +9,7 @@ from rich.prompt import Prompt
 
 from gelfmp.models import CharcoalEntry, Supplier
 
-from .constants import CHARCOAL_ENTRIES_PATH, CHARCOAL_ENTRIES_SHEET_NAME
+from .constants import CHARCOAL_ENTRIES_PATHS, CHARCOAL_ENTRIES_SHEET_NAME
 from .types import Aliases
 from .utils import get_best_matches
 
@@ -24,9 +25,9 @@ def datetime_convert(dates):
     return pd.to_datetime(dates).dt.date
 
 
-def get_entries():
+def get_entries(charcoal_entries_path):
     try:
-        df = pd.read_excel(CHARCOAL_ENTRIES_PATH, sheet_name=CHARCOAL_ENTRIES_SHEET_NAME)
+        df = pd.read_excel(charcoal_entries_path, sheet_name=CHARCOAL_ENTRIES_SHEET_NAME)
 
         # Remove linhas onde o nome do fornecedor está vazio
         df.dropna(subset=['NOME_FORNECEDOR'], inplace=True)
@@ -34,7 +35,8 @@ def get_entries():
         # Converte as datas de entrada
         df['DATA_ENTRADA'] = datetime_convert(df['DATA_ENTRADA'])
 
-        # Cria a coluna 'FORNECEDOR_E_FAZENDA' com nome do fornecedor e unidade de carbonização
+        # Cria a coluna 'FORNECEDOR_E_FAZENDA' com nome do
+        # fornecedor e unidade de carbonização
         df.insert(
             1,
             'FORNECEDOR_E_FAZENDA',
@@ -93,45 +95,48 @@ def collect():
         raise ValueError('Não existem fornecedores no banco de dados')
 
     aliases = Aliases('charcoal.alias.json')
-    entries = get_entries()
 
-    for entry_supplier_name, group in entries.groupby('FORNECEDOR_E_FAZENDA'):
-        if entry_supplier_name in aliases:
-            process_data(aliases.get(entry_supplier_name), group)
-            continue
+    for charcoal_entries_path in CHARCOAL_ENTRIES_PATHS:
+        entries = get_entries(charcoal_entries_path)
 
-        # Encontra as melhores correspondências de fornecedor
-        best_matches = get_best_matches(entry_supplier_name, suppliers_names)
+        for entry_supplier_name, group in entries.groupby('FORNECEDOR_E_FAZENDA'):
+            if entry_supplier_name in aliases:
+                process_data(aliases.get(entry_supplier_name), group)
+                continue
 
-        # Pega a melhor correspondência (a primeira)
-        similarity, supplier_name = best_matches[0]
+            # Encontra as melhores correspondências de fornecedor
+            best_matches = get_best_matches(entry_supplier_name, suppliers_names)
 
-        if similarity >= MINIMUM_SIMILARITY:
-            process_data(supplier_name, group)
-            continue
+            # Pega a melhor correspondência (a primeira)
+            similarity, supplier_name = best_matches[0]
 
-        console.print(f'\n[bold red]FORNECEDOR NÃO ENCONTRADO:[/bold red] {entry_supplier_name}')
-        console.print('\n[bold yellow]Escolha uma das opções abaixo ou pressione Enter para pular.[/bold yellow]\n')
-
-        for i, (similarity, name) in enumerate(best_matches, start=1):
-            console.print(f'[cyan]{i}.[/cyan] {name} [dim](Similaridade: {similarity:.2f}%)[/dim]')
-
-        option = Prompt.ask('\n[green]Digite o número da opção escolhida[/green]', default='').strip()
-
-        if option.isdigit():
-            option = int(option) - 1
-
-            if 0 <= option < len(best_matches):
-                supplier_name = best_matches[option][1]
-                aliases.add(entry_supplier_name, supplier_name)
+            if similarity >= MINIMUM_SIMILARITY:
                 process_data(supplier_name, group)
-                console.print(
-                    '[bold green]Fornecedor mapeado com sucesso![/bold green]'
-                    f'{entry_supplier_name} -> {supplier_name}\n'
-                )
+                continue
+
+            console.print(f'\n[bold red]FORNECEDOR NÃO ENCONTRADO:[/bold red] {entry_supplier_name}')
+            console.print('\n[bold yellow]Escolha uma das opções abaixo ou pressione Enter para pular.[/bold yellow]\n')
+
+            for i, (similarity, name) in enumerate(best_matches, start=1):
+                console.print(f'[cyan]{i}.[/cyan] {name} [dim](Similaridade: {similarity:.2f}%)[/dim]')
+
+            option = Prompt.ask('\n[green]Digite o número da opção escolhida[/green]').strip()
+
+            if option.isdigit():
+                option = int(option) - 1
+
+                if 0 <= option < len(best_matches):
+                    supplier_name = best_matches[option][1]
+                    aliases.add(entry_supplier_name, supplier_name)
+                    process_data(supplier_name, group)
+                    console.print(
+                        '[bold green]Fornecedor mapeado com sucesso![/bold green]'
+                        f'{entry_supplier_name} -> {supplier_name}\n'
+                    )
+
+                else:
+                    console.print('[bold yellow]Opção inválida. Nenhuma ação foi realizada. Saindo...[/bold yellow]\n')
+                    sys.exit(1)
             else:
-                console.print('[bold yellow]Opção inválida. Nenhuma ação foi realizada. Saindo...[/bold yellow]\n')
+                console.print('[bold yellow]Nenhuma correspondência selecionada. Saindo...[/bold yellow]\n')
                 sys.exit(1)
-        else:
-            console.print('[bold yellow]Nenhuma correspondência selecionada. Saindo...[/bold yellow]\n')
-            sys.exit(1)

@@ -1,6 +1,7 @@
 import re
 from datetime import timedelta
 
+from dateutil.relativedelta import relativedelta
 from django.utils.timezone import datetime, now
 
 
@@ -24,6 +25,16 @@ def months_ago(months: int):
     Considera que um mês tem 30 dias para simplificação.
     """
     return now() - timedelta(days=30 * months)
+
+
+def first_day_months_ago(months: int):
+    """
+    Retorna o primeiro dia do mês de 'X' meses atrás.
+    Considera a data atual como referência.
+    """
+    today = now()
+    target_date = today - relativedelta(months=months)
+    return target_date.replace(day=1)
 
 
 def months_from_now(months: int):

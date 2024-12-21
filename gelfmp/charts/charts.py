@@ -61,7 +61,7 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.months_ago(months))
+    queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
@@ -87,13 +87,6 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
     df = pd.DataFrame(queryset)
     if df.empty:
         return no_data_error(config['title'])
-
-    spacing = pd.Timedelta(days=2)
-
-    if group_by == 'week':
-        spacing = pd.Timedelta(days=5)
-    elif group_by == 'month':
-        spacing = pd.Timedelta(days=15)
 
     fig = px.bar(
         data_frame=df,
@@ -123,10 +116,6 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
         title_x=0.5,
         margin=dict(l=30, r=15, t=40, b=20),
         xaxis=dict(
-            range=[
-                pd.to_datetime(df['entry_period'].min()) - spacing,
-                pd.to_datetime(df['entry_period'].max()) + spacing,
-            ],
             dtick=config['dtick'],
         ),
         autosize=True,
@@ -158,7 +147,7 @@ def moisture_and_fines(group_by='day', months=3, supplier=None, html=False):
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.months_ago(months))
+    queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
@@ -236,7 +225,7 @@ def density(group_by='day', months=3, supplier=None, html=False):
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.months_ago(months))
+    queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
@@ -303,7 +292,7 @@ def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
     if df.empty:
         return no_data_error(f'IQFs nos últimos {months_ago} meses')
 
-    df['month_year'] = df.apply(lambda row: f"{row['month']}/{row['year']}", axis=1)
+    df['month_year'] = df.apply(lambda row: f'{row["month"]}/{row["year"]}', axis=1)
 
     fig = px.area(
         df,
@@ -323,7 +312,12 @@ def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
         dragmode=False,
         xaxis=dict(
             title='',
-            range=[-0.2, len(df['month_year']) - 0.9,] if len(df['month_year']) > 1 else [-0.1, 0.1],
+            range=[
+                -0.2,
+                len(df['month_year']) - 0.9,
+            ]
+            if len(df['month_year']) > 1
+            else [-0.1, 0.1],
             tickfont=dict(size=10),
         ),
         yaxis=dict(

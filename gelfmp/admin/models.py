@@ -3,7 +3,7 @@ from django.contrib import admin
 from gelfmp import models
 
 from .base import BaseModelAdmin
-from .filters import SupplierWithEntriesFilter
+from .filters import MonthFilter, SupplierWithEntriesFilter
 from .inlines import ContactInline, DocumentInline
 
 
@@ -108,7 +108,7 @@ class DocumentAdmin(BaseModelAdmin):
 class CharcoalEntryAdmin(BaseModelAdmin):
     list_display = ('supplier', 'entry_volume', 'moisture', 'density', 'fines', 'entry_date')
     search_fields = ('supplier__corporate_name', 'dcf')
-    list_filter = (SupplierWithEntriesFilter,)
+    list_filter = (SupplierWithEntriesFilter, MonthFilter)
 
     fieldsets = (
         (
