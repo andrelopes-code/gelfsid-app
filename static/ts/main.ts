@@ -8,7 +8,7 @@ class App {
 
     constructor() {
         this.mapService = new MapService();
-        this.mapService.setCurrentMaterialType(DEFAULT_MATERIAL_TYPE);
+        this.mapService.setActiveMaterialType(DEFAULT_MATERIAL_TYPE);
     }
 
     private async initializeFilter(materialTypes: Set<string>) {
@@ -41,7 +41,7 @@ class App {
                 // Atualiza o tipo de material atualmente filtrado ao mapService
                 const value = selectedOption.getAttribute("data-value");
                 if (value) {
-                    this.mapService.setCurrentMaterialType(value);
+                    this.mapService.setActiveMaterialType(value);
                 }
             });
 
@@ -60,20 +60,18 @@ class App {
 
     private initializeShapefileSearchControls() {
         const searchElem = document.getElementById("shapes-search-controls") as HTMLInputElement;
-
         const nextBtn = searchElem.querySelector("#next-button") as HTMLButtonElement;
         const prevBtn = searchElem.querySelector("#prev-button") as HTMLButtonElement;
 
         nextBtn.addEventListener("click", () => {
             const input = searchElem.querySelector("input") as HTMLInputElement;
 
-            this.mapService.searchAndNavigate(input.value, "next");
+            this.mapService.searchShapefilesAndNavigate(input.value, "next");
         });
 
         prevBtn.addEventListener("click", () => {
             const input = searchElem.querySelector("input") as HTMLInputElement;
-
-            this.mapService.searchAndNavigate(input.value, "prev");
+            this.mapService.searchShapefilesAndNavigate(input.value, "prev");
         });
     }
 

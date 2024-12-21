@@ -12,11 +12,13 @@ import {
     GREEN_COLOR,
     ORANGE_COLOR,
     HOST_CITY_TOOLTIP_TEXT,
+    html,
 } from "./constants";
 
 import type { Cache, CitySuppliers, ShapefileData } from "./types";
 import { supplierService } from "./supplierService";
 import { getCityKey, getRandomPastelColor } from "./utils";
+import { StyleService } from "./styleService";
 
 class MapService {
     private MAX_ZOOM = 17;
@@ -25,6 +27,8 @@ class MapService {
 
     private MAX_BOUNDS = L.latLngBounds(L.latLng(180, -180), L.latLng(-90, 180));
     private GELF_COORDINATES = L.latLng(-19.43852652, -44.34155513);
+
+    private styleService: StyleService;
 
     private map!: L.Map;
     private gelfTooltip!: L.Tooltip;
@@ -36,22 +40,27 @@ class MapService {
         suppliers: null,
         currentLayer: null,
     };
-    private styleCache = new Map<string, L.PathOptions>();
-    private satelliteMode = false;
+
+    private inSatelliteMode = false;
     private citySuppliers: CitySuppliers = {};
-    private currentStateCode: number | null = null;
+    private activeStateCode: number | null = null;
     private activeStateFeature: any | null = null;
-    private currentMaterialType: string | null = null;
+    private activeMaterialType: string | null = null;
 
     private citiesGeojsonLayer: L.GeoJSON | null = null;
     private activeCityLayers = new Set<L.Layer>();
     private activeShapefileLayers = new Set<L.Layer>();
 
+
+    private indexedLayers: Map<string, L.Layer[]> = new Map();
     private lastSearchResults: L.Layer[] = [];
     private currentSearchIndex: number = -1;
     private lastSearchQuery: string = "";
 
+
     constructor() {
+        this.styleService = new StyleService();
+
         this.initializeMap();
         this.initializeSatelliteLayer();
         this.initializeGelfTooltip();
@@ -67,7 +76,25 @@ class MapService {
         });
 
         this.map.setView(BRAZIL_COORDINATES, this.MIN_ZOOM);
-        this.map.on("zoomend", this.onZoomChange);
+
+        this.map.on("zoomend", () => {
+            if (this.map.getZoom() > this.SATELLITE_ZOOM) {
+                /*
+                    Caso o zoom seja maior que this.SATELLITE_ZOOM,
+                    a camada de satelite deve ser adicionada juntamente
+                    com os dados das propriedades (shapefiles)
+                */
+                this.enableSatelliteMode();
+            } else {
+                /*
+                    Caso o zoom seja menor que this.SATELLITE_ZOOM,
+                    a camada de satelite deve ser removida juntamente
+                    com os dados das propriedades (shapefiles) e as
+                    camadas anteriores devem ser visíveis novamente
+                */
+                this.disableSatelliteMode();
+            }
+        });
     }
 
     private initializeSatelliteLayer() {
@@ -90,33 +117,14 @@ class MapService {
         this.gelfTooltip.setLatLng(this.GELF_COORDINATES);
     }
 
-    private onZoomChange = () => {
-        if (this.map.getZoom() > this.SATELLITE_ZOOM) {
-            /*
-                Caso o zoom seja maior que this.SATELLITE_ZOOM,
-                a camada de satelite deve ser adicionada juntamente
-                com os dados das propriedades (shapefiles)
-            */
-            this.enableSatelliteMode();
-        } else {
-            /*
-                Caso o zoom seja menor que this.SATELLITE_ZOOM,
-                a camada de satelite deve ser removida juntamente
-                com os dados das propriedades (shapefiles) e as
-                camadas anteriores devem ser visíveis novamente
-            */
-            this.disableSatelliteMode();
-        }
-    };
-
     private enableSatelliteMode() {
         if (!this.map.hasLayer(this.satelliteLayer)) {
             this.satelliteLayer.addTo(this.map);
 
-            this.updateGeoJSONStyleForSatelliteMode(true);
+            this.updateStyleForSateliteMode(true);
             this.addShapefileLayers(true);
 
-            this.satelliteMode = true;
+            this.inSatelliteMode = true;
 
             // Mostra os controles de pesquisa de shapefiles
             document.getElementById("shapes-search-controls")?.classList.remove("hidden");
@@ -130,17 +138,17 @@ class MapService {
         if (this.map.hasLayer(this.satelliteLayer)) {
             this.map.removeLayer(this.satelliteLayer);
 
-            this.updateGeoJSONStyleForSatelliteMode(false);
+            this.updateStyleForSateliteMode(false);
             this.addShapefileLayers(false);
 
-            this.satelliteMode = false;
+            this.inSatelliteMode = false;
 
             // Oculta os controles de pesquisa de shapefiles
             document.getElementById("shapes-search-controls")?.classList.add("hidden");
         }
     }
 
-    private updateGeoJSONStyleForSatelliteMode(showSatellite: boolean) {
+    private updateStyleForSateliteMode(showSatellite: boolean) {
         if (this.citiesGeojsonLayer) {
             this.citiesGeojsonLayer.setStyle((feature: any) => {
                 if (showSatellite) {
@@ -189,27 +197,16 @@ class MapService {
 
     private addShapefileLayer(shapefile: ShapefileData) {
         const geojson = JSON.parse(shapefile.geojson);
-
-        /*
-            Cores aleatórias para as camadas de
-            produção florestal e uma cor fixa para
-            camadas de propriedade.
-        */
         const randomColor = getRandomPastelColor();
-        const propertyColor = "#FFFFFF33";
 
-        /*
-            A camada principal que agrupa todas
-            as sub-camadas. Ela define o estilo
-            que terão as sub-camadas de acordo
-            com o tipo (propriedade ou produção florestal).
-        */
         const mainLayer = L.geoJSON(geojson, {
-            style: (feature) => {
-                if (feature?.properties?.MATRICULA) {
+            style: (feature: any) => {
+                const isProperty = feature?.properties?.MATRICULA;
+
+                if (isProperty) {
                     return {
-                        color: propertyColor,
-                        fillColor: propertyColor,
+                        color: "#FFFFFF33",
+                        fillColor: "#FFFFFF33",
                         fillOpacity: 0.1,
                         weight: 2,
                         className: "shapefile-layer",
@@ -229,12 +226,9 @@ class MapService {
         const subLayers = mainLayer.getLayers();
 
         subLayers.forEach((layer) => {
-            /*
-                Tenta pegar as propriedades da camada caso existam.
-            */
             const layerProperties = (layer as any)?.feature?.properties;
 
-            layer.bindPopup(this.createTooltipContent(layerProperties, shapefile), {
+            layer.bindPopup(this.createShapefileTooltipContent(layerProperties, shapefile), {
                 closeButton: true,
                 closeOnEscapeKey: true,
                 interactive: true,
@@ -272,7 +266,7 @@ class MapService {
         this.activeShapefileLayers.clear();
     }
 
-    private searchLayers(query: string): Array<L.Layer> {
+    private searchShapefileLayers(query: string): Array<L.Layer> {
         const results: L.Layer[] = [];
         query = query.toLowerCase();
 
@@ -300,16 +294,15 @@ class MapService {
         return results;
     }
 
-    public searchAndNavigate(query: string, direction: "next" | "prev") {
-        if (this.satelliteMode) {
+    public searchShapefilesAndNavigate(query: string, direction: "next" | "prev") {
+        if (this.inSatelliteMode) {
             if (query !== this.lastSearchQuery) {
-                this.lastSearchResults = this.searchLayers(query);
+                this.lastSearchResults = this.searchShapefileLayers(query);
                 this.currentSearchIndex = -1;
                 this.lastSearchQuery = query;
             }
 
             if (this.lastSearchResults.length === 0) {
-                alert("No results found");
                 return;
             }
 
@@ -327,6 +320,10 @@ class MapService {
     }
 
     private focusLayer(layer: L.Layer) {
+        /**
+        Função que centra o mapa na camada de informada,
+        abre a popup e configura o zoom máximo para 16.
+        */
         const bounds = (layer as any).getBounds?.();
 
         layer.openPopup();
@@ -339,7 +336,7 @@ class MapService {
         }
     }
 
-    private createTooltipContent(properties: any, shapefile: any) {
+    private createShapefileTooltipContent(properties: any, shapefile: any) {
         const propertiesMapping = {
             PLANTIO: "Plantio",
             EXECUCAO: "Execução",
@@ -437,68 +434,8 @@ class MapService {
             Calcula e retorna o estilo da cidade com base na
             chave gerada e no tipo de exibição atual.
         */
-        const cityKey = getCityKey(this.currentStateCode!, feature.properties.name);
-        return this.calculateCityStyle(cityKey, this.currentMaterialType);
-    }
-
-    private calculateCityStyle(cityKey: string, currentMaterialType: string | null) {
-        const cacheKey = `${cityKey}-${currentMaterialType}`;
-
-        /*
-            Verifica se o estilo da cidade já está armazenado no cache.
-            Caso esteja, retorna diretamente o estilo previamente calculado.
-        */
-        if (this.styleCache.has(cacheKey)) {
-            return this.styleCache.get(cacheKey)!;
-        }
-
-        const style: L.PathOptions = {
-            color: WEAK_STROKE_COLOR,
-            fillColor: FILL_COLOR,
-            fillOpacity: 1,
-            weight: 1,
-            className: "city-layer",
-        };
-
-        /*
-            Obtém os fornecedores associados à cidade e verifica se
-            o filtro de tipo de material está habilitado ou desabilitado.
-        */
-        const suppliers = this.citySuppliers[cityKey];
-        const filterDisabled = currentMaterialType === DEFAULT_MATERIAL_TYPE;
-        const supplierHasCurrentMaterialType = suppliers?.some(
-            (s) => s.material_type === currentMaterialType
-        );
-
-        if (suppliers && (filterDisabled || supplierHasCurrentMaterialType)) {
-            style.fillColor = STROKE_COLOR;
-
-            /*
-                Aplica uma cor específica ao preenchimento
-                com base no tipo atual de material.
-            */
-            switch (currentMaterialType) {
-                case "Carvão Vegetal":
-                    style.fillColor = GREEN_COLOR;
-                    break;
-                case "Minério de Ferro":
-                    style.fillColor = ORANGE_COLOR;
-                    break;
-                case "Todos":
-                    style.fillColor = ORANGE_COLOR;
-            }
-        }
-
-        /*
-            Se a cidade possui fornecedores, mas nenhuma cor foi atribuída,
-            usa uma cor de preenchimento para indicar inatividade.
-        */
-        if (suppliers && style.fillColor === FILL_COLOR) {
-            style.fillColor = "var(--off)";
-        }
-
-        this.styleCache.set(cacheKey, style);
-        return style;
+        const cityKey = getCityKey(this.activeStateCode!, feature.properties.name);
+        return this.styleService.getCityStyle(cityKey, this.activeMaterialType, this.citySuppliers);
     }
 
     async loadStates() {
@@ -538,7 +475,7 @@ class MapService {
             this.activeCityLayers.clear();
 
             const data = await this.loadGeoJSON("cities", stateCode.toString());
-            this.currentStateCode = stateCode;
+            this.activeStateCode = stateCode;
 
             this.citiesGeojsonLayer = L.geoJSON(data, {
                 style: this.cityStyleFunction.bind(this),
@@ -562,7 +499,7 @@ class MapService {
                 const feature = layer.feature;
                 const cityKey = getCityKey(stateCode, feature.properties.name);
 
-                const notInSatelliteMode = !this.satelliteMode;
+                const notInSatelliteMode = !this.inSatelliteMode;
                 const isNotHostCity = cityKey !== HOST_CITY_KEY;
 
                 if (e.type === "mouseover" && feature.properties && isNotHostCity && notInSatelliteMode) {
@@ -594,7 +531,7 @@ class MapService {
                 } else if (e.type === "click" && notInSatelliteMode) {
                     if (feature.properties) {
                         layer._activeTooltip?.tooltip.addTo(this.map);
-                        supplierService.openDetails(cityKey, this.currentMaterialType);
+                        supplierService.openDetails(cityKey, this.activeMaterialType);
                     }
                 }
             };
@@ -605,12 +542,6 @@ class MapService {
                 .on("click", handleMouseInteraction);
         } catch (error) {
             console.error("error loading cities:", error);
-        }
-    }
-
-    updateGeoJSONStyle() {
-        if (this.citiesGeojsonLayer) {
-            this.citiesGeojsonLayer.setStyle(this.cityStyleFunction.bind(this));
         }
     }
 
@@ -642,8 +573,14 @@ class MapService {
         }
     }
 
-    setCurrentMaterialType(type: string) {
-        this.currentMaterialType = type;
+    updateGeoJSONStyle() {
+        if (this.citiesGeojsonLayer) {
+            this.citiesGeojsonLayer.setStyle(this.cityStyleFunction.bind(this));
+        }
+    }
+
+    setActiveMaterialType(type: string) {
+        this.activeMaterialType = type;
         this.updateGeoJSONStyle();
     }
 
