@@ -814,10 +814,6 @@ video {
   height: 250px;
 }
 
-.h-\[400px\]{
-  height: 400px;
-}
-
 .h-fit{
   height: -moz-fit-content;
   height: fit-content;

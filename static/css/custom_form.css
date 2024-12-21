@@ -73,3 +73,8 @@
     background-color: var(--primary-color);
     color: #151b25;
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    opacity: 0.3;
+}

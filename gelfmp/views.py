@@ -38,13 +38,23 @@ def supplier_stats(request: HttpRequest, id):
         'charts': [
             {
                 'id': 'supplier_charcoal_entries',
-                'form_id': 'supplier_charcoal_entries_form',
+                'form_id': 'supplier_stats_form',
                 'data': charts.supplier_charcoal_entries(supplier=id, html=True),
                 'form': forms.CharcoalSupplierEntriesChartForm(supplier_id=id),
             },
             {
                 'id': 'supplier_iqfs_last_3_months',
                 'data': charts.supplier_iqfs_last_3_months(supplier_id=id, html=True),
+            },
+            {
+                'id': 'supplier_average_moisture_and_fines',
+                'form_id': 'supplier_stats_form',
+                'data': charts.supplier_average_moisture_and_fines(supplier=id, html=True),
+            },
+            {
+                'id': 'supplier_average_density',
+                'form_id': 'supplier_stats_form',
+                'data': charts.supplier_average_density(supplier=id, html=True),
             },
         ],
     }
@@ -75,12 +85,12 @@ def dashboard(request: HttpRequest):
                 'form': forms.CharcoalEntriesChartForm(),
             },
             {
-                'id': 'density',
-                'data': charts.density(html=True),
+                'id': 'average_density',
+                'data': charts.average_density(html=True),
             },
             {
-                'id': 'moisture_and_fines',
-                'data': charts.moisture_and_fines(html=True),
+                'id': 'average_moisture_and_fines',
+                'data': charts.average_moisture_and_fines(html=True),
             },
         ],
     }

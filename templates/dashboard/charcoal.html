@@ -14,6 +14,8 @@
                 <div class="gap-4 grid grid-rows-2 bg-dark px-4 pb-4 w-full h-full">
                     <!-- Gráfico de entrada de carvão -->
                     {% include "components/chart.html" with
+                    form_width="25%"
+                    chart_width="75%"
                     chart_id=charts.0.id
                     form_id=charts.0.form_id
                     chart_data=charts.0.data

@@ -1,13 +1,15 @@
 <div class="flex bg-dark-100 shadow-md p-4 rounded-md w-full h-full text-slate-300">
     <!-- Gráfico -->
-    <div class="{% if form %} w-5/6 {% else %}w-full{% endif %} h-full">
+    <div  style="{% if chart_width %}width: {{ chart_width }}{% endif %}" class="{% if form %} w-5/6 {% else %}w-full{% endif %} h-full">
         <div id="{{ chart_id }}"
              data-related-form="{{ form_id }}"
              class="plotly-chart">{{ chart_data|safe }}</div>
     </div>
     {% if form %}
         <!-- Formulário de Filtro -->
-        <form id="{{ form_id }}" class="bg-dark-100 custom-form w-1/6">
+        <form style="{% if form_width %}width: {{ form_width }}{% endif %}"
+              id="{{ form_id }}"
+              class="bg-dark-100 custom-form w-1/6">
             <div class="form-container">{{ form.as_p }}</div>
             <button type="submit">Filtrar</button>
         </form>

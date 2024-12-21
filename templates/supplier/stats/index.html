@@ -30,20 +30,32 @@
                 <span class="h-[250px] min-h-[250px]">
                     {% include "components/chart.html" with
                     chart_id=charts.1.id
-                    form_id=charts.1.form_id
-                    chart_data=charts.1.data
-                    form=charts.1.form %}
+                    chart_data=charts.1.data %}
                 </span>
             </aside>
             <!-- CONTEÚDO PRINCIPAL -->
             <div class="flex flex-col gap-4 shadow-md rounded-md w-4/6 h-full max-h-full overflow-y-auto noscrollbar">
                 <div class="flex flex-col gap-4 bg-dark w-full h-full *:min-h-[400px]">
-                    <span class="h-[400px]">
+                    <span>
                         {% include "components/chart.html" with
+                        form_width='30%'
+                        chart_width='70%'
                         chart_id=charts.0.id
                         form_id=charts.0.form_id
                         chart_data=charts.0.data
                         form=charts.0.form %}
+                    </span>
+                    <span>
+                        {% include "components/chart.html" with
+                        chart_id=charts.2.id
+                        form_id=charts.2.form_id
+                        chart_data=charts.2.data %}
+                    </span>
+                    <span>
+                        {% include "components/chart.html" with
+                        chart_id=charts.3.id
+                        form_id=charts.3.form_id
+                        chart_data=charts.3.data %}
                     </span>
                 </div>
             </div>

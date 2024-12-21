@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -6,7 +8,7 @@ from django.db.models import Avg, Sum
 from django.db.models.functions import TruncDay, TruncMonth, TruncWeek
 
 from gelfmp.charts import theme
-from gelfmp.charts.utils import WEEK_DTICK, html_else_json, no_data_error
+from gelfmp.charts.utils import WEEK_DTICK, format_date, html_else_json, no_data_error, validate_date_range
 from gelfmp.models import CharcoalEntry, CharcoalIQF, Supplier
 from gelfmp.utils import dtutils
 from gelfmp.utils.error_handlers import handle_chart_error
@@ -16,8 +18,17 @@ pio.templates.default = go.layout.Template(layout=theme.custom_layout)
 
 
 @handle_chart_error
-def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name=True, html=False):
+def charcoal_entries(
+    group_by='day',
+    months=3,
+    start_date=None,
+    end_date=None,
+    supplier=None,
+    show_supplier_name=True,
+    html=False,
+):
     months = int(months)
+    validate_date_range(start_date, end_date)
 
     group_by_config = {
         'week': {
@@ -61,7 +72,18 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    entries_queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
+
+    if start_date and end_date:
+        entries_queryset = CharcoalEntry.objects.filter(entry_date__range=[start_date, end_date])
+        config['title'] = f'Entrada de Carvão (de {format_date(start_date)} a {format_date(end_date)})'
+    elif start_date:
+        entries_queryset = CharcoalEntry.objects.filter(entry_date__gte=start_date)
+        config['title'] = f'Entrada de Carvão (a partir de {format_date(start_date)})'
+    elif end_date:
+        entries_queryset = CharcoalEntry.objects.filter(entry_date__lte=end_date)
+        config['title'] = f'Entrada de Carvão (até {format_date(end_date)})'
+    else:
+        entries_queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
@@ -84,18 +106,34 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
         )
     )
 
-    df = pd.DataFrame(entries_queryset)
-    if df.empty:
+    if not entries_queryset.exists():
         return no_data_error(config['title'])
 
+    x_values = []
+    y_values = []
+    avg_moisture_values = []
+    avg_fines_values = []
+    avg_density_values = []
+
+    for entry in entries_queryset:
+        x_values.append(entry['entry_period'])
+        y_values.append(entry['total_volume'])
+        avg_moisture_values.append(entry['average_moisture'])
+        avg_fines_values.append(entry['average_fines'])
+        avg_density_values.append(entry['average_density'])
+
+    if group_by == 'day':
+        xrange = [x_values[0] - timedelta(days=5), x_values[-1] + timedelta(days=5)]
+    else:
+        xrange = None
+
     fig = px.bar(
-        data_frame=df,
-        x='entry_period',
-        y='total_volume',
-        text='total_volume',
+        x=x_values,
+        y=y_values,
+        text=y_values,
         title=config['title'],
-        labels={'total_volume': 'Volume Total'},
-        custom_data=['average_moisture', 'average_fines', 'average_density'],
+        labels={'y': 'Volume Total'},
+        custom_data=[avg_moisture_values, avg_fines_values, avg_density_values],
     )
 
     fig.update_traces(
@@ -113,7 +151,7 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
         xaxis_title='',
         title_x=0.5,
         margin=dict(l=30, r=15, t=40, b=20),
-        xaxis=dict(dtick=config['dtick']),
+        xaxis=dict(dtick=config['dtick'], range=xrange),
         autosize=True,
     )
 
@@ -121,8 +159,16 @@ def charcoal_entries(group_by='day', months=3, supplier=None, show_supplier_name
 
 
 @handle_chart_error
-def moisture_and_fines(group_by='day', months=3, supplier=None, html=False):
+def average_moisture_and_fines(
+    group_by='day',
+    months=3,
+    start_date=None,
+    end_date=None,
+    supplier=None,
+    html=False,
+):
     months = int(months)
+    validate_date_range(start_date, end_date)
 
     group_by_config = {
         'week': {
@@ -143,7 +189,18 @@ def moisture_and_fines(group_by='day', months=3, supplier=None, html=False):
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    entries_queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
+
+    if start_date and end_date:
+        entries_queryset = CharcoalEntry.objects.filter(entry_date__range=[start_date, end_date])
+        config['title'] = f'Média de Umidade e Finos (de {format_date(start_date)} a {format_date(end_date)})'
+    elif start_date:
+        entries_queryset = CharcoalEntry.objects.filter(entry_date__gte=start_date)
+        config['title'] = f'Média de Umidade e Finos (a partir de {format_date(start_date)})'
+    elif end_date:
+        entries_queryset = CharcoalEntry.objects.filter(entry_date__lte=end_date)
+        config['title'] = f'Média de Umidade e Finos (ate {format_date(end_date)})'
+    else:
+        entries_queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
@@ -199,8 +256,16 @@ def moisture_and_fines(group_by='day', months=3, supplier=None, html=False):
 
 
 @handle_chart_error
-def density(group_by='day', months=3, supplier=None, html=False):
+def average_density(
+    group_by='day',
+    months=3,
+    start_date=None,
+    end_date=None,
+    supplier=None,
+    html=False,
+):
     months = int(months)
+    validate_date_range(start_date, end_date)
 
     group_by_config = {
         'week': {
@@ -221,7 +286,18 @@ def density(group_by='day', months=3, supplier=None, html=False):
     }
 
     config = group_by_config.get(group_by, group_by_config['day'])
-    entries_queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
+
+    if start_date and end_date:
+        entries_queryset = CharcoalEntry.objects.filter(entry_date__range=[start_date, end_date])
+        config['title'] = f'Média de Densidade (de {format_date(start_date)} a {format_date(end_date)})'
+    elif start_date:
+        entries_queryset = CharcoalEntry.objects.filter(entry_date__gte=start_date)
+        config['title'] = f'Média de Densidade (a partir de {format_date(start_date)})'
+    elif end_date:
+        entries_queryset = CharcoalEntry.objects.filter(entry_date__lte=end_date)
+        config['title'] = f'Média de Densidade (até {format_date(end_date)})'
+    else:
+        entries_queryset = CharcoalEntry.objects.filter(entry_date__gte=dtutils.first_day_months_ago(months))
 
     if supplier:
         supplier = Supplier.objects.filter(id=supplier).first()
@@ -342,5 +418,35 @@ def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
     return html_else_json(fig, html)
 
 
-def supplier_charcoal_entries(supplier, group_by='day', months=3, html=False):
-    return charcoal_entries(supplier=supplier, group_by=group_by, months=months, show_supplier_name=False, html=html)
+def supplier_charcoal_entries(supplier, group_by='day', months=3, start_date=None, end_date=None, html=False):
+    return charcoal_entries(
+        supplier=supplier,
+        group_by=group_by,
+        months=months,
+        start_date=start_date,
+        end_date=end_date,
+        show_supplier_name=False,
+        html=html,
+    )
+
+
+def supplier_average_moisture_and_fines(supplier, group_by='day', months=3, start_date=None, end_date=None, html=False):
+    return average_moisture_and_fines(
+        supplier=supplier,
+        group_by=group_by,
+        months=months,
+        start_date=start_date,
+        end_date=end_date,
+        html=html,
+    )
+
+
+def supplier_average_density(supplier, group_by='day', months=3, start_date=None, end_date=None, html=False):
+    return average_density(
+        supplier=supplier,
+        group_by=group_by,
+        months=months,
+        start_date=start_date,
+        end_date=end_date,
+        html=html,
+    )

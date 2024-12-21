@@ -10,13 +10,23 @@ class CharcoalEntriesChartForm(forms.Form):
         required=False,
     )
 
-    months = forms.IntegerField(label='Meses', initial=3, required=False, min_value=1, max_value=24)
-
     supplier = forms.ModelChoiceField(
         queryset=Supplier.objects.filter(material_type='Carvão Vegetal').all(),
         label='Fornecedor',
         required=False,
         empty_label='Todos',
+    )
+
+    start_date = forms.DateField(
+        label='Data de Início',
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        required=False,
+    )
+
+    end_date = forms.DateField(
+        label='Data de Fim',
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        required=False,
     )
 
 
@@ -27,10 +37,21 @@ class CharcoalSupplierEntriesChartForm(forms.Form):
         required=False,
     )
 
-    months = forms.IntegerField(label='Meses', initial=3, required=False, min_value=1, max_value=24)
     supplier = forms.CharField(widget=forms.HiddenInput, required=True)
 
-    def __init__(self, *args, supplier_id, **kwargs):
+    start_date = forms.DateField(
+        label='Data de Início',
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        required=False,
+    )
+
+    end_date = forms.DateField(
+        label='Data de Fim',
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        required=False,
+    )
+
+    def __init__(self, *args, supplier_id=None, **kwargs):
         super().__init__(*args, **kwargs)
 
         if supplier_id:
