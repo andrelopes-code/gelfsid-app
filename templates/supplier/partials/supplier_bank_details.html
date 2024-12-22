@@ -10,6 +10,7 @@
                     <th class="px-4 py-2 font-medium text-slate-500">Código do Banco</th>
                     <th class="px-4 py-2 font-medium text-slate-500">Conta Corrente</th>
                     <th class="px-4 py-2 font-medium text-slate-500">Agência</th>
+                    <th class="px-4 py-2 font-medium text-slate-500">CNPJ da Conta</th>
                 </tr>
             </thead>
             <tbody class="w-full h-fit">
@@ -21,6 +22,11 @@
                         {% include "components/copyable_text.html" with value=supplier.bank_details.account_number %}
                     </td>
                     <td class="px-4 py-2">{% include "components/copyable_text.html" with value=supplier.bank_details.agency %}</td>
+                    {% if supplier.bank_details.account_cnpj %}
+                        <td class="px-4 py-2">{% include "components/copyable_text.html" with value=supplier.bank_details.account_cnpj %}</td>
+                    {% else %}
+                        <td class="px-4 py-2">-</td>
+                    {% endif %}
                 </tr>
             </tbody>
         </table>

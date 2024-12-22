@@ -6,6 +6,11 @@ validate_cpf_cnpj = RegexValidator(
     message='Insira um CPF ou CNPJ válido. Use apenas numeros ou 000.000.000-00, 00.000.000/0000-00.',
 )
 
+validate_cnpj = RegexValidator(
+    regex=r'^(\w{14}|\d{2}.\d{3}.\d{3}/\d{4}-\d{2})$',
+    message='Insira um CNPJ válido. Use apenas numeros ou 00.000.000/0000-00.',
+)
+
 validate_cep = RegexValidator(
     regex=r'^(\d{8}|\d{5}-\d{3})$',
     message='Insira um CEP válido. Use o formato 00000000 ou 00000-000.',

@@ -47,6 +47,7 @@ class BankDetailsAdmin(BaseModelAdmin):
                     'bank_code',
                     'account_number',
                     'agency',
+                    'account_cnpj',
                 )
             },
         ),
@@ -205,6 +206,7 @@ class SupplierAdmin(BaseModelAdmin):
     list_display = ('corporate_name', 'material_type', 'cpf_cnpj', 'city', 'active')
     list_filter = ('material_type', 'state', 'active')
     search_fields = ('corporate_name', 'cpf_cnpj')
+
     inlines = [DocumentInline, ContactInline]
 
     fieldsets = (

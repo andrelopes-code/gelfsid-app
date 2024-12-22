@@ -11,6 +11,14 @@ class BankDetails(BaseModel):
     agency = models.CharField(max_length=10, verbose_name='Agência')
     account_number = models.CharField(max_length=20, verbose_name='Número da Conta')
 
+    account_cnpj = models.CharField(
+        max_length=20,
+        validators=[validators.validate_cnpj],
+        verbose_name='CNPJ da Conta',
+        null=True,
+        blank=True,
+    )
+
     bank_code = models.CharField(
         max_length=5,
         validators=[validators.validate_bank_code],

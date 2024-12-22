@@ -34,3 +34,20 @@ class DocumentInline(BaseTabularInline):
 
     verbose_name = 'Documento'
     verbose_name_plural = 'Documentos'
+
+
+class BankDetailsInline(BaseTabularInline):
+    model = models.BankDetails
+    extra = 1
+    max_num = 1
+
+    fields = (
+        'bank_name',
+        'bank_code',
+        'account_number',
+        'agency',
+        'account_cnpj',
+    )
+
+    verbose_name = 'Detalhes Bancários'
+    verbose_name_plural = 'Detalhes Bancários'
