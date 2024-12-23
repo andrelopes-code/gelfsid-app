@@ -166,4 +166,4 @@ def charcoal_schedule(request: HttpRequest):
         'months': month_labels,
     }
 
-    return render(request, 'dashboard/schedule.html', context=context)
+    return render(request, 'dashboard/charcoal_schedule.html', context=context)

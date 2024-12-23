@@ -1380,6 +1380,14 @@ video {
   line-height: 1rem;
 }
 
+.text-\[0\.8rem\]{
+  font-size: 0.8rem;
+}
+
+.text-\[0\.9rem\]{
+  font-size: 0.9rem;
+}
+
 .font-bold{
   font-weight: 700;
 }
@@ -1709,10 +1717,6 @@ html::-webkit-scrollbar-thumb:hover {
 .placeholder\:text-slate-600::placeholder{
   --tw-text-opacity: 1;
   color: rgb(71 85 105 / var(--tw-text-opacity));
-}
-
-.last\:\!border-none:last-child{
-  border-style: none !important;
 }
 
 .hover\:translate-x-1:hover{
