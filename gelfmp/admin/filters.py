@@ -1,5 +1,6 @@
 from django.contrib.admin import SimpleListFilter
 from django.db.models import Count
+from django.utils.timezone import now
 
 from gelfmp.models import Supplier
 
@@ -33,5 +34,25 @@ class MonthFilter(SimpleListFilter):
         if self.value():
             year, month = map(int, self.value().split('-'))
             return queryset.filter(entry_date__year=year, entry_date__month=month)
+
+        return queryset
+
+
+class DocumentValidityFilter(SimpleListFilter):
+    title = 'Validade'
+    parameter_name = 'validity'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('valid', 'Válido'),
+            ('expired', 'Vencido'),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'expired':
+            queryset = queryset.filter(validity__lt=now().date())
+
+        elif self.value() == 'valid':
+            queryset = queryset.filter(validity__gte=now().date())
 
         return queryset

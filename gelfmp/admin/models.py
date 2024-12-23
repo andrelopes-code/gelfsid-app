@@ -3,7 +3,7 @@ from django.contrib import admin
 from gelfmp import models
 
 from .base import BaseModelAdmin, ROBaseModelAdmin
-from .filters import MonthFilter, SupplierWithEntriesFilter
+from .filters import DocumentValidityFilter, MonthFilter, SupplierWithEntriesFilter
 from .inlines import ContactInline, DocumentInline
 
 
@@ -61,7 +61,7 @@ class BankDetailsAdmin(BaseModelAdmin):
 @admin.register(models.Document)
 class DocumentAdmin(BaseModelAdmin):
     list_display = ('document_type', 'name', 'validity', 'supplier')
-    list_filter = ('document_type', 'supplier')
+    list_filter = ('document_type', 'supplier', DocumentValidityFilter)
     search_fields = ('name', 'supplier__corporate_name')
 
     actions = ['delete_files']
