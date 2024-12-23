@@ -1,10 +1,13 @@
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
+from django.utils.timezone import now
 
 from gelfcore.router import Router
 from gelfmp.charts import charts, forms
-from gelfmp.models import Supplier
+from gelfmp.models import CharcoalMonthlyPlan, Supplier
+from gelfmp.models.charcoal_entry import CharcoalEntry
+from gelfmp.models.choices import SupplierType
 
 router = Router()
 
@@ -67,6 +70,7 @@ def supplier_search(request: HttpRequest):
     suppliers = []
 
     if query := request.GET.get('q'):
+        # Busca por nome, cidade ou CPF/CNPJ
         suppliers = Supplier.objects.filter(
             Q(corporate_name__icontains=query) | Q(city__name__icontains=query) | Q(cpf_cnpj__icontains=query),
         )
@@ -75,7 +79,7 @@ def supplier_search(request: HttpRequest):
 
 
 @router('dashboard/charcoal/', name='charcoal_dashboard')
-def dashboard(request: HttpRequest):
+def charcoal_dashboard(request: HttpRequest):
     context = {
         'charts': [
             {
@@ -96,3 +100,70 @@ def dashboard(request: HttpRequest):
     }
 
     return render(request, 'dashboard/charcoal.html', context=context)
+
+
+@router('dashboard/schedule/', name='charcoal_schedule')
+def charcoal_schedule(request: HttpRequest):
+    year = now().year
+
+    # Obtem as programações do ano informado.
+    plans = CharcoalMonthlyPlan.objects.filter(year=year).order_by(
+        'supplier__supplier_type',
+        'supplier__corporate_name',
+        'month',
+    )
+
+    supplier_types = {supplier_type: display for supplier_type, display in SupplierType.choices}
+    grouped_data = {supplier_type: {'planned': [0] * 12, 'realized': ['-'] * 12} for supplier_type in supplier_types}
+
+    for plan in plans:
+        month_index = plan.month - 1
+        supplier_type = plan.supplier.supplier_type
+        grouped_data[supplier_type]['planned'][month_index] += plan.planned_volume
+
+    charcoal_entries = (
+        CharcoalEntry.objects.filter(entry_date__year=year)
+        .values('supplier__supplier_type', 'entry_date__month')
+        .annotate(realized_volume=Sum('entry_volume'))
+    )
+
+    for entry in charcoal_entries:
+        supplier_type = entry['supplier__supplier_type']
+        month_index = entry['entry_date__month'] - 1
+        realized_volume = entry['realized_volume']
+
+        grouped_data[supplier_type]['realized'][month_index] = round(realized_volume, 2)
+
+    table_data = [
+        {'supplier_type': supplier_types[supplier_type], 'planned': data['planned'], 'realized': data['realized']}
+        for supplier_type, data in grouped_data.items()
+    ]
+
+    month_labels = [
+        'Janeiro',
+        'Fevereiro',
+        'Março',
+        'Abril',
+        'Maio',
+        'Junho',
+        'Julho',
+        'Agosto',
+        'Setembro',
+        'Outubro',
+        'Novembro',
+        'Dezembro',
+    ]
+
+    context = {
+        'table_data': table_data,
+        'year': year,
+        'charts': [
+            {
+                'id': 'charcoal_schedule',
+                'data': charts.charcoal_schedule(table_data, year, month_labels, html=True),
+            },
+        ],
+        'months': month_labels,
+    }
+
+    return render(request, 'dashboard/schedule.html', context=context)

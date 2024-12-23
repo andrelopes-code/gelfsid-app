@@ -16,6 +16,12 @@ from gelfmp.utils.error_handlers import handle_chart_error
 # Define o tema personalizado como o padrão para os gráficos
 pio.templates.default = go.layout.Template(layout=theme.custom_layout)
 
+SUPPLIER_COLORS = {
+    'GELF': '#FFE699',
+    'Botumirim': '#C5E0B4',
+    'Terceiro': '#BDD7EE',
+}
+
 
 @handle_chart_error
 def charcoal_entries(
@@ -413,6 +419,58 @@ def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
         cliponaxis=False,
         marker=dict(size=8, symbol='circle'),
         line=dict(width=2),
+    )
+
+    return html_else_json(fig, html)
+
+
+@handle_chart_error
+def charcoal_schedule(data, year, month_labels, html=False):
+    df = pd.DataFrame(data)
+    title = f'Volume Realizado em {year}'
+
+    if df.empty:
+        return no_data_error(title)
+
+    fig = go.Figure()
+
+    for supplier_type in df['supplier_type'].unique():
+        data = df[df['supplier_type'] == supplier_type]
+
+        realized_data = data['realized'].iloc[0]
+        planned_data = data['planned'].iloc[0]
+
+        percentage_data = [
+            (realized / planned * 100 if planned != 0 and not isinstance(realized, str) else None)
+            for realized, planned in zip(realized_data, planned_data)
+        ]
+
+        customdata = list(zip(planned_data, percentage_data))
+
+        line_color = SUPPLIER_COLORS.get(supplier_type, 'gray')
+
+        fig.add_trace(
+            go.Scatter(
+                x=month_labels,
+                y=realized_data,
+                mode='lines+markers',
+                name=supplier_type,
+                cliponaxis=False,
+                hovertemplate=(
+                    '<b>Mês: %{x}</b><br>'
+                    'Realizado: %{y:.2f} m³ (%{customdata[1]:.2f}%)<br>'
+                    'Planejado: %{customdata[0]:.2f} m³'
+                ),
+                line=dict(color=line_color),
+                customdata=customdata,
+            )
+        )
+
+    fig.update_layout(
+        title=title,
+        yaxis_title='Volume Realizado (m³)',
+        showlegend=True,
+        margin=dict(l=40, r=15, t=40, b=20),
     )
 
     return html_else_json(fig, html)

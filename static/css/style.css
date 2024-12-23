@@ -1029,6 +1029,10 @@ video {
   list-style-type: none;
 }
 
+.grid-cols-1{
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
 .grid-cols-2{
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -1173,6 +1177,14 @@ video {
 
 .border-t-\[3px\]{
   border-top-width: 3px;
+}
+
+.\!border-none{
+  border-style: none !important;
+}
+
+.border-none{
+  border-style: none;
 }
 
 .border-dark-200{
@@ -1697,6 +1709,10 @@ html::-webkit-scrollbar-thumb:hover {
 .placeholder\:text-slate-600::placeholder{
   --tw-text-opacity: 1;
   color: rgb(71 85 105 / var(--tw-text-opacity));
+}
+
+.last\:\!border-none:last-child{
+  border-style: none !important;
 }
 
 .hover\:translate-x-1:hover{

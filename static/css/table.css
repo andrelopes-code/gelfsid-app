@@ -15,7 +15,6 @@
 
 .table-container {
     overflow-x: auto;
-    border: 1px solid var(--color-border);
     border-radius: 8px;
     background-color: var(--color-bg);
 }
@@ -30,7 +29,7 @@ thead {
 }
 
 th {
-    text-align: left;
+    text-align: center;
     padding: 12px;
     font-weight: bold;
     color: var(--color-text);
@@ -44,9 +43,9 @@ th a {
     transition: color 0.2s;
 }
 
-th a:hover {
+/* th a:hover {
     color: var(--color-link-hover);
-}
+} */
 
 tbody tr {
     transition: background-color 0.2s;
@@ -56,9 +55,9 @@ tbody tr:nth-child(even) {
     background-color: var(--color-row-alt);
 }
 
-tbody tr:hover {
+/* tbody tr:hover {
     background-color: var(--color-row-hover);
-}
+} */
 
 td {
     padding: 12px;

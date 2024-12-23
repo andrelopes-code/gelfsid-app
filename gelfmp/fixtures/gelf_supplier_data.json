@@ -3,14 +3,15 @@
         "model": "gelfmp.supplier",
         "pk": 1,
         "fields": {
-            "created_at": "2024-01-01T00:00:00.000Z",
-            "updated_at": "2024-01-01T00:00:00.000Z",
+            "created_at": "2024-01-01T00:00:00Z",
+            "updated_at": "2024-12-20T01:11:46.349Z",
+            "corporate_name": "GELF SIDERURGIA SA FAZENDA TAMANDUA OU POCOES",
+            "rm_code": null,
             "active": true,
-            "corporate_name": "GELF SIDERURGIA S/A FAZENDA TAMANDUA OU POCOES",
-            "supplier_type": "gelf",
             "material_type": "Carvão Vegetal",
+            "supplier_type": "gelf",
             "distance_in_meters": null,
-            "address": "RODOVIA BR 308, KM 72, S/N, ZONA RURAL",
+            "address": "RODOVIA BR 308 KM 72 SN ZONA RURAL",
             "state": "MG",
             "city": 2606,
             "cep": "39594000",
@@ -20,7 +21,7 @@
             "municipal_registration": null,
             "xml_email": null,
             "cpf_cnpj": "20388757000535",
-            "observations": null,
+            "observations": "",
             "bank_details": null
         }
     }
