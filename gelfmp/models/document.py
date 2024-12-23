@@ -13,7 +13,6 @@ from .choices import DocumentType
 
 class Document(BaseModel):
     def upload_to(instance, filename):
-        filename = instance.name + '.' + filename.split('.')[-1] if instance.name else filename
         return f'fornecedores/{instance.supplier.corporate_name}/documentos/{filename}'
 
     name = models.CharField(
