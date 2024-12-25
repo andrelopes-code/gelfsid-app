@@ -24,11 +24,13 @@ class IQFData:
     total_volume: float
 
 
-def calculate_percentage(value, total):
-    """Calcula o percentual de um valor em relação ao total."""
+def calculate_valid_percentage(invalid_volume, total_volume):
+    """Calcula o percentual válido de um valor em relação ao total."""
 
-    valid = total - value
-    return (valid / total) * 100
+    valid_volume = total_volume - invalid_volume
+    result = (valid_volume / total_volume) * 100
+
+    return result if result > 0 else 0
 
 
 def calculate_invalid_volume_percentage(entries: pd.DataFrame, total_volume, max_fines, max_moisture, min_density):
@@ -42,9 +44,9 @@ def calculate_invalid_volume_percentage(entries: pd.DataFrame, total_volume, max
     volume_moisture_above_max = moisture_above_max['entry_volume'].sum()
     volume_density_below_min = density_below_min['entry_volume'].sum()
 
-    fines_percentage = calculate_percentage(volume_fines_above_max, total_volume)
-    moisture_percentage = calculate_percentage(volume_moisture_above_max, total_volume)
-    density_percentage = calculate_percentage(volume_density_below_min, total_volume)
+    fines_percentage = calculate_valid_percentage(volume_fines_above_max, total_volume)
+    moisture_percentage = calculate_valid_percentage(volume_moisture_above_max, total_volume)
+    density_percentage = calculate_valid_percentage(volume_density_below_min, total_volume)
 
     return (
         fines_percentage,
