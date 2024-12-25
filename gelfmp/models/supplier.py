@@ -5,7 +5,6 @@ from django.forms import ValidationError
 from gelfmp.utils import validators
 from gelfmp.utils.normalization import normalize_text_upper, normalize_to_numbers
 
-from .bank_details import BankDetails
 from .base_model import BaseModel
 from .charcoal_iqf import CharcoalIQF
 from .choices import MaterialType, SupplierType
@@ -76,14 +75,6 @@ class Supplier(BaseModel):
         null=True,
         verbose_name='Observações',
         help_text='Adicione informações adicionais ou observações relevantes.',
-    )
-
-    bank_details = models.OneToOneField(
-        BankDetails,
-        on_delete=models.SET_NULL,
-        verbose_name='Detalhes Bancários',
-        null=True,
-        blank=True,
     )
 
     def get_visible_documents(self) -> QuerySet[Document]:

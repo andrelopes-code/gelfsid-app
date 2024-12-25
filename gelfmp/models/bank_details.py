@@ -25,8 +25,17 @@ class BankDetails(BaseModel):
         verbose_name='Número do Banco',
     )
 
+    supplier = models.OneToOneField(
+        'Supplier',
+        on_delete=models.CASCADE,
+        related_name='bank_details',
+        verbose_name='Fornecedor',
+        null=True,
+        blank=True,
+    )
+
     def __str__(self):
-        return f'{self.bank_name} - Cc: {self.account_number} Ag: {self.agency}'
+        return f'{self.supplier} - {self.bank_name} - Cc: {self.account_number} Ag: {self.agency}'
 
     def save(self, *args, **kwargs):
         # Normaliza o nome do banco antes de salvar o registro.

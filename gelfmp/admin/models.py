@@ -4,7 +4,7 @@ from gelfmp import models
 
 from .base import BaseModelAdmin, ROBaseModelAdmin
 from .filters import DocumentValidityFilter, MonthFilter, SupplierWithEntriesFilter
-from .inlines import ContactInline, DocumentInline
+from .inlines import BankDetailsInline, ContactInline, DocumentInline
 
 
 @admin.register(models.Contact)
@@ -207,7 +207,7 @@ class SupplierAdmin(BaseModelAdmin):
     list_filter = ('material_type', 'state', 'active')
     search_fields = ('corporate_name', 'cpf_cnpj')
 
-    inlines = [DocumentInline, ContactInline]
+    inlines = [DocumentInline, ContactInline, BankDetailsInline]
 
     fieldsets = (
         (
@@ -237,14 +237,6 @@ class SupplierAdmin(BaseModelAdmin):
                         'state',
                         'city',
                     ),
-                ]
-            },
-        ),
-        (
-            'Pagamento',
-            {
-                'fields': [
-                    ('bank_details',),
                 ]
             },
         ),

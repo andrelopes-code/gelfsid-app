@@ -73,8 +73,15 @@ def get_state_shapefiles(request: HttpRequest, state):
     if not re.match(r'^[A-Z]{2}$', state):
         return JsonResponse({'error': 'Invalid state code.'}, status=400)
 
-    documents = Document.objects.filter(document_type=DocumentType.SHAPEFILE, supplier__state=state.upper())
-    documents = documents.values('id', 'name', 'supplier__corporate_name', 'geojson')
+    property_shapefiles = Document.objects.filter(
+        document_type=DocumentType.PROPERTY_SHAPEFILE,
+        supplier__state=state.upper(),
+    ).values('id', 'name', 'supplier__corporate_name', 'geojson')
+
+    shapefiles = Document.objects.filter(
+        document_type=DocumentType.SHAPEFILE,
+        supplier__state=state.upper(),
+    ).values('id', 'name', 'supplier__corporate_name', 'geojson')
 
     data = [
         {
@@ -83,13 +90,16 @@ def get_state_shapefiles(request: HttpRequest, state):
             'name': doc.pop('name'),
             'geojson': doc.pop('geojson'),
         }
-        for doc in documents
+        for doc in property_shapefiles
+    ] + [
+        {
+            'supplier_name': doc.pop('supplier__corporate_name'),
+            'id': doc.pop('id'),
+            'name': doc.pop('name'),
+            'geojson': doc.pop('geojson'),
+        }
+        for doc in shapefiles
     ]
-
-    # ! Ajustar esse método posteriormente.
-    # ! Adicionar uma solução mais robusta e performática
-    # ! para ordenar os shapes de propriedade em primeiro.
-    data.sort(key=lambda x: 'PROPRIEDADE' not in x['name'].upper())
 
     return JsonResponse(
         data,

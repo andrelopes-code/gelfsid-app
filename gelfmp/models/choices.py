@@ -50,10 +50,8 @@ class DocumentType(models.TextChoices):
     EXCEMPTION = 'exemption', 'DISPENSA'
     REGIEF = 'reg_ief', 'REGISTRO IEF'
     CAR = 'car', 'CADASTRO AMBIENTAL RURAL'
-    STATE_REGISTRATION = 'state_registration', 'INSCRIÇÃO ESTADUAL'
-    MUNICIPAL_REGISTRATION = 'municipal_registration', 'INSCRIÇÃO MUNICIPAL'
-    CNPJ_LOOKUP = 'cnpj_lookup', 'CONSULTA CNPJ'
     SHAPEFILE = 'shapefile', 'SHAPEFILE'
+    PROPERTY_SHAPEFILE = 'property_shapefile', 'SHAPEFILE DE PROPRIEDADE'
     OTHER = 'other', 'OUTRO'
 
 

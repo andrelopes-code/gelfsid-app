@@ -86,17 +86,18 @@ class Document(BaseModel):
         if (
             not self.validity
             and self.document_type != DocumentType.EXCEMPTION
-            and self.document_type != DocumentType.OTHER
+            and self.document_type != DocumentType.CAR
             and self.document_type != DocumentType.SHAPEFILE
+            and self.document_type != DocumentType.PROPERTY_SHAPEFILE
+            and self.document_type != DocumentType.OTHER
         ):
             self.validity = dtutils.extract_date_from_text(self.filename)
 
             if not self.validity:
                 raise ValidationError('Informe uma data de validade para este documento.')
 
-        # Se o documento for um Shapefile obtem o GeoJSON
-        # convertendo-o e armazenando no campo geojson.
-        if self.document_type == DocumentType.SHAPEFILE:
+        # Se o documento for um Shapefile obtem o GeoJSON convertendo-o e armazenando no campo geojson.
+        if self.document_type == DocumentType.SHAPEFILE or self.document_type == DocumentType.PROPERTY_SHAPEFILE:
             if self.file:
                 try:
                     if self.file.name.lower().endswith('.zip'):
