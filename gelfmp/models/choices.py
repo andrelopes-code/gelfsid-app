@@ -10,6 +10,7 @@ class ContactType(models.TextChoices):
     ACCOUNTING_RESP = 'negotiation_responsible', 'Negociação (Comercial)'
     NF_RESP = 'nf_responsible', 'Emissão de Notas Fiscais'
     LOGISTICS_RESP = 'logistics_responsible', 'Programação e Logística'
+    OTHER = 'other', 'Outro'
 
 
 class MonthType(models.IntegerChoices):

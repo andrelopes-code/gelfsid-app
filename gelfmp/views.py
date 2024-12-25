@@ -114,11 +114,15 @@ def charcoal_schedule(request: HttpRequest):
     )
 
     supplier_types = {supplier_type: display for supplier_type, display in SupplierType.choices}
-    grouped_data = {supplier_type: {'planned': [0] * 12, 'realized': ['-'] * 12} for supplier_type in supplier_types}
+    grouped_data = {supplier_type: {'planned': ['-'] * 12, 'realized': ['-'] * 12} for supplier_type in supplier_types}
 
     for plan in plans:
         month_index = plan.month - 1
         supplier_type = plan.supplier.supplier_type
+
+        if grouped_data[supplier_type]['planned'][month_index] == '-':
+            grouped_data[supplier_type]['planned'][month_index] = 0
+
         grouped_data[supplier_type]['planned'][month_index] += plan.planned_volume
 
     charcoal_entries = (

@@ -91,6 +91,9 @@ class Document(BaseModel):
         ):
             self.validity = dtutils.extract_date_from_text(self.filename)
 
+            if not self.validity:
+                raise ValidationError('Informe uma data de validade para este documento.')
+
         # Se o documento for um Shapefile obtem o GeoJSON
         # convertendo-o e armazenando no campo geojson.
         if self.document_type == DocumentType.SHAPEFILE:

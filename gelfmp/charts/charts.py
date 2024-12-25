@@ -441,7 +441,11 @@ def charcoal_schedule(data, year, month_labels, html=False):
         planned_data = data['planned'].iloc[0]
 
         percentage_data = [
-            (realized / planned * 100 if planned != 0 and not isinstance(realized, str) else None)
+            (
+                realized / planned * 100
+                if planned != 0 and not (isinstance(realized, str) or isinstance(planned, str))
+                else None
+            )
             for realized, planned in zip(realized_data, planned_data)
         ]
 
