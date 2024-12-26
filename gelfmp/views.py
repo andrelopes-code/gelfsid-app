@@ -8,8 +8,10 @@ from gelfmp.charts import charts, forms
 from gelfmp.models import CharcoalMonthlyPlan, Supplier
 from gelfmp.models.charcoal_entry import CharcoalEntry
 from gelfmp.models.choices import SupplierType
+from gelfmp.services.cnpj_info import CNPJInfoService
 
 router = Router()
+cnpj_service = CNPJInfoService()
 
 
 @router(name='index')
@@ -63,6 +65,22 @@ def supplier_stats(request: HttpRequest, id):
     }
 
     return render(request, 'supplier/stats/index.html', context=context)
+
+
+@router('supplier/<int:id>/cnpj', name='supplier_cnpj_info')
+def supplier_cnpj_info(request: HttpRequest, id):
+    supplier = Supplier.objects.filter(id=id).first()
+    if not supplier:
+        return redirect('index')
+
+    cnpj_data = cnpj_service.fetch(supplier.cpf_cnpj)
+
+    context = {
+        'supplier': supplier,
+        'cnpj_info': cnpj_data,
+    }
+
+    return render(request, 'supplier/cnpj/index.html', context=context)
 
 
 @router('supplier/htmx/search/', name='supplier_search_htmx')

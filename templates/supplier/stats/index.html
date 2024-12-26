@@ -18,7 +18,7 @@
                 {% url 'index' as index_url %}
                 {% include "components/header/button.html" with href=index_url text="MAPA" %}
                 {% url 'supplier_details' id=supplier.id as details_url %}
-                {% include "components/header/button.html" with href=details_url text="VER DETALHES" %}
+                {% include "components/header/button.html" with href=details_url text="DETALHES" %}
                 <div class="pointer-events-auto">{% include "components/supplier_search.html" %}</div>
             </div>
         </nav>

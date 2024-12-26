@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{# djlint:off H021, H006 #}
+{% load static %}
+{% load custom_filters %}
+{% block title %}
+    DADOS CNPJ | {{ supplier.corporate_name }}
+{% endblock title %}
+{% block content %}
+    <div class="flex flex-col w-screen h-screen">
+        <!-- HEADER -->
+        <nav class="flex bg-dark w-full h-fit">
+            <div class="flex flex-wrap justify-start items-start gap-3 px-4 py-4 w-screen h-full">
+                <a class="pointer-events-auto" href="{% url 'index' %}">
+                    <img src="{% static 'assets/logo.png' %}"
+                         class="w-auto h-10"
+                         alt="Gelf logo" />
+                </a>
+                {% url 'index' as url %}
+                {% include "components/header/button.html" with href=url text="MAPA" %}
+                {% if supplier.is_charcoal_supplier %}
+                    {% url 'supplier_details' id=supplier.id as url %}
+                    {% include "components/header/button.html" with href=url text="DETALHES" %}
+                    {% url 'charcoal_supplier_stats' id=supplier.id as url %}
+                    {% include "components/header/button.html" with href=url text="ESTATÍSTICAS" %}
+                {% endif %}
+                <div class="pointer-events-auto">{% include "components/supplier_search.html" %}</div>
+            </div>
+        </nav>
+        <!-- MAIN -->
+        <main class="flex flex-1 gap-4 bg-dark px-4 pb-4 text-sm overflow-hidden">
+            <!-- ASIDE -->
+            <div class="space-y-4 shadow-md mx-auto w-full max-w-[80rem] h-full max-h-full text-slate-300 overflow-y-auto noscrollbar">
+                <!-- Informações Gerais -->
+                <section class="bg-dark-100 shadow-md rounded-md overflow-hidden">
+                    <h2 class="bg-dark-200 p-2 font-medium text-base text-center uppercase">Informações Gerais</h2>
+                    <div class="gap-x-8 gap-y-2 grid grid-cols-1 px-16 p-4">
+                        <div class="flex justify-between">
+                            <strong class="text-slate-500">Nome:</strong> {{ cnpj_info.company.name }}
+                        </div>
+                        <div class="flex justify-between">
+                            <strong class="text-slate-500">CNPJ:</strong> {{ cnpj_info.taxId }}
+                        </div>
+                        <div class="flex justify-between">
+                            <strong class="text-slate-500">Status:</strong> {{ cnpj_info.status.text }}
+                        </div>
+                        <div class="flex justify-between">
+                            <strong class="text-slate-500">Natureza Jurídica:</strong> {{ cnpj_info.company.nature.text }}
+                        </div>
+                        <div class="flex justify-between">
+                            <strong class="text-slate-500">Fundada em:</strong> {{ cnpj_info.founded|format_date }}
+                        </div>
+                        <div class="flex justify-between">
+                            <strong class="text-slate-500">Porte:</strong> {{ cnpj_info.company.size.text }}
+                        </div>
+                    </div>
+                </section>
+                <!-- Endereço -->
+                <section class="bg-dark-100 shadow-md rounded-md overflow-hidden">
+                    <h2 class="bg-dark-200 p-2 font-medium text-base text-center uppercase">Endereço</h2>
+                    <div class="flex flex-col gap-2 px-16 p-4">
+                        <div class="flex justify-between">
+                            <strong class="text-slate-500">Rua:</strong> {{ cnpj_info.address.street }}, {{ cnpj_info.address.number }}
+                        </div>
+                        <div class="flex justify-between">
+                            <strong class="text-slate-500">Bairro:</strong> {{ cnpj_info.address.district }}
+                        </div>
+                        <div class="flex justify-between">
+                            <strong class="text-slate-500">Cidade:</strong> {{ cnpj_info.address.city }} - {{ cnpj_info.address.state }}
+                        </div>
+                        <div class="flex justify-between">
+                            <strong class="text-slate-500">CEP:</strong> {{ cnpj_info.address.zip }}
+                        </div>
+                        {% if cnpj_info.address.details %}
+                            <div class="flex justify-between">
+                                <strong class="text-slate-500">Complemento:</strong> {{ cnpj_info.address.details }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </section>
+                <!-- Contatos -->
+                <!-- <section class="bg-dark-100 shadow-md rounded-md overflow-hidden">
+                    <h2 class="bg-dark-200 p-2 font-medium text-base text-center uppercase">Contatos</h2>
+                    <div class="gap-4 grid grid-cols-2 p-4">
+                        <div>
+                            <h3 class="mb-2 font-semibold text-slate-400">Telefones</h3>
+                            <ul class="ml-4">
+                                {% for phone in cnpj_info.phones %}<li>({{ phone.area }}) {{ phone.number }}</li>{% endfor %}
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="mb-2 font-semibold text-slate-400">E-mails</h3>
+                            <ul class="ml-4">
+                                {% for email in cnpj_info.emails %}<li>{{ email.address }}</li>{% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </section> -->
+                <!-- Atividades -->
+                <section class="bg-dark-100 shadow-md rounded-md overflow-hidden">
+                    <h2 class="bg-dark-200 p-2 font-medium text-base text-center uppercase">Atividades</h2>
+                    <div class="px-16 p-4 w-full h-full">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-slate-500">
+                                    <th class="border-slate-800 pb-2 border-b-2 text-left">Tipo</th>
+                                    <th class="border-slate-800 pb-2 border-b-2 text-left">Código</th>
+                                    <th class="border-slate-800 pb-2 border-b-2 text-center">Descrição</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-2">Primária</td>
+                                    <td class="py-2">{{ cnpj_info.mainActivity.id|format_activity_id }}</td>
+                                    <td class="py-2 text-center">{{ cnpj_info.mainActivity.text }}</td>
+                                </tr>
+                                {% for activity in cnpj_info.sideActivities %}
+                                    <tr>
+                                        <td class="py-2">Secundária</td>
+                                        <td class="py-2">{{ activity.id|format_activity_id }}</td>
+                                        <td class="py-2 text-center">{{ activity.text }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <!-- Inscrições -->
+                {% if cnpj_info.registrations %}
+                    <section class="bg-dark-100 shadow-md rounded-md overflow-hidden">
+                        <h2 class="bg-dark-200 p-2 font-medium text-base text-center uppercase">Inscrições</h2>
+                        <div class="px-16 p-4 w-full h-full">
+                            <table class="w-full text-center text-sm">
+                                <thead>
+                                    <tr class="text-slate-500">
+                                        <th class="border-slate-800 pb-2 border-b-2">Número</th>
+                                        <th class="border-slate-800 pb-2 border-b-2">Estado</th>
+                                        <th class="border-slate-800 pb-2 border-b-2">Tipo</th>
+                                        <th class="border-slate-800 pb-2 border-b-2">Status</th>
+                                        <th class="border-slate-800 pb-2 border-b-2">Habilitado</th>
+                                        <th class="border-slate-800 pb-2 border-b-2">Última Atualização</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for registration in cnpj_info.registrations %}
+                                        <tr>
+                                            <td class="py-2">{{ registration.number|default:"Não informado" }}</td>
+                                            <td class="py-2">{{ registration.state|default:"Não informado" }}</td>
+                                            <td class="py-2">{{ registration.type.text|default:"Não informado" }}</td>
+                                            <td class="py-2">{{ registration.status.text|default:"Não informado" }}</td>
+                                            <td class="py-2">{{ registration.enabled|yesno:"Sim,Não" }}</td>
+                                            <td class="py-2">{{ registration.statusDate|format_date|default:"Sem data" }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                {% endif %}
+                <!-- Sócios -->
+                <section class="bg-dark-100 shadow-md rounded-md overflow-hidden">
+                    <h2 class="bg-dark-200 p-2 font-medium text-base text-center uppercase">Sócios</h2>
+                    <div class="px-16 p-4 w-full h-full">
+                        <table class="w-full text-center text-sm">
+                            <thead>
+                                <tr class="text-slate-500">
+                                    <th class="border-slate-800 pb-2 border-b-2 text-left">Nome</th>
+                                    <th class="border-slate-800 pb-2 border-b-2 text-left">Cargo</th>
+                                    <th class="border-slate-800 pb-2 border-b-2">Desde</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for member in cnpj_info.company.members %}
+                                    <tr>
+                                        <td class="py-2 text-left">{{ member.person.name }}</td>
+                                        <td class="py-2 text-left">{{ member.role.text }}</td>
+                                        <td class="py-2">{{ member.since|format_date }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+{% endblock content %}
