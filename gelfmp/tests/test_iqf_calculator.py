@@ -55,6 +55,30 @@ def test_calculate_iqf():
     assert iqf_data.moisture_percentage == 100.0
     assert iqf_data.density_percentage == 100.0
 
+    entries = pd.DataFrame([
+        {'entry_volume': 120, 'fines': 3, 'moisture': 2, 'density': 210},
+    ])
+
+    iqf_data = calculate_iqf(0, entries)
+
+    assert iqf_data.iqf == 100.0
+    assert iqf_data.planned_percentage == 100.0
+    assert iqf_data.fines_percentage == 100.0
+    assert iqf_data.moisture_percentage == 100.0
+    assert iqf_data.density_percentage == 100.0
+
+    entries = pd.DataFrame([
+        {'entry_volume': 120, 'fines': 12, 'moisture': 2, 'density': 200},
+    ])
+
+    iqf_data = calculate_iqf(0, entries)
+
+    assert iqf_data.iqf == 50.0
+    assert iqf_data.planned_percentage == 100.0
+    assert iqf_data.fines_percentage == 0.0
+    assert iqf_data.moisture_percentage == 100.0
+    assert iqf_data.density_percentage == 0.0
+
 
 def test_calculate_suppliers_iqf(mocker):
     mock_entries = MagicMock()

@@ -62,7 +62,11 @@ def calculate_iqf(planned_volume: float, entries: pd.DataFrame):
     """Calcula o IQF baseado no volume programado e nas entradas."""
 
     total_volume = entries['entry_volume'].sum()
-    planned_percentage = min(total_volume / planned_volume * 100, 100)
+
+    if planned_volume == 0:
+        planned_percentage = 100
+    else:
+        planned_percentage = min(total_volume / planned_volume * 100, 100)
 
     (
         fines_percentage,
