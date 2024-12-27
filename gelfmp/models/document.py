@@ -98,6 +98,15 @@ class Document(BaseModel):
 
         # Se o documento for um Shapefile obtem o GeoJSON convertendo-o e armazenando no campo geojson.
         if self.document_type == DocumentType.SHAPEFILE or self.document_type == DocumentType.PROPERTY_SHAPEFILE:
+            if self.document_type == DocumentType.PROPERTY_SHAPEFILE:
+                # Verificar se já existe um Shapefile de Propriedade
+                # registrado para esse fornecedor de carvão.
+                if Document.objects.filter(
+                    document_type=DocumentType.PROPERTY_SHAPEFILE,
+                    supplier=self.supplier,
+                ).exists():
+                    raise ValidationError('O fornecedor ja possui um Shapefile de Propriedade.')
+
             if self.file:
                 try:
                     if self.file.name.lower().endswith('.zip'):

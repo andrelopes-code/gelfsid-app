@@ -1,9 +1,3 @@
-<div class="copyable-text"
-     data-value="{{ value }}"
-     onclick="copyText(this)">
-    <span class="text">{{ value }}</span>
-    <span class="tooltip">Copiado</span>
-</div>
 <style>
     .copyable-text {
         display: inline-flex;
@@ -41,3 +35,9 @@
         display: block;
     }
 </style>
+<div class="copyable-text"
+     data-value="{{ value }}"
+     onclick="copyText(this)">
+    <span class="cursor-copy">{{ value }}</span>
+    <span class="tooltip">Copiado</span>
+</div>
