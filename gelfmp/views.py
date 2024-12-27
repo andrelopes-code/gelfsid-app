@@ -87,11 +87,14 @@ def supplier_cnpj_info(request: HttpRequest, id):
 def supplier_search(request: HttpRequest):
     suppliers = []
 
-    if query := request.GET.get('q'):
-        # Busca por nome, cidade ou CPF/CNPJ
-        suppliers = Supplier.objects.filter(
-            Q(corporate_name__icontains=query) | Q(city__name__icontains=query) | Q(cpf_cnpj__icontains=query),
-        )
+    if q := request.GET.get('q'):
+        terms = q.strip().split()
+
+        query = Q()
+        for term in terms:
+            query &= Q(corporate_name__icontains=term)
+
+        suppliers = Supplier.objects.filter(query)
 
     return render(request, 'htmx/supplier_search/results.html', {'suppliers': suppliers})
 
