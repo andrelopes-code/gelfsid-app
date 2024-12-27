@@ -40,5 +40,8 @@ class CharcoalIQF(BaseModel):
                 name='charcoal_iqf_supplier_month_year_unique_constraint',
             )
         ]
+
+        ordering = ['-year', '-month']
+
         verbose_name = 'IQF de Fornecedor de Carvão'
         verbose_name_plural = 'IQFs de Fornecedores de Carvão'

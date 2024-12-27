@@ -152,7 +152,8 @@ export function SupplierCard(supplier: Supplier, borderColor: string, ratingColo
                             <span class="font-medium translate-y-[1px] text-nowrap">${distanceFmt}</span>
                         </div>
                         <div
-                            class="flex items-center gap-2 bg-black bg-opacity-20 px-3 py-1 rounded-md w-fit h-fit text-green-300"
+                            title="Média dos ultimos 3 IQFs existentes para esse fornecedor."
+                            class="flex cursor-help items-center gap-2 bg-black bg-opacity-20 px-3 py-1 rounded-md w-fit h-fit text-green-300"
                             id="supplier-rating"
                         >
                             <i class="ph-fill ph-star text-xl"></i>

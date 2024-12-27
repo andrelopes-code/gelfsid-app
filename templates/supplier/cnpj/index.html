@@ -17,9 +17,9 @@
                 </a>
                 {% url 'index' as url %}
                 {% include "components/header/button.html" with href=url text="MAPA" %}
+                {% url 'supplier_details' id=supplier.id as url %}
+                {% include "components/header/button.html" with href=url text="DETALHES" %}
                 {% if supplier.is_charcoal_supplier %}
-                    {% url 'supplier_details' id=supplier.id as url %}
-                    {% include "components/header/button.html" with href=url text="DETALHES" %}
                     {% url 'charcoal_supplier_stats' id=supplier.id as url %}
                     {% include "components/header/button.html" with href=url text="ESTATÍSTICAS" %}
                 {% endif %}

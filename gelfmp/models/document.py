@@ -96,8 +96,11 @@ class Document(BaseModel):
             if not self.validity:
                 raise ValidationError('Informe uma data de validade para este documento.')
 
-        # Se o documento for um Shapefile obtem o GeoJSON convertendo-o e armazenando no campo geojson.
         if self.document_type == DocumentType.SHAPEFILE or self.document_type == DocumentType.PROPERTY_SHAPEFILE:
+            # Define a visibibilidade para todos
+            # os Shapefiles como falso.
+            self.visible = False
+
             if self.document_type == DocumentType.PROPERTY_SHAPEFILE:
                 # Verificar se já existe um Shapefile de Propriedade
                 # registrado para esse fornecedor de carvão.
