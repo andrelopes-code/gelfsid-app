@@ -18,6 +18,45 @@
     box-sizing: border-box;
 }
 
+*:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+#content {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100vw !important;
+    height: 100%;
+}
+
+#content-main {
+    width: 100%;
+    height: 100%;
+}
+
+#app-list {
+    width: 40%;
+}
+
+/* Login */
+.login #container {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+.login #container .header {
+    width: 100%;
+}
+.login #container #content {
+    width: 100% !important;
+    padding-bottom: 0;
+}
+.login #container input[type="submit"] {
+    background-color: var(--dark-200);
+}
+
 /*
     Remove a borda aleatória no
     topo da página inicial
@@ -380,19 +419,19 @@ input[type="file"]::file-selector-button {
     padding: 0 16px;
     cursor: pointer;
     margin-right: 0.8rem;
-    background-color: white;
+    background-color: var(--body-bg);
     border: 1px solid var(--border-color) !important;
     min-height: 2rem !important;
     transition: background-color 200ms;
-    color: var(--dark);
+    color: var(--body-quiet-color);
 }
 
 input[type="file"]::file-selector-button:hover {
-    background-color: #f3f4f6;
+    background-color: #1f2430;
 }
 
 input[type="file"]::file-selector-button:active {
-    background-color: #e5e7eb;
+    background-color: #1f2430;
 }
 
 /*

@@ -1,0 +1,114 @@
+:root .admin-interface {
+    --primary: #79aec8;
+    --secondary: #417690;
+    --accent: #f5dd5d;
+    --primary-fg: #913131;
+    --body-fg: #b5bdcc;
+    --body-bg: #11151c;
+    --body-medium-color: #6e798b;
+    --body-quiet-color: #bec4cf;
+    --body-loud-color: #ff0000;
+    --header-color: #ffc;
+    --header-branding-color: var(--accent);
+    --header-bg: var(--secondary);
+    --header-link-color: var(--primary-fg);
+    --breadcrumbs-fg: #c4dce8;
+    --breadcrumbs-link-fg: #e5e5e5;
+    --breadcrumbs-bg: var(--primary);
+    --link-fg: #447e9b;
+    --link-hover-color: #036;
+    --link-selected-fg: #5b80b2;
+    --hairline-color: #262d3b;
+    --border-color: #232831;
+    --error-fg: #ba2121;
+    --message-success-bg: #dfd;
+    --message-warning-bg: #faffcc;
+    --message-error-bg: #ffefef;
+    --darkened-bg: #151b25;
+    --selected-bg: #1f2735;
+    --selected-row: #5c7292;
+    --button-fg: #d17070;
+    --button-bg: var(--primary);
+    --button-hover-bg: #609ab6;
+    --default-button-bg: var(--secondary);
+    --default-button-hover-bg: #205067;
+    --close-button-bg: #2e3646;
+    --close-button-hover-bg: #747474;
+    --delete-button-bg: #ba2121;
+    --delete-button-hover-bg: #a41515;
+    --object-tools-fg: #b33c3c;
+    --object-tools-bg: var(--close-button-bg);
+    --object-tools-hover-bg: var(--close-button-hover-bg);
+
+    --admin-interface-title-color: #d68367;
+    --admin-interface-env-color: #e74c3c;
+    --admin-interface-header-background-color: #151b25;
+    --admin-interface-header-text-color: #f1f0f8;
+    --admin-interface-header-link-color: #d3dce4;
+    --admin-interface-header-link-hover-color: #fde6ff;
+    --admin-interface-module-background-color: #1f2735;
+    --admin-interface-module-background-selected-color: #303b4e;
+    --admin-interface-module-text-color: #d3dce4;
+    --admin-interface-module-link-color: #d3dce4;
+    --admin-interface-module-link-selected-color: #d3dce4;
+    --admin-interface-module-link-hover-color: #e6ecff;
+    --admin-interface-generic-link-color: #d3dce4;
+    --admin-interface-generic-link-hover-color: #bebebe;
+    --admin-interface-generic-link-active-color: #e0e0e0;
+    --admin-interface-save-button-background-color: #11151c;
+    --admin-interface-save-button-background-hover-color: #2f3a4d;
+    --admin-interface-save-button-text-color: #f1f0f8;
+    --admin-interface-delete-button-background-color: #11151c;
+    --admin-interface-delete-button-background-hover-color: #2f3a4d;
+    --admin-interface-delete-button-text-color: #f1f0f8;
+    --admin-interface-related-modal-background-color: #11151c;
+    --admin-interface-related-modal-background-opacity: 0.3;
+    --admin-interface-main-border-top: 10px solid var(--admin-interface-module-background-color);
+    --admin-interface-logo-max-width: min(400px, 100%);
+    --admin-interface-logo-max-height: 100px;
+    --admin-interface-related-modal-border-radius: 4px;
+    --admin-interface-module-border-radius: 4px;
+    --admin-interface-jsoneditor-border-radius: var(--admin-interface-module-border-radius);
+    --admin-interface-jsoneditor-overflow: hidden;
+    --admin-interface-related-modal-close-button-display: unset;
+    --custom-border: #262d3b;
+}
+
+ul.messagelist li {
+    font-weight: bold;
+    color: rgb(46, 54, 68);
+}
+
+/* Sidebar */
+.admin-interface #toggle-nav-sidebar {
+    background-color: var(--body-bg);
+    border-color: var(--hairline-color);
+    box-shadow: none;
+    --webkit-box-shadow: none;
+}
+#nav-sidebar tr > th {
+    border-radius: 0 !important;
+}
+
+/* Filter Selects */
+.admin-interface #changelist-filter .list-filter-dropdown select {
+    background-color: var(--body-bg);
+}
+.admin-interface #changelist-filter .list-filter-dropdown select:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.admin-interface thead th a,
+.admin-interface thead th a:link,
+.admin-interface thead th a:visited,
+.admin-interface thead th a:focus,
+.admin-interface thead th a:hover {
+    color: #8590a1;
+}
+
+.admin-interface .paginator a,
+.admin-interface .paginator a:link,
+.admin-interface .paginator a:visited {
+    background-color: var(--dark-100);
+}

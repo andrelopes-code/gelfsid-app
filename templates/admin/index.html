@@ -1,0 +1,8 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+{% block coltype %}colMS{% endblock %}
+{% block content %}
+  <div id="content-main">
+    <div id="app-list">{% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}</div>
+  </div>
+{% endblock %}
