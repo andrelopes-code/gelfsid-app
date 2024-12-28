@@ -1,0 +1,662 @@
+/*
+    Folha de estilo para formulário dinâmico versao 3.x
+    ----------------------------------------------------
+    Autor: Luis Eugênio - IBAMA/CNT
+    Data:16/05/2004
+    Alterado em:12/09/2004
+    Versão: 1.0
+*/
+
+.formDinArea {
+    width: auto;
+    border: 1px silver solid;
+    background-color: #f3f3f4;
+    padding: 0px;
+    font-family: Arial, sans-serif, Helvetica;
+    font-size: 10px;
+}
+
+.formDinIframe {
+}
+
+.formDinAreaTitulo {
+    border: 0px solid silver;
+    text-align: center;
+    padding: 4px;
+    color: #0a5f97;
+    background-color: #f3f3f4;
+    font-size: 16px;
+    font-weight: bold;
+    text-indent: 16px;
+}
+
+.formDinAreaAlerta {
+    border: 1px solid silver;
+    color: red;
+    text-align: center;
+}
+
+.formDinAreaBotoes {
+    text-align: center;
+    border: 0px solid silver;
+    padding: 8px;
+}
+
+.formDinAba {
+    font-size: 11px;
+    color: #3a6ea5;
+    background-color: transparent;
+    border: 0px;
+    cursor: pointer;
+}
+
+.formDinAbaAtual {
+    font-size: 11px;
+    color: #006cff;
+    font-weight: bold;
+    background-color: transparent;
+    border: 0px;
+    cursor: pointer;
+}
+
+.formDinAbaDesabilitada {
+    border: 0px;
+    background-color: transparent;
+    color: silver;
+    text-decoration: line-through;
+}
+
+.formDinAreaEdicao {
+    background-color: #f3f3f4;
+    /*background-color:#E6E6E6;*/
+    border-top: 1px solid silver;
+    border-bottom: 1px solid silver;
+    padding: 0;
+    vertical-align: top;
+}
+
+.formDinRotulo {
+    font-size: 11px;
+    color: black;
+    text-align: left;
+    border: 0px solid silver;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    vertical-align: middle;
+}
+
+.formDinRotuloDireita {
+    font-size: 11px;
+    color: black;
+    text-align: right;
+    border: 0px solid silver;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    vertical-align: middle;
+}
+
+.FormDinRotuloEmCima {
+    color: navy;
+    text-align: left;
+    border: 0px solid silver;
+}
+
+.formDinCampoCheck {
+    font-size: 11px;
+    color: black;
+    border: 0px;
+    vertical-align: middle;
+}
+.formDinCampoCheckComplemento {
+    font-size: 9px;
+    color: blue;
+    border: 0px;
+    vertical-align: middle;
+}
+
+.formDinCampo {
+    font-size: 12px;
+    color: black;
+    border: 1px solid silver;
+}
+.formDinCampoMemo {
+    font-size: 12px;
+    color: black;
+    border: 1px solid silver;
+}
+.formDinCampoLabel {
+    font-size: 12px;
+    color: black;
+    border: 1px solid silver;
+}
+.formDinCampoMultiSoLeitura {
+    font-size: 11px;
+    color: #808080;
+    color: green;
+    background-color: #efefef;
+    border: 1px solid silver;
+}
+.formDinCampoInvalidoMulti {
+    font-size: 12px;
+    border: 1px solid red;
+    color: red;
+}
+
+.formDinCampoSoLeitura {
+    font-size: 12px;
+    color: #808080;
+    color: green;
+    background-color: #efefef;
+    border: 1px solid silver;
+}
+.formDinCampoInvalidoSoLeitura {
+    font-size: 12px;
+    color: #808080;
+    border: 1px solid red;
+}
+
+.formDinCampoInvalido {
+    border: 1px solid red;
+    color: red;
+}
+
+.formDinMsgRodapeErros {
+    font-size: 18px;
+    font-weight: bold;
+    color: red;
+}
+
+.formDinCampoCheckErro {
+    font-size: 12px;
+    color: black;
+    border: 1px solid red;
+    vertical-align: middle;
+}
+
+.formDinCampoMulti {
+    font-size: 11px;
+    width: auto;
+    height: auto;
+}
+
+.formDinCampoMultiInvalido {
+    font-size: 11px;
+    background-color: #f3f3f4;
+    width: auto;
+    height: auto;
+}
+
+.formDinCampoLink {
+    font-size: 12px;
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+    border: 0px;
+    vertical-align: middle;
+}
+
+.formDinCampoHtml {
+    font-size: 12px;
+    color: navy;
+}
+
+.formDinCampoLabel {
+    color: black;
+    border: 1px solid silver;
+}
+
+.formDinMensagem {
+    border: 1px solid silver;
+    color: blue;
+    background-color: white;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    text-indent: 16px;
+    cursor: pointer;
+}
+
+.formDinMensagemCampoInvalido {
+    font-family: Arial, sans-serif, Helvetica;
+    font-size: 12px;
+    color: red;
+}
+.formDinBotoesAux {
+    font-size: 11px;
+    color: #336699;
+    font-family: verdana;
+    background: silver;
+    border-style: groove;
+    font-weight: bold;
+    cursor: pointer;
+}
+.formDinBotao {
+    font-size: 11px;
+    color: #336699;
+    font-family: verdana;
+    background: silver;
+    border-style: groove;
+    font-weight: bold;
+    cursor: pointer;
+}
+.formDinBotaoFechar {
+    font-family: Arial;
+    font-size: 10px;
+    color: #336699;
+    font-family: verdana;
+    background: transparent;
+    font-weight: bold;
+    cursor: pointer;
+    width: 15px;
+}
+.formDinBotaoDestaque {
+    font-size: 11px;
+    color: #ff0000;
+    font-family: verdana;
+    background: #e0e0e0;
+    border-style: groove;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.formDinAreaDetalhe {
+    border: 0px solid silver;
+    color: blue;
+    text-align: center;
+    font-size: 10px;
+    padding: 2px;
+}
+
+.formDinAreaDetalheCabecalho {
+    color: blue;
+    font-weight: bold;
+    font-size: 10px;
+    border: 1px solid silver;
+}
+.formDinAreaDetalheColunaLink {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 2px;
+}
+.formDinAreaDetalheTituloColunaDados {
+    color: black;
+    border: 1px solid silver;
+    padding: 2px;
+}
+
+.formDinAreaDetalheColunaDados {
+    color: black;
+    border: 1px solid silver;
+    padding: 2px;
+    text-align: left;
+}
+
+.formDinCampoGrupo {
+    text-align: left;
+    border: 1px solid silver;
+    padding-top: 2px;
+    padding-bottom: 0px;
+}
+
+.formDinCampoGrupoTopo {
+    text-align: left;
+    border: 1px solid silver;
+    padding-top: 2px;
+    padding-bottom: 0px;
+    background-color: white;
+}
+.formDinCampoGrupoLegenda {
+    border-right: #a8a8a8 1px solid;
+    padding-right: 4px;
+    border-top: white 1px solid;
+    padding-left: 4px;
+    padding-bottom: 1px;
+    border-left: white 1px solid;
+    border-bottom: #a8a8a8 1px solid;
+    background-color: #f3f3f4;
+    color: #0a5f97;
+    font-size: 11px;
+    font-weight: bold;
+    text-indent: 0px;
+    text-align: center;
+}
+.formDinExibirTamanho {
+    color: red;
+    background-color: #f3f3f4;
+    border: 0px solid silver;
+    padding: 2px;
+    text-align: left;
+    font-size: 9px;
+}
+.formDinGrideTable {
+    padding-left: 0px;
+    font-size: 11px;
+}
+.formDinGrideTD {
+    padding-left: 2px;
+    border-bottom: 1px solid silver;
+    border-left: 0px solid silver;
+    border-right: 1px solid silver;
+}
+
+.formDinGrideTituloColunas {
+    padding-left: 2px;
+    border-bottom: 1px solid silver;
+    border-left: 0px solid silver;
+    border-right: 1px solid silver;
+    text-align: center;
+    background-color: #f3f3f4;
+    color: navy;
+}
+
+.formDinGrideTitulo {
+    padding-left: 2px;
+    border-bottom: 1px solid silver;
+    border-left: 0px solid silver;
+    border-right: 1px solid silver;
+    text-align: center;
+    font-weight: bold;
+    background-color: #f3f3f4;
+    color: navy;
+}
+.formDinGrideTituloOperacao {
+    padding-left: 2px;
+    border-bottom: 1px solid silver;
+    border-left: 0px solid silver;
+    border-right: 0px solid silver;
+    text-align: center;
+    background-color: #f3f3f4;
+    color: red;
+}
+.formDinGrideBotaoDesabilitado {
+    padding-left: 2px;
+    border-bottom: 1px solid silver;
+    border-left: 0px solid silver;
+    border-right: 0px solid silver;
+    text-align: center;
+    background-color: #f3f3f4;
+    color: silver;
+}
+
+.formDinGrideOperacao {
+    padding-left: 2px;
+    border-bottom: 1px solid silver;
+    border-left: 0px solid silver;
+    border-right: 1px solid silver;
+    text-align: center;
+    background-color: #f3f3f4;
+    color: blue;
+    width: 80px;
+    text-align: center;
+}
+.formDinCampoCaptcha {
+    border: 1px solid silver;
+    font-size: 14px;
+    color: black;
+    font-weight: bold;
+    vertical-align: middle;
+    height: 20px;
+}
+.formDinCampoInvalidoCaptcha {
+    border: 1px solid red;
+    font-size: 14px;
+    color: black;
+    font-weight: bold;
+    vertical-align: middle;
+    height: 20px;
+}
+
+/*  estilo do menu tree view
+------------------------------------------------------------------------------------------
+*/
+.dtreeFormDin {
+    font-family: Arial, Verdana, Geneva, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #0066cc;
+    white-space: nowrap;
+    font-weight: normal;
+    border: 0px solid silver;
+    text-align: left;
+}
+
+.dtreeFormDin a {
+    color: #0033cc;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.dtreeFormDin a.node,
+.dtreeFormDin a.nodeSel {
+    white-space: nowrap;
+    padding: 1px 2px 1px 2px;
+    color: #0033cc;
+    font-weight: normal;
+}
+.dtreeFormDin a.node:hover,
+.dtreeFormDin a.nodeSel:hover {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: underline;
+    background-color: #74a8df;
+}
+.dtreeFormDin a.nodeSel {
+    background-color: #c0d2ec;
+}
+.dtreeFormDin .clip {
+    overflow: hidden;
+}
+
+/*  estilo do menu tree view 2
+------------------------------------------------------------------------------------------
+*/
+
+.dtreeFormDin2 {
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #0066cc;
+    white-space: nowrap;
+    font-weight: bold;
+    width: auto;
+    border: solid 0px silver;
+}
+
+.dtreeFormDin2 img {
+    border: 0px;
+    vertical-align: middle;
+    font-weight: bold;
+}
+.dtreeFormDin2 a {
+    color: #0033cc;
+    text-decoration: none;
+    cursor: pointer;
+}
+.dtreeFormDin2 a.node,
+.dtreeFormDin2 a.nodeSel {
+    white-space: nowrap;
+    padding: 1px 2px 1px 2px;
+    color: #0033cc;
+    font-weight: normal;
+}
+.dtreeFormDin2 a.node:hover,
+.dtreeFormDin2 a.nodeSel:hover {
+    color: #ffffff;
+    text-decoration: underline;
+    background-color: #0054ff;
+}
+.dtreeFormDin2 a.nodeSel {
+    background-color: #c0d2ec;
+}
+.dtreeFormDin2 .clip {
+    overflow: hidden;
+}
+
+.dtreeFormDin2table {
+    background-color: #e0e0e4;
+    border: thin solid silver;
+}
+
+/* fim estilo menu tree view
+-------------------------------------------------------------------------------
+*/
+
+.formDinOpcoesDinamicas {
+    position: absolute;
+    top: 55px;
+    left: 220px;
+    width: 100px;
+    height: 150px;
+    background-color: #ffff72;
+    color: blue;
+    border: 1px solid blue;
+    padding: 5px;
+    line-height: 10pt;
+    font-size: 10px;
+    text-decoration: underline;
+    visibility: hidden;
+    cursor: pointer;
+}
+
+.formDinBotaoOpcaoDinamica {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    color: blue;
+    text-decoration: none;
+    background-color: silver;
+    cursor: pointer;
+    vertical-align: top;
+    height: 20px;
+    width: 20px;
+}
+.formDinMsgTela {
+    font-size: 16px;
+    color: #808080;
+    color: blue;
+    border: 0px solid silver;
+    font-weight: bold;
+}
+.formDinValorNegativo {
+    font-size: 12px;
+    border: 1px solid silver;
+    color: red;
+    text-align: right;
+    background-color: #ffffcc;
+}
+.formDinCampoCor {
+    border: 1px solid #000000;
+    font-family: Verdana;
+    font-size: 10px;
+    text-decoration: none;
+}
+.formDinCampoAjuda {
+    border: 0px solid #000000;
+    font-family: Arial, Verdana;
+    font-size: 12px;
+}
+.divHint {
+    width: 300px;
+    font-size: 8pt;
+    font-family: verdana;
+    border-width: 1px;
+    border-style: solid;
+    border-color: silver;
+    background-color: #ffffd4;
+    color: blue;
+}
+
+/*
+Inicio estilo ajax autoCompletar
+-------------------------------------------------------------------------------
+*/
+.divAjaxSelect {
+    position: absolute;
+    z-index: 10;
+    border: 1px #ccc solid;
+    border-top: none;
+    background: #ffffff;
+    padding: 0px;
+    display: none;
+    height: 200px;
+    overflow: auto;
+    font-size: 10px;
+}
+
+.ulAjaxSelect {
+    padding: 0 10px 0 10px;
+    margin: 0;
+}
+
+.liAjaxSelect {
+    list-style: none;
+    padding-left: 0px;
+    padding-top: 2px;
+}
+.linkAjaxSelect {
+    cursor: pointer;
+    font-weight: normal;
+    color: navy;
+    text-decoration: none;
+}
+li.liAjaxSelect:hover {
+    background-color: #f4f5fa;
+    font-size: 11px;
+    cursor: pointer;
+    border: 1px solid silver;
+    text-transform: uppercase;
+    text-decoration: underline;
+}
+.formDinAreaSenha {
+    border: 0px;
+    text-align: center;
+    padding: 2px;
+    color: #0a5f97;
+    background-color: #f3f3f4;
+}
+
+/*
+fim estilo ajax autoCompletar
+-------------------------------------------------------------------------------
+*/
+
+/*
+--------------------------------------------------------------------------------
+                                  EXEMPLOS DE ESTILO
+--------------------------------------------------------------------------------
+ TEXT-TRANSFORM: uppercase
+
+.botaoJava {
+	font-size:10px;
+	color:#336699;
+	font-family:verdana;
+	background:silver;
+	border-style:groove;
+	font-weight:bold
+	cursor:pointer;
+	}
+*/
+
+.fwBlockScreenDiv {
+    display: none;
+    z-index: 1001;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: gray;
+    opacity: 0.3;
+    filter: alpha(opacity=30);
+}
+.fwImgBlockScreen {
+    border: none;
+}
+.fwTxtBlockScreen {
+    font-family: Arial, Times New Roman, fantasy;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+* {
+    font-size: 10px !important;
+}

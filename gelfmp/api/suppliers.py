@@ -30,10 +30,10 @@ def get_suppliers(request: HttpRequest):
             recent_entries = list(CharcoalEntry.objects.filter(supplier=supplier).order_by('-entry_date')[:30])
             charcoal_recent_stats = get_charcoal_recent_stats(recent_entries)
 
-            # Calcula a média dos ultimos 3 IQFs existentes, caso
-            # não existam, define rating como None.
+            # Calcula a média dos ultimos 3 IQFs existentes,
+            # caso não existam, define rating como None.
             iqfs = supplier.get_iqfs().all()[:3].values_list('iqf', flat=True)
-            rating = round(sum(iqfs) / len(iqfs), 1) if len(iqfs) == 3 else None
+            rating = f'{round(sum(iqfs) / len(iqfs), 1):.1f}' if len(iqfs) == 3 else None
 
             supplier_visible_documents = [
                 {
