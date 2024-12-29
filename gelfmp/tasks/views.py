@@ -11,7 +11,7 @@ router = Router('task/')
 
 
 @staff_member_required
-@router('iqf/', name='calculate_iqf')
+@router('iqf/')
 def calculate_iqf(request: HttpRequest):
     return render(
         request,
@@ -23,7 +23,7 @@ def calculate_iqf(request: HttpRequest):
 
 
 @staff_member_required
-@router('htmx/iqf/', name='calculate_iqf_htmx')
+@router('htmx/iqf/')
 def calculate_iqf_htmx(request: HttpRequest):
     form = CalculateIQFForm(request.POST)
 

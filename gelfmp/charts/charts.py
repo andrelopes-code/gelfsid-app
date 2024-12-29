@@ -360,13 +360,17 @@ def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
 
     # Seleciona os IQFs de fornecedores nos
     # últimos 3 meses caso esses valores existam.
-    iqfs = CharcoalIQF.objects.filter(
-        year__gte=target_year,
-        year__lte=current_year,
-        month__gte=target_month,
-        month__lt=current_month,
-        supplier_id=supplier_id,
-    ).values().order_by('month', 'year')
+    iqfs = (
+        CharcoalIQF.objects.filter(
+            year__gte=target_year,
+            year__lte=current_year,
+            month__gte=target_month,
+            month__lt=current_month,
+            supplier_id=supplier_id,
+        )
+        .values()
+        .order_by('month', 'year')
+    )
 
     df = pd.DataFrame(iqfs)
     if df.empty:

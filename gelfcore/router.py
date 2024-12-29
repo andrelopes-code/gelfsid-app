@@ -38,4 +38,4 @@ class Router:
             if isinstance(view, type):
                 view = view.as_view()
 
-            yield djpath(path, view, name=name)
+            yield djpath(path, view, name=name or view.__name__)

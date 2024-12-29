@@ -14,12 +14,12 @@ router = Router()
 cnpj_service = CNPJInfoService()
 
 
-@router(name='index')
+@router('')
 def index(request: HttpRequest):
     return render(request, 'index.html')
 
 
-@router('supplier/<int:id>/', name='supplier_details')
+@router('supplier/<int:id>/')
 def supplier_details(request: HttpRequest, id):
     supplier = Supplier.objects.filter(id=id).first()
     if not supplier:
@@ -32,8 +32,8 @@ def supplier_details(request: HttpRequest, id):
     return render(request, 'supplier/index.html', context=context)
 
 
-@router('supplier/<int:id>/stats', name='charcoal_supplier_stats')
-def supplier_stats(request: HttpRequest, id):
+@router('supplier/<int:id>/stats')
+def charcoal_supplier_stats(request: HttpRequest, id):
     supplier = Supplier.objects.filter(id=id).first()
     if not supplier or not supplier.is_charcoal_supplier():
         return redirect('index')
@@ -67,7 +67,7 @@ def supplier_stats(request: HttpRequest, id):
     return render(request, 'supplier/stats/index.html', context=context)
 
 
-@router('supplier/<int:id>/cnpj', name='supplier_cnpj_info')
+@router('supplier/<int:id>/cnpj')
 def supplier_cnpj_info(request: HttpRequest, id):
     supplier = Supplier.objects.filter(id=id).first()
     if not supplier:
@@ -83,8 +83,8 @@ def supplier_cnpj_info(request: HttpRequest, id):
     return render(request, 'supplier/cnpj/index.html', context=context)
 
 
-@router('supplier/htmx/search/', name='supplier_search_htmx')
-def supplier_search(request: HttpRequest):
+@router('supplier/htmx/search/')
+def supplier_search_htmx(request: HttpRequest):
     suppliers = []
 
     if q := request.GET.get('q'):
@@ -99,7 +99,7 @@ def supplier_search(request: HttpRequest):
     return render(request, 'htmx/supplier_search/results.html', {'suppliers': suppliers})
 
 
-@router('dashboard/charcoal/', name='charcoal_dashboard')
+@router('dashboard/charcoal/')
 def charcoal_dashboard(request: HttpRequest):
     context = {
         'charts': [
@@ -123,12 +123,11 @@ def charcoal_dashboard(request: HttpRequest):
     return render(request, 'dashboard/charcoal.html', context=context)
 
 
-@router('dashboard/schedule/', name='charcoal_schedule')
+@router('dashboard/schedule/')
 def charcoal_schedule(request: HttpRequest):
-    year = now().year
+    current_year = now().year
 
-    # Obtem as programações do ano informado.
-    plans = CharcoalMonthlyPlan.objects.filter(year=year).order_by(
+    year_plans = CharcoalMonthlyPlan.objects.filter(year=current_year).order_by(
         'supplier__supplier_type',
         'supplier__corporate_name',
         'month',
@@ -137,7 +136,7 @@ def charcoal_schedule(request: HttpRequest):
     supplier_types = {supplier_type: display for supplier_type, display in SupplierType.choices}
     grouped_data = {supplier_type: {'planned': ['-'] * 12, 'realized': ['-'] * 12} for supplier_type in supplier_types}
 
-    for plan in plans:
+    for plan in year_plans:
         month_index = plan.month - 1
         supplier_type = plan.supplier.supplier_type
 
@@ -147,7 +146,7 @@ def charcoal_schedule(request: HttpRequest):
         grouped_data[supplier_type]['planned'][month_index] += plan.planned_volume
 
     charcoal_entries = (
-        CharcoalEntry.objects.filter(entry_date__year=year)
+        CharcoalEntry.objects.filter(entry_date__year=current_year)
         .values('supplier__supplier_type', 'entry_date__month')
         .annotate(realized_volume=Sum('entry_volume'))
     )
@@ -181,11 +180,11 @@ def charcoal_schedule(request: HttpRequest):
 
     context = {
         'table_data': table_data,
-        'year': year,
+        'year': current_year,
         'charts': [
             {
                 'id': 'charcoal_schedule',
-                'data': charts.charcoal_schedule(table_data, year, month_labels, html=True),
+                'data': charts.charcoal_schedule(table_data, current_year, month_labels, html=True),
             },
         ],
         'months': month_labels,
