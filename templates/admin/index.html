@@ -1,8 +1,31 @@
 {% extends "admin/base_site.html" %}
 {% load i18n static %}
-{% block coltype %}colMS{% endblock %}
+{% block extrahead %}
+  {{ block.super }}
+  <link rel="stylesheet"
+        type="text/css"
+        href="{% static 'admin/css/index.css' %}">
+{% endblock extrahead %}
 {% block content %}
-  <div id="content-main">
+  <section id="content-main">
+    <!-- Lista de Apps -->
     <div id="app-list">{% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}</div>
-  </div>
+    <!-- Erros Recentes -->
+    {% if recent_errors %}
+      <div id="app-errors">
+        <h2>ERROS RECENTES</h2>
+        <ul>
+          {% for e in recent_errors %}
+            <li class="error-item">
+              <div class="error-header">
+                <span class="error-timestamp">[{{ e.timestamp }}]</span>
+                <strong class="error-operation">{{ e.error_origin }}</strong>
+              </div>
+              <p class="error-message">{{ e.error_message }}</p>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </section>
 {% endblock %}

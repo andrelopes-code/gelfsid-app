@@ -1,4 +1,6 @@
-from django.contrib import admin
+from django.contrib.admin.models import LogEntry
+from django.contrib.auth.admin import GroupAdmin, UserAdmin
+from django.contrib.auth.models import Group, User
 
 from gelfmp import models
 
@@ -7,7 +9,17 @@ from .filters import DocumentValidityFilter, MonthFilter, SupplierWithEntriesFil
 from .inlines import BankDetailsInline, ContactInline, DocumentInline
 
 
-@admin.register(models.Contact)
+class LogEntryAdmin(ROBaseModelAdmin):
+    list_display = ('action_time', 'user', 'content_type', 'object_repr', 'action_flag')
+    search_fields = ('object_repr', 'user__username')
+    list_filter = ('action_flag', 'content_type')
+
+
+class AppErrorAdmin(BaseModelAdmin):
+    list_display = ('error_origin', 'error_message', 'timestamp')
+    search_fields = ('error_origin', 'error_message')
+
+
 class ContactAdmin(BaseModelAdmin):
     list_display = ('contact_type', 'name', 'email')
     search_fields = ('name', 'email')
@@ -34,7 +46,6 @@ class ContactAdmin(BaseModelAdmin):
     )
 
 
-@admin.register(models.BankDetails)
 class BankDetailsAdmin(BaseModelAdmin):
     list_display = ('bank_name', 'account_number', 'agency')
 
@@ -58,7 +69,6 @@ class BankDetailsAdmin(BaseModelAdmin):
     )
 
 
-@admin.register(models.Document)
 class DocumentAdmin(BaseModelAdmin):
     list_display = ('document_type', 'name', 'validity', 'supplier')
     list_filter = ('document_type', 'supplier', DocumentValidityFilter)
@@ -108,7 +118,6 @@ class DocumentAdmin(BaseModelAdmin):
     delete_files.short_description = 'Excluir Documentos selecionados'
 
 
-@admin.register(models.CharcoalEntry)
 class CharcoalEntryAdmin(ROBaseModelAdmin):
     list_display = ('supplier', 'entry_volume', 'moisture', 'density', 'fines', 'entry_date')
     search_fields = ('supplier__corporate_name', 'dcf')
@@ -136,7 +145,6 @@ class CharcoalEntryAdmin(ROBaseModelAdmin):
     )
 
 
-@admin.register(models.CharcoalMonthlyPlan)
 class CharcoalMonthlyPlanAdmin(BaseModelAdmin):
     change_form_template = 'admin/charcoalmonthlyplan/change_form.html'
 
@@ -182,7 +190,6 @@ class CharcoalMonthlyPlanAdmin(BaseModelAdmin):
         return super().response_add(request, obj, post_url_continue)
 
 
-@admin.register(models.CharcoalIQF)
 class CharcoalIQFAdmin(ROBaseModelAdmin):
     change_list_template = 'admin/charcoaliqf/change_form.html'
 
@@ -201,7 +208,6 @@ class CharcoalIQFAdmin(ROBaseModelAdmin):
     search_fields = ('supplier__corporate_name',)
 
 
-@admin.register(models.Supplier)
 class SupplierAdmin(BaseModelAdmin):
     list_display = ('corporate_name', 'material_type', 'cpf_cnpj', 'city', 'active')
     list_filter = ('material_type', 'state', 'active')
@@ -275,3 +281,19 @@ class SupplierAdmin(BaseModelAdmin):
 
     class Media:
         js = ('admin/js/city_state_dependency.js',)
+
+
+def register(admin_site):
+    admin_site.register(models.Supplier, SupplierAdmin)
+    admin_site.register(models.Document, DocumentAdmin)
+    admin_site.register(models.CharcoalMonthlyPlan, CharcoalMonthlyPlanAdmin)
+    admin_site.register(models.CharcoalIQF, CharcoalIQFAdmin)
+    admin_site.register(models.CharcoalEntry, CharcoalEntryAdmin)
+    admin_site.register(models.Contact, ContactAdmin)
+    admin_site.register(models.BankDetails, BankDetailsAdmin)
+    admin_site.register(models.AppError, AppErrorAdmin)
+
+    # Modelos admin padrão do Django
+    admin_site.register(Group, GroupAdmin)
+    admin_site.register(User, UserAdmin)
+    admin_site.register(LogEntry, LogEntryAdmin)

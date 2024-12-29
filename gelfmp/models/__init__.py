@@ -1,3 +1,4 @@
+from .app_error import AppError
 from .bank_details import BankDetails
 from .charcoal_entry import CharcoalEntry
 from .charcoal_iqf import CharcoalIQF
@@ -9,6 +10,7 @@ from .document import Document
 from .supplier import Supplier
 
 __all__ = [
+    'AppError',
     'BankDetails',
     'CharcoalEntry',
     'City',

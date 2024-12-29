@@ -366,7 +366,7 @@ def supplier_iqfs_last_3_months(supplier_id, months_ago=3, html=False):
         month__gte=target_month,
         month__lt=current_month,
         supplier_id=supplier_id,
-    ).values()
+    ).values().order_by('month', 'year')
 
     df = pd.DataFrame(iqfs)
     if df.empty:

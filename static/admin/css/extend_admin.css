@@ -31,15 +31,6 @@
     height: 100%;
 }
 
-#content-main {
-    width: 100%;
-    height: 100%;
-}
-
-#app-list {
-    width: 40%;
-}
-
 /* Login */
 .login #container {
     display: flex;
