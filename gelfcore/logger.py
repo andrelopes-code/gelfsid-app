@@ -29,7 +29,7 @@ else:
     )
 
 
-def log_service_error(error_origin, error_message):
+def log_app_error(error_origin, error_message):
     AppError.objects.create(
         error_message=error_message,
         error_origin=error_origin,
