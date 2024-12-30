@@ -35,10 +35,12 @@
                     <h2 class="bg-dark-200 p-2 font-medium text-base text-center uppercase">Informações Gerais</h2>
                     <div class="gap-x-8 gap-y-2 grid grid-cols-1 p-4">
                         <div class="flex justify-between">
-                            <strong class="text-slate-500">Nome:</strong> {{ cnpj_info.company.name }}
+                            <strong class="text-slate-500">Nome:</strong>
+                            {% include "components/copyable_text.html" with value=cnpj_info.company.name %}
                         </div>
                         <div class="flex justify-between">
-                            <strong class="text-slate-500">CNPJ:</strong> {{ cnpj_info.taxId }}
+                            <strong class="text-slate-500">CNPJ:</strong>
+                            {% include "components/copyable_text.html" with value=cnpj_info.taxId %}
                         </div>
                         <div class="flex justify-between">
                             <strong class="text-slate-500">Status:</strong> {{ cnpj_info.status.text }}
@@ -59,20 +61,33 @@
                     <h2 class="bg-dark-200 p-2 font-medium text-base text-center uppercase">Endereço</h2>
                     <div class="flex flex-col gap-2 p-4">
                         <div class="flex justify-between">
-                            <strong class="text-slate-500">Rua:</strong> {{ cnpj_info.address.street }}, {{ cnpj_info.address.number }}
+                            <strong class="text-slate-500">Rua:</strong>
+                            {% include "components/copyable_text.html" with value=cnpj_info.address.street %}
                         </div>
                         <div class="flex justify-between">
-                            <strong class="text-slate-500">Bairro:</strong> {{ cnpj_info.address.district }}
+                            <strong class="text-slate-500">Número:</strong>
+                            {% include "components/copyable_text.html" with value=cnpj_info.address.number %}
                         </div>
                         <div class="flex justify-between">
-                            <strong class="text-slate-500">Cidade:</strong> {{ cnpj_info.address.city }} - {{ cnpj_info.address.state }}
+                            <strong class="text-slate-500">Bairro:</strong>
+                            {% include "components/copyable_text.html" with value=cnpj_info.address.district %}
                         </div>
                         <div class="flex justify-between">
-                            <strong class="text-slate-500">CEP:</strong> {{ cnpj_info.address.zip }}
+                            <strong class="text-slate-500">Cidade:</strong>
+                            {% include "components/copyable_text.html" with value=cnpj_info.address.city %}
+                        </div>
+                        <div class="flex justify-between">
+                            <strong class="text-slate-500">Estado:</strong>
+                            {% include "components/copyable_text.html" with value=cnpj_info.address.state %}
+                        </div>
+                        <div class="flex justify-between">
+                            <strong class="text-slate-500">CEP:</strong>
+                            {% include "components/copyable_text.html" with value=cnpj_info.address.zip %}
                         </div>
                         {% if cnpj_info.address.details %}
                             <div class="flex justify-between">
-                                <strong class="text-slate-500">Complemento:</strong> {{ cnpj_info.address.details }}
+                                <strong class="text-slate-500">Complemento:</strong>
+                                {% include "components/copyable_text.html" with value=cnpj_info.address.details %}
                             </div>
                         {% endif %}
                     </div>
