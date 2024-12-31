@@ -1,4 +1,5 @@
-from dateutil.relativedelta import relativedelta
+from datetime import timedelta
+
 from django.db import models
 
 from gelfmp.utils import validators
@@ -42,7 +43,8 @@ class DCF(BaseModel):
     def clean(self):
         # Define a validade da DCF com base na data de
         # emissão sendo essa validade de exatamente 3 anos.
-        self.validity_date = self.issue_date + relativedelta(year=3)
+        if self.issue_date:
+            self.validity_date = self.issue_date + timedelta(days=365 * 3)
 
     class Meta:
         constraints = [

@@ -306,7 +306,7 @@ class CharcoalContractAdmin(BaseModelAdmin):
 
 
 class DCFAdmin(BaseModelAdmin):
-    list_display = ('process_number', 'supplier')
+    list_display = ('process_number', 'supplier', 'validity_date')
     search_fields = ('process_number', 'supplier__corporate_name')
 
     fieldsets = (
