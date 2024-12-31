@@ -33,6 +33,7 @@ class CharcoalContract(BaseModel):
 
     entry_date = models.DateField(null=True, blank=True, verbose_name='Data de Entrada')
     contract_volume = models.FloatField(verbose_name='Volume do Contrato (m³)')
+    price = models.FloatField(verbose_name='Preço (R$)')
     active = models.BooleanField(default=True, verbose_name='Ativo')
 
     legal_department_signed = models.BooleanField(default=False, verbose_name='Assinatura do Jurídico')
@@ -52,6 +53,11 @@ class CharcoalContract(BaseModel):
         entries = CharcoalEntry.objects.filter(dcf=self.dcf)
         return entries.aggregate(models.Sum('entry_volume'))['entry_volume__sum']
 
+    @property
+    def price_per_ton(self):
+        # Preço dividido pela densidade de corte.
+        return round(self.price / 0.235, 2)
+
     def clean(self):
         if not all([
             self.dcf.declared_volume,
@@ -60,6 +66,11 @@ class CharcoalContract(BaseModel):
             self.dcf.file,
         ]):
             raise ValidationError('Todos os campos da DCF devem estar preenchidos para a criação de um contrato.')
+
+        if self.supplier != self.dcf.supplier:
+            raise ValidationError('O fornecedor do contrato deve ser o mesmo fornecedor do DCF.')
+
+        return super().clean()
 
     class Meta:
         verbose_name = 'Contrato de Carvão'

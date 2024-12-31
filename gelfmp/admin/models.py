@@ -306,6 +306,7 @@ class CharcoalContractAdmin(BaseModelAdmin):
                 'fields': [
                     'supplier',
                     'dcf',
+                    'price',
                     ('entry_date', 'contract_volume'),
                     ('active', 'file'),
                 ]
