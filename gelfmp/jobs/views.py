@@ -7,7 +7,7 @@ from gelfmp.services.iqf_calculator import calculate_suppliers_iqf
 
 from .forms import CalculateIQFForm
 
-router = Router('task/')
+router = Router('jobs/')
 
 
 @staff_member_required
@@ -15,7 +15,7 @@ router = Router('task/')
 def calculate_iqf(request: HttpRequest):
     return render(
         request,
-        'tasks/calculate_iqf.html',
+        'jobs/calculate_iqf.html',
         {
             'form': CalculateIQFForm(),
         },

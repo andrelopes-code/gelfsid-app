@@ -5,7 +5,7 @@ from django.urls import include, path
 from django.views.generic.base import RedirectView
 
 from gelfmp.admin import admin_site
-from gelfmp.tasks.views import router as tasks_router
+from gelfmp.jobs.views import router as jobs_router
 from gelfmp.views import router as gelfmp_router
 
 urlpatterns = [
@@ -14,7 +14,7 @@ urlpatterns = [
     path('admin/', admin_site.urls),
 ]
 
-urlpatterns.extend(tasks_router.urls)
+urlpatterns.extend(jobs_router.urls)
 urlpatterns.extend(gelfmp_router.urls)
 
 
