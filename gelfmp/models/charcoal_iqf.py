@@ -3,7 +3,7 @@ from django.db import models
 from gelfmp.utils import validators
 
 from .base_model import BaseModel
-from .choices import MonthType, year_choices
+from .choices import Month, year_choices
 
 
 class CharcoalIQF(BaseModel):
@@ -23,7 +23,7 @@ class CharcoalIQF(BaseModel):
     planned_volume = models.FloatField(verbose_name='Volume Programado (m³)')
     total_volume = models.FloatField(verbose_name='Volume Total (m³)')
 
-    month = models.IntegerField(choices=MonthType.choices, verbose_name='Mês')
+    month = models.IntegerField(choices=Month.choices, verbose_name='Mês')
     year = models.IntegerField(choices=year_choices(), verbose_name='Ano')
 
     supplier = models.ForeignKey(

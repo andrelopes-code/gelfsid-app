@@ -286,7 +286,16 @@ class SupplierAdmin(BaseModelAdmin):
 
 
 class CharcoalContractAdmin(BaseModelAdmin):
-    list_display = ('supplier', 'dcf', 'legal_department_signed', 'supplier_signed', 'gelf_signed', 'status')
+    list_display = (
+        'supplier',
+        'dcf',
+        'legal_department_signed',
+        'supplier_signed',
+        'gelf_signed',
+        'remaining_volume',
+        'status',
+    )
+
     search_fields = ('supplier__corporate_name', 'dcf__process_number')
     autocomplete_fields = ('dcf',)
 
@@ -314,10 +323,14 @@ class CharcoalContractAdmin(BaseModelAdmin):
     def status(self, obj):
         if not obj.legal_department_signed and not obj.supplier_signed and not obj.gelf_signed:
             return 'Pendente'
-
         return 'Vigente' if obj.active else 'Encerrado'
 
+    def remaining_volume(self, obj):
+        delivered_volume = obj.delivered_volume
+        return round(obj.contract_volume - delivered_volume, 2)
+
     status.short_description = 'Status'
+    remaining_volume.short_description = 'Volume Restante'
 
 
 class DCFAdmin(BaseModelAdmin):
@@ -346,6 +359,11 @@ class DCFAdmin(BaseModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
+class TaskAdmin(BaseModelAdmin):
+    list_display = ('description', 'assigned_to', 'due_date', 'status')
+    search_fields = ('description', 'assigned_to__first_name', 'assigned_to__last_name')
+
+
 def register(admin_site):
     admin_site.register(models.Supplier, SupplierAdmin)
     admin_site.register(models.Document, DocumentAdmin)
@@ -357,6 +375,7 @@ def register(admin_site):
     admin_site.register(models.AppError, AppErrorAdmin)
     admin_site.register(models.CharcoalContract, CharcoalContractAdmin)
     admin_site.register(models.DCF, DCFAdmin)
+    admin_site.register(models.Task, TaskAdmin)
 
     # Modelos admin padrão do Django
     admin_site.register(Group, GroupAdmin)

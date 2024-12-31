@@ -14,7 +14,7 @@ class ContactType(models.TextChoices):
     OTHER = 'other', 'Outro'
 
 
-class MonthType(models.IntegerChoices):
+class Month(models.IntegerChoices):
     JANUARY = 1, 'Janeiro'
     FEBRUARY = 2, 'Fevereiro'
     MARCH = 3, 'Março'
@@ -60,6 +60,12 @@ class SupplierType(models.TextChoices):
     GELF = 'gelf', 'GELF'
     BOTUMIRIM = 'botumirim', 'Botumirim'
     THIRD_PARTY = 'third_party', 'Terceiro'
+
+
+class TaskStatus(models.TextChoices):
+    PENDING = 'pending', 'Pendente'
+    IN_PROGRESS = 'in_progress', 'Em andamento'
+    COMPLETED = 'completed', 'Completa'
 
 
 def year_choices():

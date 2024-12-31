@@ -1,6 +1,7 @@
 from django.db import models
 from django.forms import ValidationError
 
+from gelfmp.models.charcoal_entry import CharcoalEntry
 from gelfmp.utils import validators
 from gelfmp.utils.normalization import normalize_file_and_folder
 
@@ -48,7 +49,8 @@ class CharcoalContract(BaseModel):
 
     @property
     def delivered_volume(self):
-        return self.charcoal_entries.aggregate(models.Sum('entry_volume'))['entry_volume__sum']
+        entries = CharcoalEntry.objects.filter(dcf=self.dcf)
+        return entries.aggregate(models.Sum('entry_volume'))['entry_volume__sum']
 
     def clean(self):
         if not all([

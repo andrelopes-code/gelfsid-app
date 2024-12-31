@@ -6,7 +6,7 @@ from gelfmp.utils import dtutils
 
 class CalculateIQFForm(forms.Form):
     month = forms.ChoiceField(
-        choices=models.MonthType.choices,
+        choices=models.Month.choices,
         label='Mês de Referência',
         initial=dtutils.last_month(),
     )

@@ -2,12 +2,12 @@ from django.db import models
 from django.forms import ValidationError
 
 from .base_model import BaseModel
-from .choices import MonthType, year_choices
+from .choices import Month, year_choices
 
 
 class CharcoalMonthlyPlan(BaseModel):
     planned_volume = models.FloatField(verbose_name='Volume Programado (m³)')
-    month = models.IntegerField(choices=MonthType.choices, verbose_name='Mês')
+    month = models.IntegerField(choices=Month.choices, verbose_name='Mês')
     year = models.IntegerField(choices=year_choices(), verbose_name='Ano')
 
     price = models.DecimalField(

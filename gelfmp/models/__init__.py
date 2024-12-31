@@ -4,12 +4,13 @@ from .charcoal_contract import CharcoalContract
 from .charcoal_entry import CharcoalEntry
 from .charcoal_iqf import CharcoalIQF
 from .charcoal_monthly_plan import CharcoalMonthlyPlan
-from .choices import ContactType, DocumentType, MaterialType, MonthType, SupplierType, year_choices
+from .choices import ContactType, DocumentType, MaterialType, Month, SupplierType, year_choices
 from .city_state import City, State
 from .contact import Contact
 from .dcf import DCF
 from .document import Document
 from .supplier import Supplier
+from .task import Task
 
 __all__ = [
     'AppError',
@@ -24,11 +25,12 @@ __all__ = [
     'Contact',
     'DCF',
     'CharcoalContract',
+    'Task',
     # Choices
     'MaterialType',
     'SupplierType',
     'ContactType',
     'DocumentType',
-    'MonthType',
+    'Month',
     'year_choices',
 ]
