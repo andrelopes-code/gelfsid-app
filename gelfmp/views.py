@@ -14,7 +14,7 @@ router = Router()
 cnpj_service = CNPJInfoService()
 
 
-@router('')
+@router()
 def index(request: HttpRequest):
     return render(request, 'index.html')
 
@@ -73,7 +73,14 @@ def supplier_cnpj_info(request: HttpRequest, id):
     if not supplier:
         return redirect('index')
 
-    cnpj_data = cnpj_service.fetch(supplier.cpf_cnpj)
+    try:
+        cnpj_data = cnpj_service.fetch(supplier.cpf_cnpj)
+    except ValueError:
+        return render(
+            request,
+            'components/errors/error.html',
+            {'error': 'Não foi possivel carregar os dados do CNPJ no momento, tente novamente mais tarde.'},
+        )
 
     context = {
         'supplier': supplier,

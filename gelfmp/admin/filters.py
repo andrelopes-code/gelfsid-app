@@ -12,7 +12,6 @@ class SupplierWithEntriesFilter(SimpleListFilter):
     def lookups(self, request, model_admin):
         suppliers_with_entries = Supplier.objects.annotate(num_entries=Count('charcoal_entries'))
         suppliers_with_entries_filtered = suppliers_with_entries.filter(num_entries__gt=0)
-
         return [(supplier.id, supplier.corporate_name) for supplier in suppliers_with_entries_filtered]
 
     def queryset(self, request, queryset):

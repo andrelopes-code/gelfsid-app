@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="flex flex-col justify-center items-center gap-1 bg-dark w-full h-full">
+        <p class="font-semibold text-slate-300">
+            {% if error %}
+                {{ error }}
+            {% else %}
+                Um erro inesperado ocorreu.
+            {% endif %}
+        </p>
+        <a class="bg-dark-200 mt-6 px-4 py-2 rounded-sm text-slate-300 text-xs hover:text-primary"
+           href="{% url 'index' %}">Voltar para o início.</a>
+    </div>
+{% endblock content %}
