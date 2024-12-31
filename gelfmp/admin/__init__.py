@@ -13,6 +13,7 @@ class CustomAdminSite(admin.AdminSite):
         custom_urls = [
             path('', self.index, name='index'),
             path('task/<int:id>/complete', self.complete_task, name='complete_task'),
+            path('task/<int:id>/start', self.start_task, name='start_task'),
         ]
 
         return custom_urls + super().get_urls()
@@ -40,6 +41,19 @@ class CustomAdminSite(admin.AdminSite):
         task.save()
 
         messages.success(request, f'A tarefa "{task.description}" foi marcada como concluída.')
+
+        return redirect('admin:index')
+
+    def start_task(self, request, id):
+        task = get_object_or_404(Task, id=id)
+
+        if task.assigned_to and task.assigned_to != request.user:
+            messages.error(request, 'Essa tarefa pertence a outro usuário.')
+            return redirect('admin:index')
+
+        task.assigned_to = request.user
+        task.status = TaskStatus.IN_PROGRESS
+        task.save()
 
         return redirect('admin:index')
 

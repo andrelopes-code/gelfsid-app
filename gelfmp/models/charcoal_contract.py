@@ -59,16 +59,20 @@ class CharcoalContract(BaseModel):
         return round(self.price / 0.235, 2)
 
     def clean(self):
-        if not all([
-            self.dcf.declared_volume,
-            self.dcf.issue_date,
-            self.dcf.validity_date,
-            self.dcf.file,
-        ]):
-            raise ValidationError('Todos os campos da DCF devem estar preenchidos para a criação de um contrato.')
+        try:
+            if not all([
+                self.dcf.declared_volume,
+                self.dcf.issue_date,
+                self.dcf.validity_date,
+                self.dcf.file,
+            ]):
+                raise ValidationError('Todos os campos da DCF devem estar preenchidos para a criação de um contrato.')
 
-        if self.supplier != self.dcf.supplier:
-            raise ValidationError('O fornecedor do contrato deve ser o mesmo fornecedor do DCF.')
+            if self.supplier != self.dcf.supplier:
+                raise ValidationError('O fornecedor do contrato deve ser o mesmo fornecedor do DCF.')
+
+        except Exception as e:
+            raise ValidationError(f'Erro ao criar o contrato: {e}')
 
         return super().clean()
 

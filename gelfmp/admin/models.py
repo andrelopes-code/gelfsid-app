@@ -298,17 +298,23 @@ class CharcoalContractAdmin(BaseModelAdmin):
 
     fieldsets = (
         (
-            'Informações Básicas',
+            'Informações do Contrato',
             {
                 'fields': [
                     'supplier',
                     'dcf',
                     'price',
                     ('entry_date', 'contract_volume'),
-                    ('active', 'file'),
+                    (
+                        'legal_department_signed',
+                        'supplier_signed',
+                        'gelf_signed',
+                    ),
+                    'file',
                 ]
             },
         ),
+        ('', {'fields': []}),
     )
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -319,8 +325,9 @@ class CharcoalContractAdmin(BaseModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def status(self, obj):
-        if not obj.legal_department_signed and not obj.supplier_signed and not obj.gelf_signed:
+        if not obj.legal_department_signed or not obj.supplier_signed or not obj.gelf_signed:
             return 'Pendente'
+
         return 'Vigente' if obj.active else 'Encerrado'
 
     def remaining_volume(self, obj):
@@ -337,7 +344,7 @@ class DCFAdmin(BaseModelAdmin):
 
     fieldsets = (
         (
-            'Informações Básicas',
+            'Informações da DCF',
             {
                 'fields': [
                     'process_number',
@@ -347,6 +354,7 @@ class DCFAdmin(BaseModelAdmin):
                 ]
             },
         ),
+        ('', {'fields': []}),
     )
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -366,6 +374,21 @@ class TaskAdmin(BaseModelAdmin):
         'assigned_to__last_name',
         'assigned_by__first_name',
         'assigned_by__last_name',
+    )
+
+    fieldsets = (
+        (
+            'Informações da Tarefa',
+            {
+                'fields': [
+                    'description',
+                    'status',
+                    'due_date',
+                    ('assigned_to', 'assigned_by', 'completed_by'),
+                ]
+            },
+        ),
+        ('', {'fields': []}),
     )
 
     def status_color(self, obj):

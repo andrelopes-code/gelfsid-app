@@ -18,7 +18,7 @@
     --link-fg: #447e9b;
     --link-hover-color: #036;
     --link-selected-fg: #5b80b2;
-    --hairline-color: #262d3b;
+    --hairline-color: #191e29;
     --border-color: #232831;
     --error-fg: #ba2121;
     --message-success-bg: #dfd;
@@ -129,4 +129,5 @@ ul.messagelist li a:hover {
 
 button.mfp-close {
     color: var(--body-fg) !important;
+    transform: translateX(-50%) !important;
 }

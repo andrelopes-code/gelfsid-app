@@ -148,6 +148,9 @@ p.date .datetimeshortcuts {
 p.date input {
     margin-top: 1px !important;
 }
+.date-icon {
+    margin-left: 8px;
+}
 
 /*
     Adiciona um padding horizontal ao redor
@@ -210,6 +213,11 @@ p.date input {
 input[type="checkbox"]:checked {
     accent-color: var(--primary-color);
     width: fit-content !important;
+}
+.fieldBox:has(input[type="checkbox"]) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 /*
@@ -314,9 +322,9 @@ input[type="checkbox"] {
     margin: 0 !important;
 }
 
-.colM input,
-textarea,
-select {
+.colM input:not([type="checkbox"]),
+.colM textarea,
+.colM select {
     margin-top: 0.2rem !important;
     min-height: 2rem !important;
 }
