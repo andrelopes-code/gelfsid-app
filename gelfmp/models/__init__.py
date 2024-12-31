@@ -1,4 +1,3 @@
-from .app_error import AppError
 from .bank_details import BankDetails
 from .charcoal_contract import CharcoalContract
 from .charcoal_entry import CharcoalEntry
@@ -13,7 +12,6 @@ from .supplier import Supplier
 from .task import Task
 
 __all__ = [
-    'AppError',
     'BankDetails',
     'CharcoalEntry',
     'City',

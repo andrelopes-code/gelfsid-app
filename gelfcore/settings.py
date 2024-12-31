@@ -40,6 +40,7 @@ ROOT_URLCONF = 'gelfcore.urls'
 WSGI_APPLICATION = 'gelfcore.wsgi.application'
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
+LOGIN_URL = '/admin/login/'
 
 INSTALLED_APPS = [
     'admin_interface',
@@ -64,6 +65,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'gelfmp.middleware.AdminLoginRedirectMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]

@@ -76,7 +76,16 @@
 
 ul.messagelist li {
     font-weight: bold;
-    color: rgb(46, 54, 68);
+    color: #2e3644;
+}
+
+ul.messagelist li a {
+    font-weight: bold;
+    color: #2e3644 !important;
+}
+
+ul.messagelist li a:hover {
+    color: #657288 !important;
 }
 
 /* Sidebar */

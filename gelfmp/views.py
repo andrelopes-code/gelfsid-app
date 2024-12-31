@@ -5,9 +5,7 @@ from django.utils.timezone import now
 
 from gelfcore.router import Router
 from gelfmp.charts import charts, forms
-from gelfmp.models import CharcoalMonthlyPlan, Supplier
-from gelfmp.models.charcoal_entry import CharcoalEntry
-from gelfmp.models.choices import SupplierType
+from gelfmp.models import CharcoalEntry, CharcoalMonthlyPlan, Supplier, SupplierType
 from gelfmp.services.cnpj_info import CNPJInfoService
 
 router = Router()

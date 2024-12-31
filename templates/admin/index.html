@@ -4,27 +4,37 @@
   {{ block.super }}
   <link rel="stylesheet"
         type="text/css"
-        href="{% static 'admin/css/index.css' %}">
+        href="{% static 'admin/css/index/main.css' %}">
+  <link rel="stylesheet"
+        type="text/css"
+        href="{% static 'admin/css/index/task.css' %}">
 {% endblock extrahead %}
 {% block content %}
   <section id="content-main">
     <!-- Lista de Apps -->
     <div id="app-list">{% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}</div>
-    <!-- Erros Recentes -->
-    {% if recent_errors %}
-      <div id="app-errors">
-        <h2>ERROS RECENTES</h2>
-        <ul class="noscrollbar">
-          {% for e in recent_errors %}
-            <li class="error-item">
-              <div class="error-header">
-                <span class="error-timestamp">[{{ e.timestamp }}]</span>
-                <strong class="error-operation">{{ e.error_origin }}</strong>
+    <!-- Tarefas Atribuidas -->
+    {% if pending_tasks %}
+      <div id="custom-container">
+        <h2>TAREFAS PENDENTES</h2>
+        <div class="noscrollbar task-list">
+          {% for t in pending_tasks %}
+            <div class="task-item">
+              <div>
+                <p class="task-timestamp">[{{ t.created_at }}]</p>
+                <p>{{ t.description }}</p>
               </div>
-              <p class="error-message">{{ e.error_message }}</p>
-            </li>
+              <div class="task-footer">
+                <p>
+                  {% if t.due_date %}Prazo: {{ t.due_date|date:"d/m/Y" }}{% endif %}
+                </p>
+                <div class="task-actions">
+                  <a href="{% url 'admin:complete_task' t.id %}" class="complete-btn">CONCLUIR</a>
+                </div>
+              </div>
+            </div>
           {% endfor %}
-        </ul>
+        </div>
       </div>
     {% endif %}
   </section>

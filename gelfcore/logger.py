@@ -3,8 +3,6 @@ import sys
 from django.conf import settings
 from loguru import logger
 
-from gelfmp.models.app_error import AppError
-
 logger.remove()
 log = logger
 
@@ -26,11 +24,4 @@ else:
         retention='7 days',
         level='ERROR',
         format='{time} | {name} | {level} | {message}',
-    )
-
-
-def log_app_error(error_origin, error_message):
-    AppError.objects.create(
-        error_message=error_message,
-        error_origin=error_origin,
     )

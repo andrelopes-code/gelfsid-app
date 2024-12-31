@@ -377,7 +377,7 @@ fieldset.module .vTextField {
 fieldset.module select {
     max-width: 100%;
     width: 100%;
-    overflow: hidden;
+    /* overflow: hidden; */
     text-overflow: ellipsis;
 }
 

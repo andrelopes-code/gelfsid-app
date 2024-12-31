@@ -1,8 +1,10 @@
 from django.contrib.admin.models import LogEntry
 from django.contrib.auth.admin import GroupAdmin, UserAdmin
 from django.contrib.auth.models import Group, User
+from django.utils.html import format_html
 
 from gelfmp import models
+from gelfmp.models.choices import TaskStatus
 
 from .base import BaseModelAdmin, ROBaseModelAdmin
 from .filters import DocumentValidityFilter, MonthFilter, SupplierWithEntriesFilter
@@ -13,11 +15,6 @@ class LogEntryAdmin(ROBaseModelAdmin):
     list_display = ('action_time', 'user', 'content_type', 'object_repr', 'action_flag')
     search_fields = ('object_repr', 'user__username')
     list_filter = ('action_flag', 'content_type')
-
-
-class AppErrorAdmin(BaseModelAdmin):
-    list_display = ('error_origin', 'error_message', 'timestamp')
-    search_fields = ('error_origin', 'error_message')
 
 
 class ContactAdmin(BaseModelAdmin):
@@ -361,8 +358,45 @@ class DCFAdmin(BaseModelAdmin):
 
 
 class TaskAdmin(BaseModelAdmin):
-    list_display = ('description', 'assigned_to', 'due_date', 'status')
-    search_fields = ('description', 'assigned_to__first_name', 'assigned_to__last_name')
+    list_display = ('description', 'assigned_by', 'assigned_to', 'due_date', 'status_color')
+    readonly_fields = ('assigned_by', 'completed_by')
+    search_fields = (
+        'description',
+        'assigned_to__first_name',
+        'assigned_to__last_name',
+        'assigned_by__first_name',
+        'assigned_by__last_name',
+    )
+
+    def status_color(self, obj):
+        status_display = obj.get_status_display()
+
+        if obj.status == TaskStatus.COMPLETED:
+            return format_html('<span style="color:#88f38c;">{}</span>', f'{status_display} ({obj.completed_by})')
+        elif obj.status == TaskStatus.IN_PROGRESS:
+            return format_html('<span style="color:#f3e887;">{}</span>', status_display)
+        elif obj.status == TaskStatus.PENDING:
+            return format_html('<span style="color:#f0b763;">{}</span>', status_display)
+
+        return status_display
+
+    def has_change_permission(self, request, obj=None):
+        if obj and obj.assigned_by == request.user:
+            return True
+
+        return False
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.assigned_by = request.user
+
+        if obj.status == TaskStatus.COMPLETED and not obj.completed_by:
+            obj.completed_by = request.user
+
+        super().save_model(request, obj, form, change)
+
+    status_color.short_description = 'Status'
+    status_color.admin_order_field = 'status'
 
 
 def register(admin_site):
@@ -373,7 +407,6 @@ def register(admin_site):
     admin_site.register(models.CharcoalEntry, CharcoalEntryAdmin)
     admin_site.register(models.Contact, ContactAdmin)
     admin_site.register(models.BankDetails, BankDetailsAdmin)
-    admin_site.register(models.AppError, AppErrorAdmin)
     admin_site.register(models.CharcoalContract, CharcoalContractAdmin)
     admin_site.register(models.DCF, DCFAdmin)
     admin_site.register(models.Task, TaskAdmin)
