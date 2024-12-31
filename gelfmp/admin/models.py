@@ -286,7 +286,7 @@ class SupplierAdmin(BaseModelAdmin):
 
 
 class CharcoalContractAdmin(BaseModelAdmin):
-    list_display = ('supplier', 'dcf')
+    list_display = ('supplier', 'dcf', 'legal_department_signed', 'supplier_signed', 'gelf_signed', 'status')
     search_fields = ('supplier__corporate_name', 'dcf__process_number')
     autocomplete_fields = ('dcf',)
 
@@ -303,6 +303,21 @@ class CharcoalContractAdmin(BaseModelAdmin):
             },
         ),
     )
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'supplier':
+            # Adciona apenas fornecedores de carvão ao seletor de fornecedores.
+            kwargs['queryset'] = models.Supplier.objects.filter(material_type=models.MaterialType.CHARCOAL)
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def status(self, obj):
+        if not obj.legal_department_signed and not obj.supplier_signed and not obj.gelf_signed:
+            return 'Pendente'
+
+        return 'Vigente' if obj.active else 'Encerrado'
+
+    status.short_description = 'Status'
 
 
 class DCFAdmin(BaseModelAdmin):
@@ -322,6 +337,13 @@ class DCFAdmin(BaseModelAdmin):
             },
         ),
     )
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'supplier':
+            # Adciona apenas fornecedores de carvão ao seletor de fornecedores.
+            kwargs['queryset'] = models.Supplier.objects.filter(material_type=models.MaterialType.CHARCOAL)
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 def register(admin_site):

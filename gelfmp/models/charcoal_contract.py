@@ -34,6 +34,10 @@ class CharcoalContract(BaseModel):
     contract_volume = models.FloatField(verbose_name='Volume do Contrato (m³)')
     active = models.BooleanField(default=True, verbose_name='Ativo')
 
+    legal_department_signed = models.BooleanField(default=False, verbose_name='Assinatura do Jurídico')
+    supplier_signed = models.BooleanField(default=False, verbose_name='Assinatura do Fornecedor')
+    gelf_signed = models.BooleanField(default=False, verbose_name='Assinatura da GELF')
+
     file = models.FileField(
         upload_to=upload_to,
         null=True,
