@@ -6,8 +6,9 @@ from django.db import models
 class ContactType(models.TextChoices):
     WITNESS = 'witness', 'Testemunha'
     LEGAL_REPRESENTATIVE = 'legal_representative', 'Representante Legal'
-    NEGOTIATION_RESP = 'accounting_responsible', 'Setor Contábil'
-    ACCOUNTING_RESP = 'negotiation_responsible', 'Negociação (Comercial)'
+    ACCOUNTING_RESP = 'accounting_responsible', 'Setor Contábil'
+    FINANCIAL_RESP = 'financial_responsible', 'Setor Financeiro'
+    NEGOTIATION_RESP = 'negotiation_responsible', 'Negociação (Comercial)'
     NF_RESP = 'nf_responsible', 'Emissão de Notas Fiscais'
     LOGISTICS_RESP = 'logistics_responsible', 'Programação e Logística'
     OTHER = 'other', 'Outro'

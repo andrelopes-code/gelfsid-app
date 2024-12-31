@@ -18,7 +18,7 @@ validate_cep = RegexValidator(
 
 validate_dcf = RegexValidator(
     regex=r'^\d{13}/\d{2}-\d{2}$',
-    message='Insira uma DCF válida, usando o formato 0000000000000/00-00.',
+    message='Insira um valor válido, usando o formato 0000000000000/00-00.',
 )
 
 validate_bank_code = RegexValidator(

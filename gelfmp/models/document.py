@@ -6,6 +6,7 @@ from django.forms import ValidationError
 from gelfcore.logger import log
 from gelfmp.services import geojson
 from gelfmp.utils import dtutils, validators
+from gelfmp.utils.normalization import normalize_file_and_folder
 
 from .base_model import BaseModel
 from .choices import DocumentType
@@ -13,7 +14,10 @@ from .choices import DocumentType
 
 class Document(BaseModel):
     def upload_to(instance, filename):
-        return f'fornecedores/{instance.supplier.corporate_name}/documentos/{filename}'
+        safe_filename = normalize_file_and_folder(filename)
+        safe_corporate_name = normalize_file_and_folder(instance.supplier.corporate_name)
+
+        return f'fornecedores/{safe_corporate_name}/documentos/{safe_filename}'
 
     name = models.CharField(
         max_length=50,

@@ -41,7 +41,7 @@ class ContactAdmin(BaseModelAdmin):
         ),
         (
             '',
-            {'fields': tuple()},
+            {'fields': []},
         ),
     )
 
@@ -64,7 +64,7 @@ class BankDetailsAdmin(BaseModelAdmin):
         ),
         (
             '',
-            {'fields': tuple()},
+            {'fields': []},
         ),
     )
 
@@ -140,7 +140,7 @@ class CharcoalEntryAdmin(ROBaseModelAdmin):
         ),
         (
             '',
-            {'fields': tuple()},
+            {'fields': []},
         ),
     )
 
@@ -209,6 +209,8 @@ class CharcoalIQFAdmin(ROBaseModelAdmin):
 
 
 class SupplierAdmin(BaseModelAdmin):
+    change_form_template = 'admin/supplier/change_form.html'
+
     list_display = ('corporate_name', 'material_type', 'cpf_cnpj', 'city', 'active')
     list_filter = ('material_type', 'state', 'active')
     search_fields = ('corporate_name', 'cpf_cnpj')
@@ -283,6 +285,44 @@ class SupplierAdmin(BaseModelAdmin):
         js = ('admin/js/city_state_dependency.js',)
 
 
+class CharcoalContractAdmin(BaseModelAdmin):
+    list_display = ('supplier', 'dcf')
+    search_fields = ('supplier__corporate_name', 'dcf__process_number')
+
+    fieldsets = (
+        (
+            'Informações Básicas',
+            {
+                'fields': [
+                    'supplier',
+                    'dcf',
+                    ('entry_date', 'contract_volume'),
+                    ('active', 'file'),
+                ]
+            },
+        ),
+    )
+
+
+class DCFAdmin(BaseModelAdmin):
+    list_display = ('process_number', 'supplier')
+    search_fields = ('process_number', 'supplier__corporate_name')
+
+    fieldsets = (
+        (
+            'Informações Básicas',
+            {
+                'fields': [
+                    'process_number',
+                    'supplier',
+                    ('issue_date', 'declared_volume'),
+                    'file',
+                ]
+            },
+        ),
+    )
+
+
 def register(admin_site):
     admin_site.register(models.Supplier, SupplierAdmin)
     admin_site.register(models.Document, DocumentAdmin)
@@ -292,6 +332,8 @@ def register(admin_site):
     admin_site.register(models.Contact, ContactAdmin)
     admin_site.register(models.BankDetails, BankDetailsAdmin)
     admin_site.register(models.AppError, AppErrorAdmin)
+    admin_site.register(models.CharcoalContract, CharcoalContractAdmin)
+    admin_site.register(models.DCF, DCFAdmin)
 
     # Modelos admin padrão do Django
     admin_site.register(Group, GroupAdmin)

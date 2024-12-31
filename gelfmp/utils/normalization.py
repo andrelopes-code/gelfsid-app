@@ -58,3 +58,12 @@ def normalize_name(name):
         normalized_words[0] = normalized_words[0].capitalize()
 
     return ' '.join(normalized_words)
+
+
+def normalize_file_and_folder(name):
+    """Normaliza o nome de arquivos e pastas para uso no sistema de arquivos."""
+
+    if name:
+        return re.sub(r'[^a-zA-Z0-9_-]', '_', name)
+
+    return name
