@@ -55,7 +55,7 @@ class Document(BaseModel):
 
     supplier = models.ForeignKey(
         'Supplier',
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='documents',
         verbose_name='Fornecedor',
     )

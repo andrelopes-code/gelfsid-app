@@ -288,6 +288,7 @@ class SupplierAdmin(BaseModelAdmin):
 class CharcoalContractAdmin(BaseModelAdmin):
     list_display = ('supplier', 'dcf')
     search_fields = ('supplier__corporate_name', 'dcf__process_number')
+    autocomplete_fields = ('dcf',)
 
     fieldsets = (
         (

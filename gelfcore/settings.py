@@ -39,6 +39,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ROOT_URLCONF = 'gelfcore.urls'
 WSGI_APPLICATION = 'gelfcore.wsgi.application'
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 INSTALLED_APPS = [
     'admin_interface',

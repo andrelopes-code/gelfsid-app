@@ -8,6 +8,7 @@ from rich.console import Console
 from rich.prompt import Prompt
 
 from gelfmp.models import CharcoalEntry, Supplier
+from gelfmp.models.dcf import DCF
 
 from .constants import CHARCOAL_ENTRIES_PATHS, CHARCOAL_ENTRIES_SHEET_NAME
 from .types import Aliases
@@ -51,6 +52,8 @@ def get_entries(charcoal_entries_path):
 
 def process_row(row, supplier):
     try:
+        dcf, _ = DCF.objects.get_or_create(process_number=row['AUT_DES'], defaults={'supplier': supplier})
+
         return CharcoalEntry(
             supplier=supplier,
             entry_date=row['DATA_ENTRADA'],
@@ -59,10 +62,10 @@ def process_row(row, supplier):
             moisture=row['UMIDADE'],
             density=row['DENSIDADE_BU'],
             fines=row['FINOS'],
-            dcf=row['AUT_DES'],
             gcae=row['GCAE'],
             vehicle_plate=row['PLACA_VEÍCULO'],
             origin_ticket=row['TICKET_ORIGEM'],
+            dcf=dcf,
         )
     except KeyError as e:
         raise ValueError(f'Campo ausente: {e}')

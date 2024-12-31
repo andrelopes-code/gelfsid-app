@@ -1,7 +1,5 @@
 from django.db import models
 
-from gelfmp.utils import validators
-
 from .base_model import BaseModel
 
 
@@ -15,12 +13,18 @@ class CharcoalEntry(BaseModel):
     fines = models.FloatField(verbose_name='Finos (%)')
     density = models.FloatField(verbose_name='Densidade')
 
-    dcf = models.CharField(max_length=50, validators=[validators.validate_dcf], verbose_name='DCF')
     gcae = models.CharField(max_length=50, verbose_name='GCAE')
+
+    dcf = models.ForeignKey(
+        'DCF',
+        on_delete=models.PROTECT,
+        related_name='charcoal_entries',
+        verbose_name='DCF',
+    )
 
     supplier = models.ForeignKey(
         'Supplier',
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='charcoal_entries',
         verbose_name='Fornecedor',
     )
