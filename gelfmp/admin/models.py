@@ -381,7 +381,13 @@ class TaskAdmin(BaseModelAdmin):
         return status_display
 
     def has_change_permission(self, request, obj=None):
-        if obj and obj.assigned_by == request.user:
+        if obj and obj.assigned_by == request.user or request.user.is_superuser:
+            return True
+
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        if obj and obj.assigned_by == request.user or request.user.is_superuser:
             return True
 
         return False
