@@ -3,6 +3,8 @@ from datetime import datetime
 from django import template
 from django.utils import timezone
 
+from gelfmp.utils.normalization import normalize_to_numbers
+
 register = template.Library()
 
 
@@ -31,6 +33,8 @@ def get_validity_status(validity_date):
 def format_cpf_cnpj(value):
     if not isinstance(value, str):
         return value
+
+    value = normalize_to_numbers(value)
 
     if len(value) == 11:
         return f'{value[:3]}.{value[3:6]}.{value[6:9]}-{value[9:]}'

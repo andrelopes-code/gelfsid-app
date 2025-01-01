@@ -40,22 +40,64 @@ def normalize_phone(phone):
     return phone
 
 
+def normalize_cep(cep):
+    if cep:
+        cep = re.sub(r'\D', '', cep)
+        cep = cep[:5] + '-' + cep[5:]
+
+    return cep
+
+
 def normalize_name(name):
     """
     Normaliza um nome, colocando letras maiúsculas no início de cada palavra,
     exceto para conectivos (como "de", "da", "do", "e").
+    Preserva palavras inteiramente em maiúsculas (como "LTDA", "JC", "CRP", "CBI").
     """
 
     if not name:
         return name
 
+    preserve_upper = {
+        'LTDA',
+        'JC',
+        'JA',
+        'CRP',
+        'CBI',
+        'S/A',
+        'ME',
+        'EPP',
+        'CIA',
+        'W&D',
+        'HF',
+        'JK',
+        'JF',
+        'LHG',
+        'EIRELLI',
+        'AMM',
+        'SA',
+        'S.A',
+        'S.A.',
+        'S/A',
+        'HRM',
+        'JPL',
+        'MG',
+    }
+
     exceptions = {'e', 'de', 'da', 'do', 'das', 'dos'}
 
     words = name.split()
-    normalized_words = [word.capitalize() if word.lower() not in exceptions else word.lower() for word in words]
+    normalized_words = []
 
-    if normalized_words:
-        normalized_words[0] = normalized_words[0].capitalize()
+    for word in words:
+        if word.upper() in preserve_upper:
+            normalized_words.append(word.upper())
+
+        elif word.lower() in exceptions:
+            normalized_words.append(word.lower())
+
+        else:
+            normalized_words.append(word.capitalize())
 
     return ' '.join(normalized_words)
 

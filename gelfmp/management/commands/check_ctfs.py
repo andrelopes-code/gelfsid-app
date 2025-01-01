@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 
 from gelfmp.models import Document, Supplier
 from gelfmp.models.choices import DocumentType
-from gelfmp.services.ibama_ctf import IbamaCTFService
+from gelfmp.services.ibama_scrapper import IbamaCTFService
 
 
 class Command(BaseCommand):

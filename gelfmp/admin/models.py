@@ -305,16 +305,22 @@ class CharcoalContractAdmin(BaseModelAdmin):
                     'dcf',
                     'price',
                     ('entry_date', 'contract_volume'),
+                    'file',
+                ]
+            },
+        ),
+        (
+            'Assinaturas',
+            {
+                'fields': (
                     (
                         'legal_department_signed',
                         'supplier_signed',
                         'gelf_signed',
                     ),
-                    'file',
-                ]
+                )
             },
         ),
-        ('', {'fields': []}),
     )
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
