@@ -1,21 +1,25 @@
+import os
+
 from django.db import models
 from django.forms import ValidationError
 
 from gelfmp.models.charcoal_entry import CharcoalEntry
 from gelfmp.utils import validators
+from gelfmp.utils.functions import handle_file_cleanup, handle_file_cleanup_on_delete
 from gelfmp.utils.normalization import normalize_file_and_folder
 
 from .base_model import BaseModel
 
 
 class CharcoalContract(BaseModel):
-    def upload_to(instance, _):
+    def upload_to(instance, filename):
         safe_corporate_name = normalize_file_and_folder(instance.supplier.corporate_name)
 
         contract_name = f'{instance.dcf.process_number}_{instance.supplier.corporate_name}'
         safe_contract_name = normalize_file_and_folder(contract_name)
+        file_extension = os.path.splitext(filename)[1]
 
-        return f'fornecedores/{safe_corporate_name}/contratos/{safe_contract_name}'
+        return f'FORNECEDORES/{safe_corporate_name}/CONTRATOS/{safe_contract_name}.{file_extension}'
 
     supplier = models.ForeignKey(
         'Supplier',
@@ -75,6 +79,14 @@ class CharcoalContract(BaseModel):
             raise ValidationError(f'Erro ao criar o contrato: {e}')
 
         return super().clean()
+
+    def delete(self, *args, **kwargs):
+        handle_file_cleanup_on_delete(self)
+        super().delete(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        handle_file_cleanup(self)
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Contrato de Carvão'

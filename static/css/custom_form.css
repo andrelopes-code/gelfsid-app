@@ -15,10 +15,13 @@
     padding: 1rem;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
 
-    &::-webkit-scrollbar {
-        display: none;
-    }
+.form-container::-webkit-scrollbar {
+    display: none;
 }
 
 .custom-form p {
@@ -38,10 +41,13 @@
     outline: none;
     border: 1px solid var(--weak-stroke-color);
     transition: all 0.1s ease-in-out;
+    color: #74839b;
+}
 
-    &:focus {
-        box-shadow: 0 0 15px -6px #374a6c;
-    }
+.custom-form select:focus,
+.custom-form input:focus,
+.custom-form textarea:focus {
+    box-shadow: 0 0 15px -6px #374a6c;
 }
 
 .custom-form select {

@@ -3,9 +3,9 @@ import os
 from django.db import models
 from django.forms import ValidationError
 
-from gelfcore.logger import log
 from gelfmp.services import geojson
 from gelfmp.utils import dtutils, validators
+from gelfmp.utils.functions import handle_file_cleanup, handle_file_cleanup_on_delete
 from gelfmp.utils.normalization import normalize_file_and_folder
 
 from .base_model import BaseModel
@@ -17,7 +17,7 @@ class Document(BaseModel):
         safe_filename = normalize_file_and_folder(filename)
         safe_corporate_name = normalize_file_and_folder(instance.supplier.corporate_name)
 
-        return f'fornecedores/{safe_corporate_name}/documentos/{safe_filename}'
+        return f'FORNECEDORES/{safe_corporate_name}/DOCUMENTOS/{safe_filename}'
 
     name = models.CharField(
         max_length=50,
@@ -65,18 +65,7 @@ class Document(BaseModel):
         return os.path.basename(self.file.name)
 
     def delete(self, *args, **kwargs):
-        try:
-            # Remove o arquivo relacionado
-            # ao registro de documento caso
-            # seja encontrado.
-            self.file.close()
-            os.remove(self.file.path)
-
-        except PermissionError as e:
-            log.error(f'Erro ao tentar deletar arquivo de documento: {e}')
-        except FileNotFoundError:
-            pass
-
+        handle_file_cleanup_on_delete(self)
         super().delete(*args, **kwargs)
 
     def clean(self):
@@ -127,19 +116,7 @@ class Document(BaseModel):
         return super().clean()
 
     def save(self, *args, **kwargs):
-        # Deleta o documento antigo se ao atualizar
-        # seja um arquivo de mesmo nome.
-        if self.pk:
-            try:
-                old_file = Document.objects.get(pk=self.pk).file
-
-                if old_file and old_file.name != self.file.name:
-                    if os.path.isfile(old_file.path):
-                        os.remove(old_file.path)
-
-            except Document.DoesNotExist:
-                pass
-
+        handle_file_cleanup(self)
         super().save(*args, **kwargs)
 
     def __str__(self):

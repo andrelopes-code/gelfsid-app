@@ -1,24 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="flex flex-col justify-center items-center bg-dark shadow-md px-[20vw] py-[12vh] w-full h-full text-slate-300">
-        <form hx-post="{% block htmxurl %}{% endblock htmxurl %}"
-              hx-swap="innerHTML"
-              hx-target="#job-result"
-              hx-indicator="#job-loader"
+        <form method="post"
               class="bg-dark-100 custom-form w-fit min-w-[33vw] h-fit max-h-full">
             <h1 class="px-8 pt-4 font-medium text-center text-slate-300">
                 {% block formtitle %}
-                    TÍTULO
+                    {% if formtitle %}
+                        {{ formtitle }}
+                    {% else %}
+                        CUIDADO AO ALTERAR OS CAMPOS ABAIXO!
+                    {% endif %}
                 {% endblock formtitle %}
             </h1>
             {% csrf_token %}
             <div class="relative form-container">
                 {% block form %}
+                    {{ form.as_p }}
                 {% endblock form %}
                 <div id="job-loader"
                      class="z-50 absolute inset-0 flex justify-center items-center backdrop-blur-sm my-indicator font-medium text-slate-500">
                     {% block loadingmsg %}
-                        Carregando...
+                        Gerando contrato, aguarde...
                     {% endblock loadingmsg %}
                 </div>
                 <div id="job-result" class="text-center text-slate-500 text-wrap"></div>
@@ -27,7 +29,7 @@
                     id="submit-button"
                     class="relative flex justify-center items-center bg-primary mt-4 px-4 py-2 w-full text-white">
                 {% block buttontext %}
-                    Processar
+                    GERAR
                 {% endblock buttontext %}
             </button>
         </form>

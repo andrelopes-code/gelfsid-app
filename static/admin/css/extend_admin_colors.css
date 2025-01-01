@@ -131,3 +131,20 @@ button.mfp-close {
     color: var(--body-fg) !important;
     transform: translateX(-50%) !important;
 }
+
+input:not([type]),
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="number"],
+input[type="tel"],
+textarea,
+select,
+.vTextField {
+    color: #74839b;
+}
+
+span[role="textbox"] {
+    color: #74839b !important;
+}

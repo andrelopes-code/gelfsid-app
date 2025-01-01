@@ -13,8 +13,15 @@ from gelfmp.utils.normalization import normalize_cep, normalize_name
 
 
 class ContractFillerService:
-    TEMPLATE_PATH = 'static/data/base_charcoal_contract.docx'
+    TEMPLATE_PATH = 'templates/docx/base_charcoal_contract.docx'
     PRICE_DENSITY = 0.235
+
+    OPTIONAL_FIELDS = {
+        'legal_representative2',
+        'legal_representative2_email',
+        'legal_representative2_cpf',
+        'entry_date',
+    }
 
     def fill_contract(self, supplier, contract, output, context=None):
         doc = DocxTemplate(self.TEMPLATE_PATH)
@@ -82,7 +89,7 @@ class ContractFillerService:
         return format_date(date, format="d 'de' MMMM 'de' yyyy", locale='pt_BR')
 
     def get_price_volume_context(self, contract):
-        contract_volume = contract.contract_volume
+        contract_volume = int(contract.contract_volume)
         contract_volume_in_words = num2words(contract_volume, lang='pt_BR')
 
         price = contract.price
@@ -165,3 +172,14 @@ class ContractFillerService:
 
         if missing_variables:
             raise ValueError(f'Os seguintes campos do contexto faltam: {", ".join(missing_variables)}')
+
+        null_values = [key for key, value in context.items() if not value and key not in self.OPTIONAL_FIELDS]
+        if null_values:
+            raise ValueError(
+                f'Não foi possivel gerar o contrato pois os seguintes campos do '
+                f'contexto possuem valores nulos: {", ".join(null_values)}'
+            )
+
+
+# Instancia global de ContractFillerService
+contract_filler = ContractFillerService()

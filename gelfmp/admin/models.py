@@ -117,7 +117,7 @@ class DocumentAdmin(BaseModelAdmin):
 
 class CharcoalEntryAdmin(ROBaseModelAdmin):
     list_display = ('supplier', 'entry_volume', 'moisture', 'density', 'fines', 'entry_date')
-    search_fields = ('supplier__corporate_name', 'dcf')
+    search_fields = ('supplier__corporate_name', 'dcf__process_number')
     list_filter = (SupplierWithEntriesFilter, MonthFilter)
 
     fieldsets = (
@@ -188,7 +188,7 @@ class CharcoalMonthlyPlanAdmin(BaseModelAdmin):
 
 
 class CharcoalIQFAdmin(ROBaseModelAdmin):
-    change_list_template = 'admin/charcoaliqf/change_form.html'
+    change_list_template = 'admin/charcoaliqf/change_list.html'
 
     list_display = (
         'supplier',
@@ -283,6 +283,8 @@ class SupplierAdmin(BaseModelAdmin):
 
 
 class CharcoalContractAdmin(BaseModelAdmin):
+    change_form_template = 'admin/charcoalcontract/change_form.html'
+
     list_display = (
         'supplier',
         'dcf',

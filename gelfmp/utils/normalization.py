@@ -106,6 +106,8 @@ def normalize_file_and_folder(name):
     """Normaliza o nome de arquivos e pastas para uso no sistema de arquivos."""
 
     if name:
-        return re.sub(r'[^a-zA-Z0-9_-]', '_', name)
+        name = re.sub(r'[^a-zA-Z0-9]', '_', name)
+        name = re.sub(r'_{2,}', '_', name)
+        return name
 
     return name

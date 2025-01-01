@@ -1,19 +1,22 @@
+import os
 from datetime import timedelta
 
 from django.db import models
 
 from gelfmp.utils import validators
+from gelfmp.utils.functions import handle_file_cleanup, handle_file_cleanup_on_delete
 from gelfmp.utils.normalization import normalize_file_and_folder
 
 from .base_model import BaseModel
 
 
 class DCF(BaseModel):
-    def upload_to(instance, _):
+    def upload_to(instance, filename):
         safe_corporate_name = normalize_file_and_folder(instance.supplier.corporate_name)
         safe_process_number = normalize_file_and_folder(instance.process_number)
+        file_extension = os.path.splitext(filename)[1]
 
-        return f'fornecedores/{safe_corporate_name}/dcfs/{safe_process_number}'
+        return f'FORNECEDORES/{safe_corporate_name}/DCFs/{safe_process_number}{file_extension}'
 
     process_number = models.CharField(
         max_length=50,
@@ -39,6 +42,14 @@ class DCF(BaseModel):
         blank=True,
         verbose_name='Arquivo DCF',
     )
+
+    def delete(self, *args, **kwargs):
+        handle_file_cleanup_on_delete(self)
+        super().delete(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        handle_file_cleanup(self)
+        super().save(*args, **kwargs)
 
     def clean(self):
         # Define a validade da DCF com base na data de
