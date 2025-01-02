@@ -21,6 +21,7 @@ class ContactAdmin(BaseModelAdmin):
     list_display = ('contact_type', 'name', 'email')
     search_fields = ('name', 'email')
     list_filter = ('contact_type',)
+    autocomplete_fields = ('supplier',)
 
     fieldsets = (
         (
@@ -70,6 +71,7 @@ class DocumentAdmin(BaseModelAdmin):
     list_display = ('document_type', 'name', 'validity', 'supplier')
     list_filter = ('document_type', 'supplier', DocumentValidityFilter)
     search_fields = ('name', 'supplier__corporate_name')
+    autocomplete_fields = ('supplier',)
 
     actions = ['delete_files']
 
@@ -119,6 +121,7 @@ class CharcoalEntryAdmin(ROBaseModelAdmin):
     list_display = ('supplier', 'entry_volume', 'moisture', 'density', 'fines', 'entry_date')
     search_fields = ('supplier__corporate_name', 'dcf__process_number')
     list_filter = (SupplierWithEntriesFilter, MonthFilter)
+    autocomplete_fields = ('supplier', 'dcf')
 
     fieldsets = (
         (
@@ -148,6 +151,7 @@ class CharcoalMonthlyPlanAdmin(BaseModelAdmin):
     list_display = ('supplier', 'planned_volume', 'month', 'year')
     list_filter = ('month', 'year')
     search_fields = ('supplier__corporate_name',)
+    autocomplete_fields = ('supplier',)
 
     fieldsets = (
         (
@@ -296,7 +300,7 @@ class CharcoalContractAdmin(BaseModelAdmin):
     )
 
     search_fields = ('supplier__corporate_name', 'dcf__process_number')
-    autocomplete_fields = ('dcf',)
+    autocomplete_fields = ('dcf', 'supplier')
 
     fieldsets = (
         (
@@ -349,6 +353,8 @@ class CharcoalContractAdmin(BaseModelAdmin):
 class DCFAdmin(BaseModelAdmin):
     list_display = ('process_number', 'supplier', 'validity_date')
     search_fields = ('process_number', 'supplier__corporate_name')
+
+    autocomplete_fields = ('supplier',)
 
     fieldsets = (
         (
