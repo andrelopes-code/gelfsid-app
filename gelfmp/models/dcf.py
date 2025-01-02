@@ -24,7 +24,8 @@ class DCF(BaseModel):
         verbose_name='Número do Processo',
     )
 
-    declared_volume = models.FloatField(null=True, blank=True, verbose_name='Volume Declarado (m³)')
+    declared_volume = models.IntegerField(null=True, blank=True, verbose_name='Volume Declarado (m³)')
+    available_volume = models.IntegerField(null=True, blank=True, verbose_name='Volume Disponível (m³)')
     issue_date = models.DateField(null=True, blank=True, verbose_name='Data de Emissão')
     validity_date = models.DateField(null=True, blank=True, editable=False, verbose_name='Data de Vencimento')
 

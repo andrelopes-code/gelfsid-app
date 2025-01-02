@@ -78,6 +78,11 @@ class CharcoalContract(BaseModel):
         except Exception as e:
             raise ValidationError(f'Erro ao criar o contrato: {e}')
 
+        if not self.entry_date:
+            first_entry = self.dcf.charcoal_entries.order_by('entry_date').first()
+            if first_entry:
+                self.entry_date = first_entry.entry_date
+
         return super().clean()
 
     def delete(self, *args, **kwargs):

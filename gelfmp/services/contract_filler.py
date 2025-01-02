@@ -132,10 +132,12 @@ class ContractFillerService:
         }
 
     def get_bank_context(self, supplier):
+        bank_details = supplier.bank_details.first()
+
         return {
-            'bank_name': supplier.bank_details.bank_name,
-            'bank_account_number': supplier.bank_details.account_number,
-            'bank_agency': supplier.bank_details.agency,
+            'bank_name': bank_details.bank_name,
+            'bank_account_number': bank_details.account_number,
+            'bank_agency': bank_details.agency,
         }
 
     def normalize_header(self, text):

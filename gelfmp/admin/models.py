@@ -120,7 +120,7 @@ class DocumentAdmin(BaseModelAdmin):
 class CharcoalEntryAdmin(ROBaseModelAdmin):
     list_display = ('supplier', 'entry_volume', 'moisture', 'density', 'fines', 'entry_date')
     search_fields = ('supplier__corporate_name', 'dcf__process_number')
-    list_filter = (SupplierWithEntriesFilter, MonthFilter)
+    list_filter = (SupplierWithEntriesFilter, MonthFilter, 'supplier__supplier_type')
     autocomplete_fields = ('supplier', 'dcf')
 
     fieldsets = (
@@ -351,7 +351,7 @@ class CharcoalContractAdmin(BaseModelAdmin):
 
 
 class DCFAdmin(BaseModelAdmin):
-    list_display = ('process_number', 'supplier', 'validity_date')
+    list_display = ('process_number', 'supplier', 'available_volume', 'validity_date')
     search_fields = ('process_number', 'supplier__corporate_name')
 
     autocomplete_fields = ('supplier',)
@@ -363,7 +363,11 @@ class DCFAdmin(BaseModelAdmin):
                 'fields': [
                     'process_number',
                     'supplier',
-                    ('issue_date', 'declared_volume'),
+                    (
+                        'declared_volume',
+                        'available_volume',
+                        'issue_date',
+                    ),
                     'file',
                 ]
             },
