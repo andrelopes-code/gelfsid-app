@@ -25,7 +25,7 @@ class BankDetails(BaseModel):
         verbose_name='Número do Banco',
     )
 
-    supplier = models.OneToOneField(
+    supplier = models.ForeignKey(
         'Supplier',
         on_delete=models.CASCADE,
         related_name='bank_details',

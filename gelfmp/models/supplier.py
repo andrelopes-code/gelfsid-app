@@ -107,7 +107,6 @@ class Supplier(BaseModel):
         # Normaliza os campos para evitar inconsistência nos dados.
         self.corporate_name = normalize_text_upper(self.corporate_name)
         self.cpf_cnpj = normalize_to_numbers(self.cpf_cnpj)
-        self.address = normalize_text_upper(self.address)
         self.cep = normalize_to_numbers(self.cep)
 
         return super().save(*args, **kwargs)

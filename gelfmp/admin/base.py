@@ -4,7 +4,7 @@ EMPTY_LABEL_TEXT = 'Selecione'
 
 
 class BaseModelAdmin(admin.ModelAdmin):
-    """Classe admin base para models"""
+    """Classe admin base para modelos"""
 
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         kwargs['choices'] = [('', EMPTY_LABEL_TEXT)] + list(db_field.choices)
@@ -28,7 +28,7 @@ class BaseTabularInline(admin.TabularInline):
 
 
 class ROBaseModelAdmin(BaseModelAdmin):
-    """Classe admin base sem permissoes de alteração e adição"""
+    """Classe admin base sem permissões de alteração e adição"""
 
     def has_change_permission(self, request, obj=None):
         return False

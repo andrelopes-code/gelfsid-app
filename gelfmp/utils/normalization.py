@@ -8,7 +8,7 @@ def normalize_text_upper(name):
     if name:
         name = unicodedata.normalize('NFKD', name)
         name = ''.join(c for c in name if not unicodedata.combining(c))
-        name = re.sub(r'[,/]', '', name)
+        name = re.sub(r'[,]', '', name)
         name = re.sub(r'\s+', ' ', name)
         return name.upper().strip()
 

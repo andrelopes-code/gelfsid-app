@@ -39,7 +39,7 @@ class DocumentInline(BaseTabularInline):
 class BankDetailsInline(BaseTabularInline):
     model = models.BankDetails
     extra = 1
-    max_num = 1
+    max_num = 2
 
     fields = (
         'bank_name',

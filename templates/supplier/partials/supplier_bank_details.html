@@ -15,19 +15,21 @@
             </thead>
             <tbody class="w-full h-fit">
                 <!-- Dados bancários do fornecedor -->
-                <tr class="border-dark-200">
-                    <td class="px-4 py-2">{% include "components/copyable_text.html" with value=supplier.bank_details.bank_name %}</td>
-                    <td class="px-4 py-2">{% include "components/copyable_text.html" with value=supplier.bank_details.bank_code %}</td>
-                    <td class="px-4 py-2">
-                        {% include "components/copyable_text.html" with value=supplier.bank_details.account_number %}
-                    </td>
-                    <td class="px-4 py-2">{% include "components/copyable_text.html" with value=supplier.bank_details.agency %}</td>
-                    {% if supplier.bank_details.account_cnpj %}
-                        <td class="px-4 py-2">{% include "components/copyable_text.html" with value=supplier.bank_details.account_cnpj %}</td>
-                    {% else %}
-                        <td class="px-4 py-2">-</td>
-                    {% endif %}
-                </tr>
+                {% for bd in supplier.bank_details.all %}
+                    <tr class="border-dark-200">
+                        <td class="px-4 py-2">{% include "components/copyable_text.html" with value=bd.bank_name %}</td>
+                        <td class="px-4 py-2">{% include "components/copyable_text.html" with value=bd.bank_code %}</td>
+                        <td class="px-4 py-2">
+                            {% include "components/copyable_text.html" with value=bd.account_number %}
+                        </td>
+                        <td class="px-4 py-2">{% include "components/copyable_text.html" with value=bd.agency %}</td>
+                        {% if bd.account_cnpj %}
+                            <td class="px-4 py-2">{% include "components/copyable_text.html" with value=bd.account_cnpj %}</td>
+                        {% else %}
+                            <td class="px-4 py-2">-</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

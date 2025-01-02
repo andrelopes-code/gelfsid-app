@@ -2,6 +2,7 @@ from django.db.models import Q, Sum
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.utils.timezone import now
+from httpx import ReadTimeout
 
 from gelfcore.router import Router
 from gelfmp.charts import charts, forms
@@ -73,7 +74,22 @@ def supplier_cnpj_info(request: HttpRequest, id):
 
     try:
         cnpj_data = cnpj_service.fetch(supplier.cpf_cnpj)
-    except ValueError:
+
+        # Atualizar os dados de endereço do fornecedor
+        # com os dados atualizados vindo da consulta do CNPJ.
+        supplier.cep = cnpj_data['address']['zip']
+        supplier.address = ', '.join([
+            cnpj_data['address']['street'],
+            cnpj_data['address']['number'],
+            cnpj_data['address']['district'],
+        ])
+
+        if complement := cnpj_data['address']['details']:
+            supplier.address += f', {complement}'
+
+        supplier.save()
+
+    except (ValueError, ReadTimeout):
         return render(
             request,
             'components/errors/error.html',
