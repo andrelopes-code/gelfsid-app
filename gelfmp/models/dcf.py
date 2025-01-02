@@ -56,6 +56,10 @@ class DCF(BaseModel):
         # emissão sendo essa validade de exatamente 3 anos.
         if self.issue_date:
             self.validity_date = self.issue_date + timedelta(days=365 * 3)
+        else:
+            self.validity_date = None
+
+        return super().clean()
 
     class Meta:
         constraints = [
