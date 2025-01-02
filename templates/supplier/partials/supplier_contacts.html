@@ -25,7 +25,13 @@
                         <!-- Nome -->
                         <td class="px-4 py-2">{% include "components/copyable_text.html" with value=contact.name %}</td>
                         <!-- Email -->
-                        <td class="px-4 py-2">{% include "components/copyable_text.html" with value=contact.email %}</td>
+                        <td class="px-4 py-2">
+                            {% if contact.email %}
+                                {% include "components/copyable_text.html" with value=contact.email %}
+                            {% else %}
+                                <span>-</span>
+                            {% endif %}
+                        </td>
                         <!-- CPF -->
                         <td class="px-4 py-2">
                             {% if contact.cpf %}

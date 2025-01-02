@@ -17,7 +17,7 @@ class Contact(BaseModel):
         verbose_name='CPF',
     )
 
-    email = models.EmailField(verbose_name='Email')
+    email = models.EmailField(null=True, blank=True, verbose_name='Email')
     contact_type = models.CharField(max_length=50, choices=ContactType.choices, verbose_name='Função')
 
     primary_phone = models.CharField(max_length=20, verbose_name='Telefone Principal', null=True, blank=True)
