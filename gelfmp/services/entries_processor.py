@@ -1,4 +1,6 @@
 import pandas as pd
+import rich
+from django.conf import settings
 from django.db import transaction
 from django.db.utils import IntegrityError
 
@@ -43,6 +45,9 @@ class EntriesProcessor:
                 if similarity >= MINIMUM_SIMILARITY:
                     self._process_entries(best_match, group)
                     continue
+
+                if settings.DEBUG:
+                    rich.print(best_matches)
 
                 # Caso não seja possível identificar o fornecedor
                 # armazena na lista de fornecedores não encontrados.
