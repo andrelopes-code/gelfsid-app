@@ -1,5 +1,3 @@
-import os
-
 from django.db import models
 from django.forms import ValidationError
 
@@ -14,12 +12,7 @@ from .base_model import BaseModel
 class CharcoalContract(BaseModel):
     def upload_to(instance, filename):
         safe_corporate_name = normalize_file_and_folder(instance.supplier.corporate_name)
-
-        contract_name = f'{instance.dcf.process_number}_{instance.supplier.corporate_name}'
-        safe_contract_name = normalize_file_and_folder(contract_name)
-        file_extension = os.path.splitext(filename)[1]
-
-        return f'FORNECEDORES/{safe_corporate_name}/CONTRATOS/{safe_contract_name}.{file_extension}'
+        return f'FORNECEDORES/{safe_corporate_name}/CONTRATOS/{filename}'
 
     supplier = models.ForeignKey(
         'Supplier',
@@ -68,9 +61,8 @@ class CharcoalContract(BaseModel):
                 self.dcf.declared_volume,
                 self.dcf.issue_date,
                 self.dcf.validity_date,
-                self.dcf.file,
             ]):
-                raise ValidationError('Todos os campos da DCF devem estar preenchidos para a criação de um contrato.')
+                raise ValidationError('Os dados do DCF devem estar completos antes de criar o contrato.')
 
             if self.supplier != self.dcf.supplier:
                 raise ValidationError('O fornecedor do contrato deve ser o mesmo fornecedor do DCF.')
