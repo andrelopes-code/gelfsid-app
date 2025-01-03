@@ -5,13 +5,13 @@ from django.core.management.base import BaseCommand
 
 from gelfmp.models import Document, Supplier
 from gelfmp.models.choices import DocumentType
-from gelfmp.services.ibama_scrapper import IbamaCTFService
+from gelfmp.services.ibama_scrapper import IbamaCTFScrapper
 
 
 class Command(BaseCommand):
     async def task(self):
         cpf_cnpj_list = await sync_to_async(lambda: list(Supplier.objects.values_list('cpf_cnpj', flat=True)))()
-        ctf_service = IbamaCTFService()
+        ctf_service = IbamaCTFScrapper()
 
         result = await ctf_service.bulk_fetch(cpf_cnpj_list)
 

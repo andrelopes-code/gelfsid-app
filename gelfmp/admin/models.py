@@ -8,7 +8,7 @@ from gelfmp.models.choices import TaskStatus
 
 from .base import BaseModelAdmin, ROBaseModelAdmin
 from .filters import DocumentValidityFilter, MonthFilter, SupplierWithEntriesFilter
-from .inlines import BankDetailsInline, ContactInline, DocumentInline
+from .inlines import AliasInline, BankDetailsInline, ContactInline, DocumentInline
 
 
 class LogEntryAdmin(ROBaseModelAdmin):
@@ -118,6 +118,8 @@ class DocumentAdmin(BaseModelAdmin):
 
 
 class CharcoalEntryAdmin(ROBaseModelAdmin):
+    change_list_template = 'admin/charcoalentry/change_list.html'
+
     list_display = ('supplier', 'entry_volume', 'moisture', 'density', 'fines', 'entry_date')
     search_fields = ('supplier__corporate_name', 'dcf__process_number')
     list_filter = (SupplierWithEntriesFilter, MonthFilter, 'supplier__supplier_type')
@@ -216,7 +218,7 @@ class SupplierAdmin(BaseModelAdmin):
     list_filter = ('material_type', 'state', 'active')
     search_fields = ('corporate_name', 'cpf_cnpj')
 
-    inlines = [DocumentInline, ContactInline, BankDetailsInline]
+    inlines = [DocumentInline, ContactInline, BankDetailsInline, AliasInline]
 
     fieldsets = (
         (

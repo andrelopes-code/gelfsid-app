@@ -51,3 +51,13 @@ class BankDetailsInline(BaseTabularInline):
 
     verbose_name = 'Detalhes Bancários'
     verbose_name_plural = 'Detalhes Bancários'
+
+
+class AliasInline(BaseTabularInline):
+    model = models.Alias
+    extra = 1
+
+    fields = ('alias',)
+
+    verbose_name = 'Alias'
+    verbose_name_plural = 'Aliases'

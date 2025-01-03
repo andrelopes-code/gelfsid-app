@@ -10,7 +10,7 @@ URL = 'https://servicos.ibama.gov.br/ctf/publico/certificado_regularidade_consul
 CONTENT_TYPE = 'application/x-www-form-urlencoded'
 
 
-class IbamaCTFService:
+class IbamaCTFScrapper:
     """Classe para buscar informações sobre o CTF de um CPF/CNPJ."""
 
     async def fetch(self, cpf_cnpj):

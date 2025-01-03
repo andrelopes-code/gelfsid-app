@@ -1,12 +1,14 @@
 from io import BytesIO
 
 from django.contrib.admin.views.decorators import staff_member_required
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 
+from gelfcore.logger import log
 from gelfcore.router import Router
 from gelfmp.models.charcoal_contract import CharcoalContract
 from gelfmp.services.contract_filler import contract_filler
+from gelfmp.services.entries_processor import EntriesProcessor
 from gelfmp.services.iqf_calculator import calculate_suppliers_iqf
 
 from .forms import CalculateIQFForm, DynamicContractForm
@@ -43,6 +45,7 @@ def calculate_iqf_htmx(request: HttpRequest):
             return render(request, 'htmx/iqf/results.html', {'processed_suppliers': [str(e)]})
 
 
+@staff_member_required
 @router('contract/<int:id>/generate/')
 def generate_charcoal_contract(request: HttpRequest, id):
     contract = get_object_or_404(CharcoalContract, pk=id)
@@ -77,3 +80,29 @@ def generate_charcoal_contract(request: HttpRequest, id):
             'form': DynamicContractForm(contract_context=contract_context),
         },
     )
+
+
+@staff_member_required
+@router('charcoal/entries/upload')
+def charcoal_entries_upload(request: HttpRequest):
+    if request.method == 'POST' and request.FILES.get('file'):
+        file = request.FILES['file']
+
+        if not file.name.endswith('.xlsx') and not file.name.endswith('.xls'):
+            return JsonResponse({'status': 'error', 'message': 'Arquivo EXCEL inválido.'}, status=400)
+
+        try:
+            processor = EntriesProcessor()
+            processor.process([file])
+
+            return JsonResponse({'status': 'success', 'message': 'Arquivo processado com sucesso.'})
+
+        except ValueError as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+        except Exception as e:
+            log.error(f'Erro ao processar o arquivo de entradas de carvão: {e}')
+
+        return JsonResponse({'status': 'error', 'message': 'Erro ao processar o arquivo.'}, status=400)
+
+    return render(request, 'jobs/charcoal_entries_upload.html')
