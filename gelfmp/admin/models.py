@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group, User
 from django.utils.html import format_html
 
 from gelfmp import models
+from gelfmp.admin.exporters import ExportCSV
 from gelfmp.models.choices import TaskStatus
 
 from .base import BaseModelAdmin, ROBaseModelAdmin
@@ -117,13 +118,25 @@ class DocumentAdmin(BaseModelAdmin):
     delete_files.short_description = 'Excluir Documentos selecionados'
 
 
-class CharcoalEntryAdmin(ROBaseModelAdmin):
+class CharcoalEntryAdmin(ROBaseModelAdmin, ExportCSV):
     change_list_template = 'admin/charcoalentry/change_list.html'
 
     list_display = ('supplier', 'entry_volume', 'moisture', 'density', 'fines', 'entry_date')
     search_fields = ('supplier__corporate_name', 'dcf__process_number')
     list_filter = (SupplierWithEntriesFilter, MonthFilter, 'supplier__supplier_type')
     autocomplete_fields = ('supplier', 'dcf')
+
+    actions = ['export_to_csv']
+
+    csv_fields = (
+        'supplier',
+        'entry_date',
+        'dcf',
+        'entry_volume',
+        'moisture',
+        'density',
+        'fines',
+    )
 
     fieldsets = (
         (
